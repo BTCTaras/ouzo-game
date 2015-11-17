@@ -1,21 +1,17 @@
 #include "game.h"
+#include "scene_test.h"
 
 #include <stdio.h>
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
-// Initialisation for stuff like GLFW and GLEW goes here.
+// Initialisation for stuff like GLFW goes here.
 // TODO: Un-hardcode this maybe?
 bool initLibs() {
 	if (!glfwInit()) {
 		fprintf(stderr, "Failed to initialise GLFW!!\n");
 		return true;
-	}
-
-	if (!glewInit()) {
-		fprintf(stderr, "Failed to initialise GLEW!!\n");
-		return false;
 	}
 
 	return true;
@@ -30,6 +26,8 @@ int main(int argc, char *argv[]) {
 	}
 
 	CGame game;
+	CGame::Inst = &game;
+	game.SetScene(new CSceneTest);
 	game.StartLoop();
 	return 0;
 }

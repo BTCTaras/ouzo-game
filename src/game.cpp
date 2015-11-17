@@ -13,6 +13,8 @@ const unsigned int GAME_START_WIDTH = 1280;
 const unsigned int GAME_START_HEIGHT = 720;
 const char *GAME_START_TITLE = "Ouzo";
 
+CGame *CGame::Inst = nullptr;
+
 CGame::CGame()
 	:	m_running(true),
 		m_targetFPS(60)
@@ -27,6 +29,20 @@ CGame::CGame()
 	}
 
 	glfwMakeContextCurrent(m_window);
+
+	static bool inittedGLEW = false;
+
+	if (!inittedGLEW) {
+		glewExperimental = GL_TRUE;
+		
+		if (glewInit() != GLEW_OK) {
+			fprintf(stderr, "Failed to initialise GLEW!!\n");
+			exit(2);
+			return;
+		}
+
+		inittedGLEW = true;
+	}
 
 	this->SetVerticalSync(false);
 	this->InitGL();
@@ -72,13 +88,24 @@ void CGame::SetVerticalSync(bool vsync) {
 	glfwSwapInterval(vsync ? 1 : 0);
 }
 
+void CGame::SetScene(CScene *scene) {
+	if (m_scene != nullptr) {
+		m_scene->OnLeave(scene);
+	}
+
+	m_scene.reset(scene);
+	m_scene->OnInit();
+}
+
 void CGame::InitGL() {
 	glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
 }
 
 void CGame::OnRender() {
 	glClear(GL_COLOR_BUFFER_BIT);
+	m_scene->OnRender();
 }
 
 void CGame::OnUpdate() {
+	m_scene->OnUpdate();
 }
