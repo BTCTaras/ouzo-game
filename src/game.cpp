@@ -6,14 +6,19 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <chrono>
+#include <thread>
+
 const unsigned int GAME_START_WIDTH = 1280;
 const unsigned int GAME_START_HEIGHT = 720;
 const char *GAME_START_TITLE = "Ouzo";
 
 CGame::CGame()
-	: m_running(true)
+	:	m_running(true),
+		m_targetFPS(60)
 {
 	m_window = glfwCreateWindow(GAME_START_WIDTH, GAME_START_HEIGHT, GAME_START_TITLE, NULL, NULL);
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	if (!m_window) {
 		fprintf(stderr, "ERROR: Could not create window!!\n");
@@ -22,6 +27,9 @@ CGame::CGame()
 	}
 
 	glfwMakeContextCurrent(m_window);
+
+	this->SetVerticalSync(false);
+	this->InitGL();
 }
 
 CGame::~CGame() {
@@ -30,14 +38,47 @@ CGame::~CGame() {
 }
 
 void CGame::StartLoop() {
+	double lastTime = glfwGetTime();
+
 	while (!glfwWindowShouldClose(m_window) && m_running) {
-		// Game loop code here
+		double now = glfwGetTime();
+		double dt = now - lastTime;
+		m_deltaTime = (float)dt;
+
+		this->OnUpdate();
+		this->OnRender();
+		
+		lastTime = glfwGetTime();
 
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
+
+		// Give the CPU a short break
+		// TODO: Make this configurable? Some people like having a million FPS...
+		std::this_thread::sleep_for(std::chrono::microseconds(1));
 	}
 }
 
 void CGame::Stop() {
 	m_running = false;
+}
+
+void CGame::SetTargetFPS(unsigned int fps) {
+	m_targetFPS = fps;
+}
+
+void CGame::SetVerticalSync(bool vsync) {
+	m_vsync = vsync;
+	glfwSwapInterval(vsync ? 1 : 0);
+}
+
+void CGame::InitGL() {
+	glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
+}
+
+void CGame::OnRender() {
+	glClear(GL_COLOR_BUFFER_BIT);
+}
+
+void CGame::OnUpdate() {
 }

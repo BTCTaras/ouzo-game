@@ -23,6 +23,9 @@ bool initLibs() {
 
 int main(int argc, char *argv[]) {
 	if (!initLibs()) {
+#ifdef OUZO_DEBUG
+		getchar(); // chance to read the error
+#endif
 		return 2;
 	}
 
