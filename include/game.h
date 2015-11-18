@@ -1,6 +1,7 @@
 #pragma once
 
 #include "scene.h"
+#include "graphics.h"
 
 #include <memory>
 
@@ -22,6 +23,8 @@ public:
 	void SetScene(CScene *scene);
 	S_CScene GetScene();
 
+	CGraphics *GetGraphics();
+
 private:
 	void InitGL();
 
@@ -36,4 +39,6 @@ private:
 	GLFWwindow *m_window;
 
 	S_CScene m_scene;
+
+	CGraphics m_graphics;
 };

@@ -1,5 +1,5 @@
 #include "game.h"
-#include "scene_test.h"
+#include "scene_menu.h"
 
 #include <stdio.h>
 
@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
 	CGame game;
 	CGame::Inst = &game;
-	game.SetScene(new CSceneTest);
+	game.SetScene(new CSceneMenu);
 	game.StartLoop();
 	return 0;
 }

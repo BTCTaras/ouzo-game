@@ -51,8 +51,10 @@ CGame::CGame()
 
 	glfwSetWindowSizeCallback(m_window, GLFW_OnResize);
 
-	this->SetVerticalSync(false);
+	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 	this->InitGL();
+
+	m_graphics.Init();
 }
 
 CGame::~CGame() {
@@ -98,6 +100,10 @@ void CGame::SetTargetFPS(unsigned int fps) {
 void CGame::SetVerticalSync(bool vsync) {
 	m_vsync = vsync;
 	glfwSwapInterval(vsync ? 1 : 0);
+}
+
+CGraphics *CGame::GetGraphics() {
+	return &m_graphics;
 }
 
 void CGame::SetScene(CScene *scene) {
