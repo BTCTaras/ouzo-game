@@ -18,3 +18,7 @@ void CSceneTest::OnRender() {
 	glVertex2f(1.0f, -1.0f);
 	glEnd();
 }
+
+void CSceneTest::OnResize(int newWidth, int newHeight) {
+	printf("Resized to (%d, %d)\n", newWidth, newHeight);
+}

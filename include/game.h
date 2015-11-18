@@ -20,6 +20,7 @@ public:
 	void SetVerticalSync(bool vsync);
 
 	void SetScene(CScene *scene);
+	S_CScene GetScene();
 
 private:
 	void InitGL();

@@ -15,3 +15,7 @@ void CScene::OnUpdate() {
 void CScene::OnLeave(CScene *scene) {
 
 }
+
+void CScene::OnResize(int newWidth, int newHeight) {
+  
+}
