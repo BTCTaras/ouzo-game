@@ -27,6 +27,13 @@ void CSceneMenu::OnInit() {
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
   glOrthof(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+
+  // Tell OpenGL that we're done with compiling shaders.
+  // Does not disable shader compilation, but shader compilation
+  // will take more time to warm up in the future!
+  if (glReleaseShaderCompiler) {
+    glReleaseShaderCompiler();
+  }
 }
 
 void CSceneMenu::OnRender() {
