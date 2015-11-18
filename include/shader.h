@@ -40,6 +40,11 @@ private:
     ///
     void OnAttach();
 
+    ///
+    /// Decrements the attachment counter.
+    ///
+    void OnDetach();
+
     unsigned int m_id;
     unsigned int m_attachmentCounter;
 
@@ -50,8 +55,25 @@ typedef std::shared_ptr<CShader> S_CShader;
 
 class CProgram {
 public:
-  CProgram(size_t count, S_CShader *shaders);
-  ~CProgram();
+    CProgram();
+    CProgram(size_t count, S_CShader *shaders);
+    ~CProgram();
+
+    ///
+    /// Loads a program from the specified shaders.
+    /// The count must specify how many shaders are given, *not* the size.
+    ///
+    void LoadFromShaders(size_t count, S_CShader *shaders);
+
+    ///
+    /// Returns the OpenGL handle to the program.
+    ///
+    unsigned int GetHandle();
+
+private:
+    void Link();
+
+    unsigned int m_id;
 };
 
 typedef std::shared_ptr<CProgram> S_CProgram;
