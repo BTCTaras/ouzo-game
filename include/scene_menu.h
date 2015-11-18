@@ -1,6 +1,8 @@
 #pragma once
 
 #include "scene.h"
+#include "shader.h"
+#include "graphics.h"
 
 class CSceneMenu : public CScene {
 public:
@@ -14,4 +16,7 @@ public:
 
 private:
   unsigned int m_backgroundBuffer;
+
+  mvp_matrix_t m_mvpMatrix;
+  S_CProgram m_program;
 };

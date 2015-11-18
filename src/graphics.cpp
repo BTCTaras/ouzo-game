@@ -1,5 +1,11 @@
 #include "graphics.h"
 
+#include "shader.h"
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #include <GL/glew.h>
 #include <stdio.h>
 
@@ -16,10 +22,19 @@ CGraphics::~CGraphics() {
   }
 }
 
-void CGraphics::Begin() {
+void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
   if (m_vao == 0) {
     fprintf(stderr, "WARNING: CGraphics has no VAO!!\n");
   }
+
+  if (program != nullptr) {
+    program->Use();
+  }
+
+  glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
+
+  unsigned int mvpLoc = program->GetUniformLocation("u_MVPMatrix");
+  glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
 
   glBindVertexArray(m_vao);
 

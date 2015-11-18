@@ -2,8 +2,16 @@
 
 #include "graphics.h"
 #include "game.h"
+#include "shader.h"
 
 #include <GL/glew.h>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 CSceneMenu::CSceneMenu() {}
 
@@ -13,6 +21,16 @@ CSceneMenu::~CSceneMenu() {
 
 void CSceneMenu::OnInit() {
   glClearColor(0.0, 0.0, 0.0, 0.0);
+
+  m_program.reset(new CProgram);
+
+  S_CShader shaders[] = {
+    S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/diffuse.vsh")),
+    S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/diffuse.fsh"))
+  };
+
+  m_program->LoadFromShaders(2, shaders);
+
   glGenBuffers(1, &m_backgroundBuffer);
 
   vertex_t vertices[] = {
@@ -24,9 +42,9 @@ void CSceneMenu::OnInit() {
   glBindBuffer(GL_ARRAY_BUFFER, m_backgroundBuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  glOrthof(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+  m_mvpMatrix.projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+  m_mvpMatrix.view = glm::mat4(1.0f);
+  m_mvpMatrix.model = glm::mat4(1.0f);
 
   // Tell OpenGL that we're done with compiling shaders.
   // Does not disable shader compilation, but shader compilation
@@ -37,7 +55,7 @@ void CSceneMenu::OnInit() {
 }
 
 void CSceneMenu::OnRender() {
-  CGame::Inst->GetGraphics()->Begin();
+  CGame::Inst->GetGraphics()->Begin(m_mvpMatrix, m_program);
 
   glBindBuffer(GL_ARRAY_BUFFER, m_backgroundBuffer);
   glDrawArrays(GL_TRIANGLES, 0, 3);

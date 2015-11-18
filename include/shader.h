@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <string>
+#include <map>
 
 class CShader {
     friend class CProgram;
@@ -70,8 +71,20 @@ public:
     ///
     unsigned int GetHandle();
 
+    ///
+    /// Retrieves a uniform location from the uniform cache.
+    ///
+    unsigned int GetUniformLocation(const char *name);
+
+    ///
+    /// Same as calling glUseProgram.
+    ///
+    void Use();
+
 private:
     void Link();
+
+    std::map<std::string, unsigned int> m_uniformCache;
 
     unsigned int m_id;
 };

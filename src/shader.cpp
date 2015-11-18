@@ -7,7 +7,8 @@
 
 CShader::CShader(unsigned int type)
   : m_attachmentCounter(0),
-    m_chunkName("N/A")
+    m_chunkName("N/A"),
+    m_id(0)
 {
     m_id = glCreateShader(type);
 }
@@ -74,7 +75,9 @@ const std::string& CShader::GetChunkName() {
     return m_chunkName;
 }
 
-CProgram::CProgram() {
+CProgram::CProgram()
+    : m_id(0)
+{
     m_id = glCreateProgram();
 }
 
@@ -100,6 +103,27 @@ void CProgram::LoadFromShaders(size_t count, S_CShader *shaders) {
         glDetachShader(m_id, shader->m_id);
         shader->OnDetach();
     }
+}
+
+void CProgram::Use() {
+    if (m_id == 0) {
+        fprintf(stderr, "Warning: Tried to use uninitialised/invalid program!!\n");
+        return;
+    }
+
+    glUseProgram(m_id);
+}
+
+unsigned int CProgram::GetUniformLocation(const char *name) {
+  std::string sname = name;
+
+  if (m_uniformCache.find(sname) != m_uniformCache.end()) {
+    return m_uniformCache[sname];
+  } else {
+    unsigned int id = glGetUniformLocation(m_id, name);
+    m_uniformCache[sname] = id;
+    return id;
+  }
 }
 
 void CProgram::Link() {

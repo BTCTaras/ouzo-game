@@ -1,5 +1,9 @@
 #pragma once
 
+#include "shader.h"
+
+#include <glm/glm.hpp>
+
 ///
 /// Represents a vertex. Values in order (floats): x, y, z, u, v.
 ///
@@ -7,6 +11,12 @@ typedef struct {
   float x, y, z;
   float u, v;
 } vertex_t;
+
+typedef struct {
+  glm::mat4 projection;
+  glm::mat4 view;
+  glm::mat4 model;
+} mvp_matrix_t;
 
 class CGraphics {
 public:
@@ -16,7 +26,7 @@ public:
   ///
   /// Enables all vertex attributes and passes them to the current program.
   ///
-  void Begin();
+  void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr);
 
   ///
   /// Disables all vertex attributes *and unbinds any bound programs*.
