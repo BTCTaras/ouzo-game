@@ -18,8 +18,8 @@ CGame *CGame::Inst = nullptr;
 static void GLFW_OnResize(GLFWwindow *window, int width, int height);
 
 CGame::CGame()
-	:	m_running(true),
-		m_targetFPS(60)
+	:	m_targetFPS(60),
+		m_running(true)
 {
 	m_window = glfwCreateWindow(GAME_START_WIDTH, GAME_START_HEIGHT, GAME_START_TITLE, NULL, NULL);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
