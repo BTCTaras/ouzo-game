@@ -25,9 +25,10 @@ CGame::CGame()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Forbid compatibility
+	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
+	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
 	m_window = glfwCreateWindow(GAME_START_WIDTH, GAME_START_HEIGHT, GAME_START_TITLE, NULL, NULL);
-	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
 	// Centre the window
 	const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
@@ -65,6 +66,8 @@ CGame::CGame()
 	this->InitGL();
 
 	m_graphics.Init();
+
+	glfwShowWindow(m_window);
 }
 
 CGame::~CGame() {

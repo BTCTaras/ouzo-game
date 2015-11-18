@@ -34,8 +34,9 @@ void CSceneMenu::OnInit() {
   glGenBuffers(1, &m_backgroundBuffer);
 
   vertex_t vertices[] = {
-    { 0.0f, 1.0f, 0.0f, 0.5f, 0.0f },
+    { -1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
     { -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
+    { 1.0f, 1.0f, 0.0f, 1.0f, 0.0f },
     { 1.0f, -1.0f, 0.0f, 1.0f, 1.0f }
   };
 
@@ -62,7 +63,7 @@ void CSceneMenu::OnRender() {
   glBindBuffer(GL_ARRAY_BUFFER, m_backgroundBuffer);
 
   m_texture.Use();
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
   CGame::Inst->GetGraphics()->End();
 }
