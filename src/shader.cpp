@@ -6,9 +6,9 @@
 #include <memory>
 
 CShader::CShader(unsigned int type)
-  : m_attachmentCounter(0),
-    m_chunkName("N/A"),
-    m_id(0)
+  : m_id(0),
+    m_attachmentCounter(0),
+    m_chunkName("N/A")
 {
     m_id = glCreateShader(type);
 }
