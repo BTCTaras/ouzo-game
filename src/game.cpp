@@ -29,6 +29,11 @@ CGame::CGame()
 	m_window = glfwCreateWindow(GAME_START_WIDTH, GAME_START_HEIGHT, GAME_START_TITLE, NULL, NULL);
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 
+	// Centre the window
+	const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	glfwSetWindowPos(m_window, vidmode->width / 2 - GAME_START_WIDTH / 2,
+														 vidmode->height / 2 - GAME_START_HEIGHT / 2);
+
 	if (!m_window) {
 		fprintf(stderr, "ERROR: Could not create window!!\n");
 		glfwTerminate();
