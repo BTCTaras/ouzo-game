@@ -3,6 +3,7 @@
 #include "scene.h"
 #include "shader.h"
 #include "graphics.h"
+#include "texture.h"
 
 class CSceneMenu : public CScene {
 public:
@@ -19,4 +20,5 @@ private:
 
   mvp_matrix_t m_mvpMatrix;
   S_CProgram m_program;
+  CTexture m_texture;
 };

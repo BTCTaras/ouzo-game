@@ -46,6 +46,8 @@ void CSceneMenu::OnInit() {
   m_mvpMatrix.view = glm::mat4(1.0f);
   m_mvpMatrix.model = glm::mat4(1.0f);
 
+  m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
+
   // Tell OpenGL that we're done with compiling shaders.
   // Does not disable shader compilation, but shader compilation
   // will take more time to warm up in the future!
@@ -58,6 +60,8 @@ void CSceneMenu::OnRender() {
   CGame::Inst->GetGraphics()->Begin(m_mvpMatrix, m_program);
 
   glBindBuffer(GL_ARRAY_BUFFER, m_backgroundBuffer);
+
+  m_texture.Use();
   glDrawArrays(GL_TRIANGLES, 0, 3);
 
   CGame::Inst->GetGraphics()->End();

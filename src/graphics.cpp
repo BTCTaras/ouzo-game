@@ -14,6 +14,7 @@ const unsigned int CGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
 void CGraphics::Init() {
   glGenVertexArrays(1, &m_vao);
+  glEnable(GL_TEXTURE_2D);
 }
 
 CGraphics::~CGraphics() {
@@ -35,6 +36,9 @@ void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 
   unsigned int mvpLoc = program->GetUniformLocation("u_MVPMatrix");
   glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
+
+  unsigned int texLoc = program->GetUniformLocation("u_Texture");
+  glUniform1i(texLoc, 0);
 
   glBindVertexArray(m_vao);
 
