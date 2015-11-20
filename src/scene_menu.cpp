@@ -18,10 +18,12 @@ CSceneMenu::~CSceneMenu() {}
 
 void CSceneMenu::OnInit() {
   m_buttonTexture.LoadFromFile("assets/ui/button_test.png");
+
   S_CUIControlTexture tex(new CUIControlTexture(&m_buttonTexture));
   tex->x = 80;
   tex->y = 40;
   this->AddControl(tex);
+
   CSceneUI::OnInit();
 
   m_texture.LoadFromFile("assets/backgrounds/test.jpeg");

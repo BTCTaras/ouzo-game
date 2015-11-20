@@ -9,7 +9,7 @@ public:
 	virtual void OnInit();
 	virtual void OnLeave(CScene *newScene);
 	virtual void OnResize(int newWidth, int newHeight);
-	virtual void OnClick(int x, int y);
+	virtual void OnClick(unsigned int button, float x, float y);
 };
 
 typedef std::shared_ptr<CScene> S_CScene;

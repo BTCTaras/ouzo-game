@@ -12,6 +12,11 @@ enum UIEvent {
   CLICK
 };
 
+struct ui_event_params_t {
+  float x, y;
+  unsigned int button;
+};
+
 struct ui_colour_t {
   float r, g, b;
 };
@@ -44,7 +49,7 @@ typedef std::shared_ptr<CUISprite> S_CUISprite;
 class CUIControl {
 public:
   CUIControl();
-  virtual void HandleEvent(UIEvent &event);
+  virtual void HandleEvent(UIEvent &event, ui_event_params_t &params);
 
   void AddChild(std::shared_ptr<CUIControl> control);
   std::vector< std::shared_ptr<CUIControl> >* GetChildren();
@@ -89,6 +94,7 @@ public:
   void UpdateBackground();
 
   virtual void OnResize(int width, int height);
+  virtual void OnClick(unsigned int button, float width, float height);
 
 private:
   S_CUIControlTexture m_mainControl;

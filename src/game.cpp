@@ -16,6 +16,7 @@ const char *GAME_START_TITLE = "Ouzo";
 CGame *CGame::Inst = nullptr;
 
 static void GLFW_OnResize(GLFWwindow *window, int width, int height);
+static void GLFW_OnClick(GLFWwindow *window, int button, int action, int mods);
 
 CGame::CGame()
 	:	m_targetFPS(60),
@@ -61,6 +62,7 @@ CGame::CGame()
 	printf("Graphics Driver: %s\n", glVersion);
 
 	glfwSetWindowSizeCallback(m_window, GLFW_OnResize);
+	glfwSetMouseButtonCallback(m_window, GLFW_OnClick);
 
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 	this->InitGL();
@@ -78,6 +80,28 @@ CGame::~CGame() {
 void GLFW_OnResize(GLFWwindow *window, int width, int height) {
 	glViewport(0, 0, width, height);
 	CGame::Inst->GetScene()->OnResize(width, height);
+}
+
+void GLFW_OnClick(GLFWwindow *window, int button, int action, int mods) {
+	unsigned int translatedBtn;
+	switch (button) {
+		case GLFW_MOUSE_BUTTON_LEFT:
+			translatedBtn = 0;
+			break;
+		case GLFW_MOUSE_BUTTON_RIGHT:
+			translatedBtn = 1;
+			break;
+		case GLFW_MOUSE_BUTTON_MIDDLE:
+			translatedBtn = 2;
+			break;
+		default:
+			translatedBtn = 0xFF;
+			break;
+	}
+
+	double x, y;
+	glfwGetCursorPos(window, &x, &y);
+	CGame::Inst->GetScene()->OnClick(translatedBtn, (float)x, (float)y);
 }
 
 void CGame::StartLoop() {

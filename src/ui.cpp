@@ -73,6 +73,22 @@ CTexture* CSceneUI::GetBackgroundTexture() {
   return nullptr;
 }
 
+void CSceneUI::OnClick(unsigned int button, float x, float y) {
+  printf("Clicked at %d, %d with button %d\n", (int)x, (int)y, button);
+
+  for (S_CUIControl c : *m_mainControl->GetChildren()) {
+    if (x <= c->x + c->width && x >= c->x && y <= c->y + c->height && y >= c->y) {
+      ui_event_params_t clickEvent;
+      clickEvent.x = x - c->x;
+      clickEvent.y = y - c->y;
+      clickEvent.button = button;
+
+      UIEvent type = UIEvent::CLICK;
+      c->HandleEvent(type, clickEvent);
+    }
+  }
+}
+
 ///
 /// CUIControl
 ///
@@ -147,8 +163,10 @@ void CUISprite::SetTexture(CTexture *tex) {
 /// CUIControl
 ///
 
-void CUIControl::HandleEvent(UIEvent &event) {
-
+void CUIControl::HandleEvent(UIEvent &event, ui_event_params_t &params) {
+  if (event == UIEvent::CLICK) {
+    printf("Got clicked at %f, %f with button %d\n", params.x, params.y, params.button);
+  }
 }
 
 ///

@@ -20,6 +20,6 @@ void CScene::OnResize(int newWidth, int newHeight) {
 
 }
 
-void CScene::OnClick(int x, int y) {
-  
+void CScene::OnClick(unsigned int button, float x, float y) {
+
 }
