@@ -3,6 +3,8 @@
 #include "scene.h"
 #include "graphics.h"
 
+#define GFX CGame::Inst->GetGraphics()
+
 #include <memory>
 
 struct GLFWwindow;

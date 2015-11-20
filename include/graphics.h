@@ -43,7 +43,10 @@ public:
   ///
   static const unsigned int VERT_ATTRIB_TEX_COORDS;
 
+  S_CProgram GetDefaultProgram();
+
 private:
   unsigned int m_vao; // Stores the vertex attributes.
+  S_CProgram m_defaultProgram;
 
 };

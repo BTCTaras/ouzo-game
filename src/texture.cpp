@@ -9,6 +9,10 @@ CTexture::CTexture() {
   glGenTextures(1, &m_id);
 }
 
+CTexture::CTexture(const CTexture &tex) {
+  m_id = tex.m_id;
+}
+
 CTexture::~CTexture() {
   glDeleteTextures(1, &m_id);
 }

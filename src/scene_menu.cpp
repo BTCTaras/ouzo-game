@@ -14,38 +14,10 @@
 #include <math.h>
 
 CSceneMenu::CSceneMenu() {}
-
-CSceneMenu::~CSceneMenu() {
-  glDeleteBuffers(1, &m_backgroundBuffer);
-}
+CSceneMenu::~CSceneMenu() {}
 
 void CSceneMenu::OnInit() {
-  glClearColor(0.0, 0.0, 0.0, 0.0);
-
-  m_program.reset(new CProgram);
-
-  S_CShader shaders[] = {
-    S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/diffuse.vsh")),
-    S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/diffuse.fsh"))
-  };
-
-  m_program->LoadFromShaders(2, shaders);
-
-  glGenBuffers(1, &m_backgroundBuffer);
-
-  vertex_t vertices[] = {
-    { -1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-    { -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
-    { 1.0f, 1.0f, 0.0f, 1.0f, 0.0f },
-    { 1.0f, -1.0f, 0.0f, 1.0f, 1.0f }
-  };
-
-  glBindBuffer(GL_ARRAY_BUFFER, m_backgroundBuffer);
-  glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-  m_mvpMatrix.projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
-  m_mvpMatrix.view = glm::mat4(1.0f);
-  m_mvpMatrix.model = glm::mat4(1.0f);
+  CSceneUI::OnInit();
 
   m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
 
@@ -57,21 +29,14 @@ void CSceneMenu::OnInit() {
   }
 }
 
-void CSceneMenu::OnRender() {
-  CGame::Inst->GetGraphics()->Begin(m_mvpMatrix, m_program);
-
-  glBindBuffer(GL_ARRAY_BUFFER, m_backgroundBuffer);
-
-  m_texture.Use();
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-  CGame::Inst->GetGraphics()->End();
-}
-
 void CSceneMenu::OnUpdate() {
 
 }
 
 void CSceneMenu::OnLeave(S_CScene *scene) {
 
+}
+
+CTexture* CSceneMenu::GetBackgroundTexture() {
+  return &m_texture;
 }

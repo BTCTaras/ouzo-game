@@ -6,6 +6,7 @@ class CTexture {
 public:
   CTexture();
   CTexture(const char *file);
+  CTexture(const CTexture &tex);
   ~CTexture();
 
   void LoadFromFile(const char *file);

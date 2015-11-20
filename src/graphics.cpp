@@ -15,12 +15,25 @@ const unsigned int CGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 void CGraphics::Init() {
   glGenVertexArrays(1, &m_vao);
   glEnable(GL_TEXTURE_2D);
+
+  m_defaultProgram.reset(new CProgram);
+
+  S_CShader shaders[] = {
+    S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/diffuse.vsh")),
+    S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/diffuse.fsh"))
+  };
+
+  m_defaultProgram->LoadFromShaders(2, shaders);
 }
 
 CGraphics::~CGraphics() {
   if (m_vao > 0) {
     glDeleteVertexArrays(1, &m_vao);
   }
+}
+
+S_CProgram CGraphics::GetDefaultProgram() {
+  return m_defaultProgram;
 }
 
 void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {

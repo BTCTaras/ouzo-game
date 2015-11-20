@@ -1,24 +1,21 @@
 #pragma once
 
-#include "scene.h"
+#include "ui.h"
 #include "shader.h"
 #include "graphics.h"
 #include "texture.h"
 
-class CSceneMenu : public CScene {
+class CSceneMenu : public CSceneUI {
 public:
   CSceneMenu();
   ~CSceneMenu();
 
   virtual void OnInit();
-  virtual void OnRender();
   virtual void OnUpdate();
   virtual void OnLeave(S_CScene *scene);
 
-private:
-  unsigned int m_backgroundBuffer;
+  virtual CTexture* GetBackgroundTexture();
 
-  mvp_matrix_t m_mvpMatrix;
-  S_CProgram m_program;
+private:
   CTexture m_texture;
 };
