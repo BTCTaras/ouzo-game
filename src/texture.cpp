@@ -38,8 +38,15 @@ void CTexture::LoadFromFile(const char *file) {
 
   m_width = FreeImage_GetWidth(image);
   m_height = FreeImage_GetHeight(image);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height,
-               0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image));
+
+  if (glewIsSupported("GL_ARB_texture_compression")) {
+    // Compress if we can
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, m_width, m_height,
+                 0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image));
+  } else {
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height,
+                 0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image));
+  }
 
   FreeImage_Unload(image);
   FreeImage_Unload(bitmap);
