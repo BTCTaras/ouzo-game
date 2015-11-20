@@ -163,7 +163,7 @@ void CUISprite::SetTexture(CTexture *tex) {
 /// CUIControl
 ///
 
-void CUIControl::HandleEvent(UIEvent &event, ui_event_params_t &params) {
+void CUIControl::HandleEvent(UIEvent event, ui_event_params_t &params) {
   if (event == UIEvent::CLICK) {
     printf("Got clicked at %f, %f with button %d\n", params.x, params.y, params.button);
   }

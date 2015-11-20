@@ -49,7 +49,7 @@ typedef std::shared_ptr<CUISprite> S_CUISprite;
 class CUIControl {
 public:
   CUIControl();
-  virtual void HandleEvent(UIEvent &event, ui_event_params_t &params);
+  virtual void HandleEvent(UIEvent event, ui_event_params_t &params);
 
   void AddChild(std::shared_ptr<CUIControl> control);
   std::vector< std::shared_ptr<CUIControl> >* GetChildren();
