@@ -126,6 +126,10 @@ void CGame::SetScene(CScene *scene) {
 
 	m_scene.reset(scene);
 	m_scene->OnInit();
+
+	int width, height;
+	glfwGetWindowSize(m_window, &width, &height);
+	m_scene->OnResize(width, height);
 }
 
 S_CScene CGame::GetScene() {

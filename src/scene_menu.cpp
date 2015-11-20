@@ -17,16 +17,14 @@ CSceneMenu::CSceneMenu() {}
 CSceneMenu::~CSceneMenu() {}
 
 void CSceneMenu::OnInit() {
+  m_buttonTexture.LoadFromFile("assets/ui/button_test.png");
+  S_CUIControlTexture tex(new CUIControlTexture(&m_buttonTexture));
+  tex->x = 80;
+  tex->y = 40;
+  this->AddControl(tex);
   CSceneUI::OnInit();
 
   m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
-
-  // Tell OpenGL that we're done with compiling shaders.
-  // Does not disable shader compilation, but shader compilation
-  // will take more time to warm up in the future!
-  if (glReleaseShaderCompiler) {
-    glReleaseShaderCompiler();
-  }
 }
 
 void CSceneMenu::OnUpdate() {

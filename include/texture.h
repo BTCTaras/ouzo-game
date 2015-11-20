@@ -13,8 +13,12 @@ public:
 
   void Use();
 
+  unsigned int GetWidth();
+  unsigned int GetHeight();
+
 private:
   unsigned int m_id;
+  unsigned int m_width, m_height;
 };
 
 typedef std::shared_ptr<CTexture> S_CTexture;

@@ -25,8 +25,10 @@ typedef std::shared_ptr<CUIRenderable> S_CUIRenderable;
 
 class CUISprite : public CUIRenderable {
 public:
-  CUISprite(CTexture *tex);
+  CUISprite(CTexture *tex = nullptr);
   ~CUISprite();
+
+  void SetTexture(CTexture *tex);
 
   virtual void OnRender(mvp_matrix_t &mvp);
 
@@ -41,11 +43,14 @@ typedef std::shared_ptr<CUISprite> S_CUISprite;
 
 class CUIControl {
 public:
+  CUIControl();
   virtual void HandleEvent(UIEvent &event);
 
   void AddChild(std::shared_ptr<CUIControl> control);
   std::vector< std::shared_ptr<CUIControl> >* GetChildren();
   std::vector<S_CUIRenderable>* GetRenderables();
+
+  float x, y, width, height;
 
 protected:
   void AddRenderable(S_CUIRenderable renderable);
@@ -55,12 +60,19 @@ private:
   std::vector<S_CUIRenderable> m_renderables;
 };
 
-class CUIControlBackground : public CUIControl {
+typedef std::shared_ptr<CUIControl> S_CUIControl;
+
+class CUIControlTexture : public CUIControl {
 public:
-  CUIControlBackground(CTexture *texture);
+  CUIControlTexture(CTexture *texture = nullptr);
+
+  void SetTexture(CTexture *texture);
+
+private:
+  S_CUISprite m_sprite;
 };
 
-typedef std::shared_ptr<CUIControl> S_CUIControl;
+typedef std::shared_ptr<CUIControlTexture> S_CUIControlTexture;
 
 class CSceneUI : public CScene {
 public:
@@ -69,15 +81,21 @@ public:
 
   virtual void OnInit();
 
-  void AddControl(S_CUIControl control);
+  void AddControl(std::shared_ptr<CUIControl> control);
 
   virtual void OnRender();
   virtual CTexture* GetBackgroundTexture();
 
+  void UpdateBackground();
+
+  virtual void OnResize(int width, int height);
+
 private:
-  S_CUIControl m_mainControl;
+  S_CUIControlTexture m_mainControl;
 
   mvp_matrix_t m_mvpMatrix;
   S_CProgram m_program;
+
+  int m_width, m_height;
 
 };

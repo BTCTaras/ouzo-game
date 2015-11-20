@@ -11,38 +11,58 @@
 #include <glm/gtc/type_ptr.hpp>
 
 const vertex_t QUAD_VERTICES[] = {
-  { -1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-  { -1.0f, -1.0f, 0.0f, 0.0f, 1.0f },
-  { 1.0f, 1.0f, 0.0f, 1.0f, 0.0f },
-  { 1.0f, -1.0f, 0.0f, 1.0f, 1.0f }
+  { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+  { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f },
+  { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f },
+  { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f },
 };
 
 ///
 /// CSceneUI
 ///
 
-CSceneUI::CSceneUI() {}
+CSceneUI::CSceneUI() {
+    m_mainControl.reset(new CUIControlTexture);
+}
+
 CSceneUI::~CSceneUI() {}
 
 void CSceneUI::OnInit() {
-  m_mvpMatrix.projection = glm::ortho(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f);
+  m_mvpMatrix.projection = glm::mat4(1.0f);
   m_mvpMatrix.view = glm::mat4(1.0f);
   m_mvpMatrix.model = glm::mat4(1.0f);
-
-  m_mainControl.reset(new CUIControlBackground(this->GetBackgroundTexture()));
 }
 
-void CSceneUI::AddControl(S_CUIControl control) {
+void CSceneUI::AddControl(std::shared_ptr<CUIControl> control) {
   m_mainControl->AddChild(control);
 }
 
+void CSceneUI::OnResize(int width, int height) {
+  m_width = width;
+  m_height = height;
+  m_mvpMatrix.projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
+  this->UpdateBackground();
+}
+
+void CSceneUI::UpdateBackground() {
+  m_mainControl->SetTexture(this->GetBackgroundTexture());
+  m_mainControl->width = m_width;
+  m_mainControl->height = m_height;
+}
+
 void CSceneUI::OnRender() {
+
   for (S_CUIRenderable renderable : *m_mainControl->GetRenderables()) {
+    m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(m_mainControl->x, m_mainControl->y, 0.0f));
+    m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(m_mainControl->width, m_mainControl->height, 1.0f));
     renderable->OnRender(m_mvpMatrix);
   }
-  
+
+
   for (S_CUIControl control : *m_mainControl->GetChildren()) {
-    for (S_CUIRenderable renderable : *m_mainControl->GetRenderables()) {
+    for (S_CUIRenderable renderable : *control->GetRenderables()) {
+      m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(control->x, control->y, 0.0f));
+      m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(control->width, control->height, 1.0f));
       renderable->OnRender(m_mvpMatrix);  // This is pretty naive.
                                           // Replace with instancing (& multidraw indirect).
     }
@@ -56,6 +76,12 @@ CTexture* CSceneUI::GetBackgroundTexture() {
 ///
 /// CUIControl
 ///
+
+CUIControl::CUIControl()
+  : x(0.0f), y(0.0f),
+    width(0.0f), height(0.0f)
+{
+}
 
 void CUIControl::AddChild(S_CUIControl control) {
   m_children.push_back(control);
@@ -80,9 +106,11 @@ std::vector<S_CUIRenderable>* CUIControl::GetRenderables() {
 unsigned int CUISprite::s_globalSpriteBuffer = 0;
 unsigned int CUISprite::s_activeSprites = 0;
 
-CUISprite::CUISprite(CTexture *tex)
-  : m_texture(tex)
-{
+CUISprite::CUISprite(CTexture *tex) {
+  if (tex != nullptr) {
+    this->SetTexture(tex);
+  }
+
   if (s_globalSpriteBuffer == 0) {
     glGenBuffers(1, &s_globalSpriteBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, s_globalSpriteBuffer);
@@ -111,6 +139,10 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
   GFX->End();
 }
 
+void CUISprite::SetTexture(CTexture *tex) {
+  m_texture = tex;
+}
+
 ///
 /// CUIControl
 ///
@@ -123,6 +155,18 @@ void CUIControl::HandleEvent(UIEvent &event) {
 /// CUIControlBackground
 ///
 
-CUIControlBackground::CUIControlBackground(CTexture *tex) {
-  this->AddRenderable(S_CUISprite(new CUISprite(tex)));
+CUIControlTexture::CUIControlTexture(CTexture *tex)
+  : m_sprite(new CUISprite(nullptr))
+{
+  if (tex != nullptr) {
+    m_sprite->SetTexture(tex);
+    this->width = tex->GetWidth();
+    this->height = tex->GetHeight();
+  }
+
+  this->AddRenderable(m_sprite);
+}
+
+void CUIControlTexture::SetTexture(CTexture *tex) {
+  m_sprite->SetTexture(tex);
 }

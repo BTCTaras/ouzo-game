@@ -26,6 +26,7 @@ CTexture::CTexture(const char *file)
 void CTexture::LoadFromFile(const char *file) {
   FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
   FIBITMAP *image = FreeImage_ConvertTo32Bits(bitmap); // Make sure there is an alpha channel
+  FreeImage_FlipVertical(image); // Images are loaded upside down for some reason
 
   if (!bitmap) {
     fprintf(stderr, "Failed to load image \"%s\"!!\n", file);
@@ -35,13 +36,21 @@ void CTexture::LoadFromFile(const char *file) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-  int width = FreeImage_GetWidth(image);
-  int height = FreeImage_GetHeight(image);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height,
+  m_width = FreeImage_GetWidth(image);
+  m_height = FreeImage_GetHeight(image);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height,
                0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image));
 
   FreeImage_Unload(image);
   FreeImage_Unload(bitmap);
+}
+
+unsigned int CTexture::GetWidth() {
+  return m_width;
+}
+
+unsigned int CTexture::GetHeight() {
+  return m_height;
 }
 
 void CTexture::Use() {

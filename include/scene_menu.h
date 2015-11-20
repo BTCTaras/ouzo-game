@@ -17,5 +17,6 @@ public:
   virtual CTexture* GetBackgroundTexture();
 
 private:
+  CTexture m_buttonTexture;
   CTexture m_texture;
 };
