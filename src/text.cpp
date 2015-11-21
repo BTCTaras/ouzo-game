@@ -52,29 +52,39 @@ CText::~CText() {
 void CText::CreateTextBuffer() {
   std::vector<vertex_t> vertices;
 
-  for (size_t i = 0; i < m_text.length(); ++i) {
-    float x1 = i * m_size;
-    float y1 = 0;
-    float x2 = i * m_size + m_size;
-    float y2 = m_size;
+  float x = 0;
+  float y = 0;
 
+  for (size_t i = 0; i < m_text.length(); ++i) {
     unsigned long c = m_text[i];
+    if (c == (unsigned long) ' ') {
+      x += m_size / 4; // TODO: Un-hardcode this.
+    }
+
     glyph_data_t *gdata = m_font->GetGlyphData(c);
 
+    float x2 = x + gdata->bitmapLeft;
+    float y2 = -y - gdata->bitmapTop;
+    float w = gdata->width;
+    float h = gdata->height;
+
     float u1 = gdata->u1;
-    float v1 = gdata->v1;
+    float v1 = gdata->v2 - gdata->v1;
     float u2 = gdata->u2;
-    float v2 = gdata->v2;
+    float v2 = v1 - gdata->v2;
 
     // Triangle 1
-    vertices.push_back({ x1, y1, 0.0f, u1, v1 });
-    vertices.push_back({ x1, y2, 0.0f, u1, v2 });
-    vertices.push_back({ x2, y1, 0.0f, u2, v1 });
+    vertices.push_back({ x2,      h + y2,      0.0f, u1, v1 });
+    vertices.push_back({ x2,      y2,           0.0f, u1, v2 });
+    vertices.push_back({ x2 + w,  h + y2,      0.0f, u2, v1 });
 
     // Triangle 2
-    vertices.push_back({ x1, y2, 0.0f, u1, v2 });
-    vertices.push_back({ x2, y2, 0.0f, u2, v2 });
-    vertices.push_back({ x2, y1, 0.0f, u2, v1 });
+    vertices.push_back({ x2,      y2,           0.0f, u1, v2 });
+    vertices.push_back({ x2 + w,  y2,           0.0f, u2, v2 });
+    vertices.push_back({ x2 + w,  h + y2,      0.0f, u2, v1 });
+
+    x += gdata->advanceX >> 6;
+    y += gdata->advanceY >> 6;
   }
 
   m_fontBufferSize = vertices.size() * sizeof(vertex_t);
@@ -99,7 +109,12 @@ void CText::Render(mvp_matrix_t &mvp) {
   GFX->Begin(mvp, s_fontProgram);
   glUniform3f(s_fontProgram->GetUniformLocation("u_FontColour"), m_colour.r, m_colour.g, m_colour.b);
   atlas->Use();
-  glDrawArrays(GL_TRIANGLES, 0, m_fontBufferSize);
+
+  //glBindTexture(GL_TEXTURE_2D, 1); // Uses the button texture to make wireframe visible.
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Turn on wireframe.
+  glDrawArrays(GL_TRIANGLES, 0, m_fontBufferSize); // Render text.
+  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Turn off wireframe.
+
   GFX->End();
 }
 

@@ -95,12 +95,12 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
     gdata.height = g->bitmap.rows;
     gdata.bitmapLeft = g->bitmap_left;
     gdata.bitmapTop = g->bitmap_top;
-    gdata.advanceX = (unsigned int)(g->advance.x * 64.0f);
-    gdata.advanceY = (unsigned int)(g->advance.y * 64.0f);
+    gdata.advanceX = g->advance.x;
+    gdata.advanceY = g->advance.y;
     gdata.u1 = (size * i) / atlasWidth;
     gdata.v1 = 0.0f;
-    gdata.u2 = (size * i + size) / atlasWidth;
-    gdata.v2 = size / atlasHeight;
+    gdata.u2 = (size * i + gdata.width) / atlasWidth;
+    gdata.v2 = gdata.height / atlasHeight;
     m_glyphData[c] = gdata;
 
     glTexSubImage2D(GL_TEXTURE_2D, 0, size * i, 0, g->bitmap.width, g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, g->bitmap.buffer);

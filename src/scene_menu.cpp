@@ -32,8 +32,7 @@ void CSceneMenu::OnInit() {
 
   m_font.LoadFromFile("assets/fonts/Ubuntu-C.ttf");
   m_font.CreateAtlas(128);
-
-  m_helloWorld.InitText(&m_font, 64, U"Hello World!");
+  m_helloWorld.InitText(&m_font, 128, U"Hello World!");
 
   // We're done compiling shaders now.
   if (glReleaseShaderCompiler) {
@@ -44,7 +43,7 @@ void CSceneMenu::OnInit() {
 void CSceneMenu::OnRender() {
   CSceneUI::OnRender();
 
-  m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 200.0f, 0.0f));
+  m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 300.0f, 0.0f));
   m_helloWorld.Render(m_mvpMatrix);
 }
 
