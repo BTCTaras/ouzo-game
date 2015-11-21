@@ -145,11 +145,11 @@ CUISprite::~CUISprite() {
 
 void CUISprite::OnRender(mvp_matrix_t &mvp) {
   m_texture->Use();
-  GFX->Begin(mvp);
 
   glBindBuffer(GL_ARRAY_BUFFER, s_globalSpriteBuffer);
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
+  GFX->Begin(mvp);
+  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
   GFX->End();
 }
 

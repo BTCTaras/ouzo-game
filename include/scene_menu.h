@@ -4,6 +4,8 @@
 #include "shader.h"
 #include "graphics.h"
 #include "texture.h"
+#include "font.h"
+#include "text.h"
 
 class CSceneMenu : public CSceneUI {
 public:
@@ -20,7 +22,8 @@ public:
 private:
   CTexture m_buttonTexture;
   CTexture m_texture;
-  CTexture m_fontTexture;
 
   S_CProgram m_fontProgram;
+  CFont m_font;
+  CText m_helloWorld;
 };

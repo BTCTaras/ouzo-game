@@ -1,4 +1,5 @@
 #include "font.h"
+#include "font_chars.h"
 
 #include <GL/glew.h>
 
@@ -20,9 +21,14 @@ static void initFreeType() {
   }
 }
 
-CFont::CFont(const char *file, unsigned int index) {
+CFont::CFont() {
   initFreeType(); // Only initialises when needed. Okay to call every time.
   s_fontRefCount++;
+}
+
+CFont::CFont(const char *file, unsigned int index)
+  : CFont()
+{
   this->LoadFromFile(file, index);
 }
 
@@ -43,12 +49,13 @@ void CFont::LoadFromFile(const char *file, unsigned int index) {
   }
 }
 
-void CFont::CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCount, unsigned long *chars) {
+S_CTexture CFont::CreateAtlas(unsigned int size) {
+  S_CTexture tex(new CTexture);
   unsigned int handle = tex->GetOpenGLHandle();
 
   if (handle <= 0) {
-    fprintf(stderr, "CFont::CreateGlyphTexture: Texture passed has invalid OpenGL handle!!\n");
-    return;
+    fprintf(stderr, "CFont::CreateAtlas: Texture passed has invalid OpenGL handle!!\n");
+    return nullptr;
   }
 
   // Create the bitmaps
@@ -63,13 +70,17 @@ void CFont::CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCoun
 
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
+  size_t charCount = sizeof(FONT_CHARS) / sizeof(FONT_CHARS[0]);
   const size_t texSize = size * size * charCount * sizeof(unsigned char);
   unsigned char texBuf[texSize];
   memset(texBuf, 0, texSize);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size * charCount, size, 0, GL_RED, GL_UNSIGNED_BYTE, texBuf);
 
+  const float atlasWidth = size * charCount;
+  const float atlasHeight = size;
+
   for (size_t i = 0; i < charCount; ++i) {
-    unsigned long c = chars[i];
+    unsigned long c = FONT_CHARS[i];
 
     int error = FT_Load_Char(m_fontFace, c, FT_LOAD_RENDER);
     if (error) {
@@ -78,8 +89,38 @@ void CFont::CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCoun
     }
 
     FT_GlyphSlot g = m_fontFace->glyph;
+
+    glyph_data_t gdata;
+    gdata.width = g->bitmap.width;
+    gdata.height = g->bitmap.rows;
+    gdata.bitmapLeft = g->bitmap_left;
+    gdata.bitmapTop = g->bitmap_top;
+    gdata.advanceX = (unsigned int)(g->advance.x * 64.0f);
+    gdata.advanceY = (unsigned int)(g->advance.y * 64.0f);
+    gdata.u1 = (size * i) / atlasWidth;
+    gdata.v1 = 0.0f;
+    gdata.u2 = (size * i + size) / atlasWidth;
+    gdata.v2 = size / atlasHeight;
+    m_glyphData[c] = gdata;
+
     glTexSubImage2D(GL_TEXTURE_2D, 0, size * i, 0, g->bitmap.width, g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, g->bitmap.buffer);
   }
+
+  m_atlasCache[size] = tex;
+  return tex;
+}
+
+S_CTexture CFont::GetAtlas(unsigned int size) {
+  if (m_atlasCache.find(size) == m_atlasCache.end()) {
+    fprintf(stderr, "CFont::GetAtlas: No atlas with size %d!!\n", size);
+    return nullptr;
+  }
+
+  return m_atlasCache[size];
+}
+
+glyph_data_t* CFont::GetGlyphData(unsigned long character) {
+  return &m_glyphData[character];
 }
 
 CFont::~CFont() {

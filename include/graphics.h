@@ -18,6 +18,10 @@ typedef struct {
   glm::mat4 model;
 } mvp_matrix_t;
 
+typedef struct {
+  float r, g, b;
+} colour_t;
+
 class CGraphics {
 public:
   ~CGraphics();
