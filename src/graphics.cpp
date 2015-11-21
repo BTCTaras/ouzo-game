@@ -41,16 +41,16 @@ void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
     fprintf(stderr, "WARNING: CGraphics has no VAO!!\n");
   }
 
-  if (program != nullptr) {
-    program->Use();
-    glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
+  S_CProgram prog = (program != nullptr) ? program : m_defaultProgram;
+  prog->Use();
 
-    unsigned int mvpLoc = program->GetUniformLocation("u_MVPMatrix");
-    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
+  glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
 
-    unsigned int texLoc = program->GetUniformLocation("u_Texture");
-    glUniform1i(texLoc, 0);
-  }
+  unsigned int mvpLoc = prog->GetUniformLocation("u_MVPMatrix");
+  glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
+
+  unsigned int texLoc = prog->GetUniformLocation("u_Texture");
+  glUniform1i(texLoc, 0);
 
   glBindVertexArray(m_vao);
 
@@ -68,4 +68,6 @@ void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 void CGraphics::End() {
   glDisableVertexAttribArray(CGraphics::VERT_ATTRIB_TEX_COORDS);
   glDisableVertexAttribArray(CGraphics::VERT_ATTRIB_POS);
+
+  glUseProgram(0);
 }

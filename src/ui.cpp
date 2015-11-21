@@ -51,13 +51,11 @@ void CSceneUI::UpdateBackground() {
 }
 
 void CSceneUI::OnRender() {
-
   for (S_CUIRenderable renderable : *m_mainControl->GetRenderables()) {
     m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(m_mainControl->x, m_mainControl->y, 0.0f));
     m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(m_mainControl->width, m_mainControl->height, 1.0f));
     renderable->OnRender(m_mvpMatrix);
   }
-
 
   for (S_CUIControl control : *m_mainControl->GetChildren()) {
     for (S_CUIRenderable renderable : *control->GetRenderables()) {
@@ -146,8 +144,8 @@ CUISprite::~CUISprite() {
 }
 
 void CUISprite::OnRender(mvp_matrix_t &mvp) {
-  GFX->Begin(mvp, GFX->GetDefaultProgram());
   m_texture->Use();
+  GFX->Begin(mvp);
 
   glBindBuffer(GL_ARRAY_BUFFER, s_globalSpriteBuffer);
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

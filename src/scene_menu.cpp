@@ -48,17 +48,17 @@ void CSceneMenu::OnInit() {
 }
 
 void CSceneMenu::OnRender() {
-  CSceneUI::OnRender();
+  //CSceneUI::OnRender();
 
-  m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f));
-  m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(16.0f, 16.0f, 1.0f));
-  GFX->Begin(m_mvpMatrix, m_fontProgram);
+  m_mvpMatrix.model = glm::scale(glm::mat4(1.0f), glm::vec3(384.0f, 128.0f, 1.0f));
+
+  m_fontTexture.Use();
+  GFX->Begin(m_mvpMatrix);
 
   glUniform1f(m_fontProgram->GetUniformLocation("u_Char"), 0.0f);
-  glUniform1f(m_fontProgram->GetUniformLocation("u_CharCount"), 3.0f);
+  glUniform1f(m_fontProgram->GetUniformLocation("u_FontSize"), 16.0f);
 
   glBindBuffer(GL_ARRAY_BUFFER, CUISprite::s_globalSpriteBuffer);
-  glBindTexture(GL_TEXTURE_3D, m_fontTexture.GetOpenGLHandle());
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
   GFX->End();

@@ -57,54 +57,37 @@ void CFont::CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCoun
     return;
   }
 
-  size_t strideBytes = size * size * (sizeof(unsigned char) * 3 + sizeof(unsigned int));
-  size_t stride = size * size;
-
-  unsigned char *texBuffer = (unsigned char*)malloc(strideBytes * charCount);
-  printf("Allocating %d bytes of memory\n", strideBytes * charCount);
-
-  if (texBuffer == NULL) {
-    fprintf(stderr, "Could not allocate a font texture buffer! Are we out of memory?\n");
-    return;
-  }
-
   // Create the bitmaps
   FT_Set_Pixel_Sizes(m_fontFace, size, size);
 
+  // Upload all glyphs to video memory
+  glBindTexture(GL_TEXTURE_2D, handle);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+  const size_t texSize = size * size * charCount * sizeof(unsigned char);
+  unsigned char texBuf[texSize];
+  memset(texBuf, 0, texSize);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size * charCount, size, 0, GL_RED, GL_UNSIGNED_BYTE, texBuf);
+
   for (size_t i = 0; i < charCount; ++i) {
     unsigned long c = chars[i];
-    unsigned int index = FT_Get_Char_Index(m_fontFace, c);
 
-    int error = FT_Load_Glyph(m_fontFace, index, FT_LOAD_DEFAULT);
+    int error = FT_Load_Char(m_fontFace, c, FT_LOAD_RENDER);
     if (error) {
       fprintf(stderr, "Error loading glyph for character %#06x!!\n", (unsigned int)c);
       continue;
     }
 
-    error = FT_Render_Glyph(m_fontFace->glyph, FT_RENDER_MODE_NORMAL);
-    if (error) {
-      fprintf(stderr, "Error rendering glyph for character %#06x!!\n", (unsigned int)c);
-      continue;
-    }
-
-    FT_GlyphSlot glyph = m_fontFace->glyph;
-
-    for (unsigned int i = 0; i < size * size; ++i) {
-      unsigned char pixel = glyph->bitmap.buffer[i];
-      texBuffer[i * stride + (i++)] = pixel;
-    }
+    FT_GlyphSlot g = m_fontFace->glyph;
+    glTexSubImage2D(GL_TEXTURE_2D, 0, size * i, 0, g->bitmap.width, g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, g->bitmap.buffer);
   }
-
-  // Upload all glyphs to video memory
-  glBindTexture(GL_TEXTURE_3D, handle);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-  glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB8, size, size, charCount, 0, GL_RGB, GL_UNSIGNED_BYTE, texBuffer);
-
-  free(texBuffer);
 }
 
 CFont::~CFont() {
-
+  FT_Done_Face(m_fontFace);
 }
