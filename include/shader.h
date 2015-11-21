@@ -74,7 +74,7 @@ public:
     ///
     /// Retrieves a uniform location from the uniform cache.
     ///
-    unsigned int GetUniformLocation(const char *name);
+    int GetUniformLocation(const char *name, bool ignoreUniformNotFound = false);
 
     ///
     /// Same as calling glUseProgram.

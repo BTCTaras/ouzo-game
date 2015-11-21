@@ -16,14 +16,15 @@ void CGraphics::Init() {
   glGenVertexArrays(1, &m_vao);
   glEnable(GL_TEXTURE_2D);
 
-  m_defaultProgram.reset(new CProgram);
-
   S_CShader shaders[] = {
     S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/diffuse.vsh")),
     S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/diffuse.fsh"))
   };
 
-  m_defaultProgram->LoadFromShaders(2, shaders);
+  m_defaultProgram.reset(new CProgram(2, shaders));
+
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
 CGraphics::~CGraphics() {
@@ -46,10 +47,10 @@ void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 
   glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
 
-  unsigned int mvpLoc = prog->GetUniformLocation("u_MVPMatrix");
+  unsigned int mvpLoc = prog->GetUniformLocation("u_MVPMatrix", true);
   glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
 
-  unsigned int texLoc = prog->GetUniformLocation("u_Texture");
+  unsigned int texLoc = prog->GetUniformLocation("u_Texture", true);
   glUniform1i(texLoc, 0);
 
   glBindVertexArray(m_vao);

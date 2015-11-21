@@ -5,9 +5,9 @@ in vec2 sh_TexCoords;
 out vec4 out_Colour;
 
 uniform sampler2D u_Texture;
-uniform float u_Char;
-uniform float u_FontSize;
+uniform vec3 u_FontColour;
 
 void main() {
-  out_Colour = texture(u_Texture, sh_TexCoords);
+  float luminance = texture(u_Texture, sh_TexCoords).r;
+  out_Colour = vec4(u_FontColour.rgb, luminance);
 }

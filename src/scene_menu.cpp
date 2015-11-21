@@ -40,23 +40,27 @@ void CSceneMenu::OnInit() {
 
   CFont font("assets/fonts/Ubuntu-C.ttf");
 
-  unsigned long chars[] = {
-    0x41, 0x42, 0x43
-  };
+  unsigned long chars[26 * 2];
 
-  font.CreateGlyphTexture(&m_fontTexture, 16, 3, chars);
+  // Latin alphabet
+  for (unsigned long i = 0x41; i < 0x41 + 26 * 2; ++i) {
+    chars[i - 0x41] = i;
+  }
+
+  font.CreateGlyphTexture(&m_fontTexture, 128, 3, chars);
 }
 
 void CSceneMenu::OnRender() {
-  //CSceneUI::OnRender();
+  CSceneUI::OnRender();
 
-  m_mvpMatrix.model = glm::scale(glm::mat4(1.0f), glm::vec3(384.0f, 128.0f, 1.0f));
+  m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(400.0f, 300.0f, 0.0f));
+  m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(384.0f, 128.0f, 1.0f));
 
   m_fontTexture.Use();
-  GFX->Begin(m_mvpMatrix);
+  GFX->Begin(m_mvpMatrix, m_fontProgram);
 
-  glUniform1f(m_fontProgram->GetUniformLocation("u_Char"), 0.0f);
-  glUniform1f(m_fontProgram->GetUniformLocation("u_FontSize"), 16.0f);
+  glUniform1i(m_fontProgram->GetUniformLocation("u_Char", true), 0);
+  glUniform3f(m_fontProgram->GetUniformLocation("u_FontColour", true), 0.0f, 1.0f, 1.0f);
 
   glBindBuffer(GL_ARRAY_BUFFER, CUISprite::s_globalSpriteBuffer);
   glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
