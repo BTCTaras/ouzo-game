@@ -48,6 +48,11 @@ void CSceneMenu::OnInit() {
   }
 
   font.CreateGlyphTexture(&m_fontTexture, 128, 3, chars);
+
+  // We're done compiling shaders now.
+  if (glReleaseShaderCompiler) {
+    glReleaseShaderCompiler();
+  }
 }
 
 void CSceneMenu::OnRender() {

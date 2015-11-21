@@ -25,6 +25,11 @@ void CGraphics::Init() {
 
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  GLint textureSize;
+  glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
+
+  printf("OpenGL max texture size is %dx%d\n", textureSize, textureSize);
 }
 
 CGraphics::~CGraphics() {
