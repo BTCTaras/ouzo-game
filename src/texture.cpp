@@ -9,8 +9,14 @@ CTexture::CTexture() {
   glGenTextures(1, &m_id);
 }
 
-CTexture::CTexture(const CTexture &tex) {
-  m_id = tex.m_id;
+
+CTexture::CTexture(unsigned int id) {
+  m_id = id;
+}
+
+CTexture::CTexture(const CTexture &tex)
+  : CTexture(tex.m_id)
+{
 }
 
 CTexture::~CTexture() {
@@ -41,6 +47,8 @@ void CTexture::LoadFromFile(const char *file) {
 
   if (glewIsSupported("GL_ARB_texture_compression")) {
     // Compress if we can
+    // TODO: DXT3 might not be supported on all platforms.
+    // -> Perform a check that figures out whether it's available.
     glTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT3_EXT, m_width, m_height,
                  0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(image));
   } else {
@@ -50,6 +58,10 @@ void CTexture::LoadFromFile(const char *file) {
 
   FreeImage_Unload(image);
   FreeImage_Unload(bitmap);
+}
+
+unsigned int CTexture::GetOpenGLHandle() {
+  return m_id;
 }
 
 unsigned int CTexture::GetWidth() {

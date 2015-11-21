@@ -43,15 +43,14 @@ void CGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 
   if (program != nullptr) {
     program->Use();
+    glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
+
+    unsigned int mvpLoc = program->GetUniformLocation("u_MVPMatrix");
+    glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
+
+    unsigned int texLoc = program->GetUniformLocation("u_Texture");
+    glUniform1i(texLoc, 0);
   }
-
-  glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
-
-  unsigned int mvpLoc = program->GetUniformLocation("u_MVPMatrix");
-  glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
-
-  unsigned int texLoc = program->GetUniformLocation("u_Texture");
-  glUniform1i(texLoc, 0);
 
   glBindVertexArray(m_vao);
 

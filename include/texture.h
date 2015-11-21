@@ -6,6 +6,7 @@ class CTexture {
 public:
   CTexture();
   CTexture(const char *file);
+  CTexture(unsigned int id);
   CTexture(const CTexture &tex);
   ~CTexture();
 
@@ -15,6 +16,8 @@ public:
 
   unsigned int GetWidth();
   unsigned int GetHeight();
+
+  unsigned int GetOpenGLHandle();
 
 private:
   unsigned int m_id;

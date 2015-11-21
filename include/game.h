@@ -27,6 +27,11 @@ public:
 
 	CGraphics *GetGraphics();
 
+	unsigned int GetWidth();
+	unsigned int GetHeight();
+
+	unsigned int m_width, m_height;
+
 private:
 	void InitGL();
 

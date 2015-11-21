@@ -37,10 +37,12 @@ public:
 
   virtual void OnRender(mvp_matrix_t &mvp);
 
+static unsigned int s_globalSpriteBuffer;
+
 private:
   CTexture *m_texture;
 
-  static unsigned int s_globalSpriteBuffer;
+
   static unsigned int s_activeSprites;
 };
 
@@ -96,10 +98,11 @@ public:
   virtual void OnResize(int width, int height);
   virtual void OnClick(unsigned int button, float width, float height);
 
+protected:
+  mvp_matrix_t m_mvpMatrix;
+
 private:
   S_CUIControlTexture m_mainControl;
-
-  mvp_matrix_t m_mvpMatrix;
   S_CProgram m_program;
 
   int m_width, m_height;

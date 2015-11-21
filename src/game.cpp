@@ -77,7 +77,17 @@ CGame::~CGame() {
 	glfwTerminate();
 }
 
+unsigned int CGame::GetWidth() {
+	return m_width;
+}
+
+unsigned int CGame::GetHeight() {
+	return m_height;
+}
+
 void GLFW_OnResize(GLFWwindow *window, int width, int height) {
+	CGame::Inst->m_width = width;
+	CGame::Inst->m_height = height;
 	glViewport(0, 0, width, height);
 	CGame::Inst->GetScene()->OnResize(width, height);
 }

@@ -13,10 +13,14 @@ public:
   virtual void OnInit();
   virtual void OnUpdate();
   virtual void OnLeave(S_CScene *scene);
+  virtual void OnRender();
 
   virtual CTexture* GetBackgroundTexture();
 
 private:
   CTexture m_buttonTexture;
   CTexture m_texture;
+  CTexture m_fontTexture;
+
+  S_CProgram m_fontProgram;
 };
