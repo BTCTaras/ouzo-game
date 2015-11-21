@@ -30,7 +30,6 @@ public:
   void CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCount, unsigned long *chars);
 
 private:
-
   FT_Face m_fontFace;
   CTexture m_glyphTexture;
 };

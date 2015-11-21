@@ -8,27 +8,21 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-static FT_Library s_freetype;
+static FT_Library s_freetype = NULL;
+static size_t s_fontRefCount = 0;
 
 static void initFreeType() {
-  bool done = false;
-  if (!done) {
+  if (s_freetype == NULL) {
     int error = FT_Init_FreeType(&s_freetype);
     if (error) {
       fprintf(stderr, "Failed to initialise FreeType!!\n");
-      goto done;
     }
-
-    goto done;
-
-    done:
-      done = true;
-      return;
   }
 }
 
 CFont::CFont(const char *file, unsigned int index) {
   initFreeType(); // Only initialises when needed. Okay to call every time.
+  s_fontRefCount++;
   this->LoadFromFile(file, index);
 }
 
@@ -79,7 +73,7 @@ void CFont::CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCoun
 
     int error = FT_Load_Char(m_fontFace, c, FT_LOAD_RENDER);
     if (error) {
-      fprintf(stderr, "Error loading glyph for character %#06x!!\n", (unsigned int)c);
+      fprintf(stderr, "Error loading glyph for character %#010x!!\n", (unsigned int)c);
       continue;
     }
 
@@ -89,5 +83,10 @@ void CFont::CreateGlyphTexture(CTexture *tex, unsigned int size, size_t charCoun
 }
 
 CFont::~CFont() {
+  s_fontRefCount--;
   FT_Done_Face(m_fontFace);
+
+  if (s_freetype != NULL && s_fontRefCount == 0) {
+    FT_Done_FreeType(s_freetype);
+  }
 }
