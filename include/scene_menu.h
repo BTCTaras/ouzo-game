@@ -12,10 +12,10 @@ public:
   CSceneMenu();
   ~CSceneMenu();
 
-  virtual void OnInit();
   virtual void OnUpdate();
   virtual void OnLeave(S_CScene *scene);
   virtual void OnRender();
+  virtual void OnInitUI();
 
   virtual CTexture* GetBackgroundTexture();
 

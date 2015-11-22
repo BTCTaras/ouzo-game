@@ -56,7 +56,6 @@ public:
 
 private:
   FT_Face m_fontFace;
-  CTexture m_glyphTexture;
 
   std::map<unsigned long, glyph_data_t> m_glyphData;
   std::map<unsigned int, S_CTexture> m_atlasCache;

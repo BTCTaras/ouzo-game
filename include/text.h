@@ -6,6 +6,7 @@
 #include "font.h"
 
 #include <string>
+#include <memory>
 
 class CText {
 public:
@@ -15,6 +16,8 @@ public:
 
   void SetColour(colour_t colour);
   void InitText(CFont *font, unsigned int size, const std::u32string &text);
+
+  void SetText(const std::u32string &text);
 
   void Render(mvp_matrix_t &mvp);
   unsigned int GetBuffer();
@@ -33,3 +36,5 @@ private:
 
   CFont *m_font;
 };
+
+typedef std::shared_ptr<CFont> S_CFont;

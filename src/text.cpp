@@ -40,8 +40,12 @@ void CText::InitText(CFont *font, unsigned int size, const std::u32string &text)
 
   m_size = size;
   m_font = font;
-  m_text = text;
 
+  this->SetText(text);
+}
+
+void CText::SetText(const std::u32string &text) {
+  m_text = text;
   this->CreateTextBuffer();
 }
 

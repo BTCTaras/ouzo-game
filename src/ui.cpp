@@ -23,6 +23,7 @@ const vertex_t QUAD_VERTICES[] = {
 
 CSceneUI::CSceneUI() {
     m_mainControl.reset(new CUIControlTexture);
+    m_mainControl->z = -1.0f;
 }
 
 CSceneUI::~CSceneUI() {}
@@ -31,6 +32,8 @@ void CSceneUI::OnInit() {
   m_mvpMatrix.projection = glm::mat4(1.0f);
   m_mvpMatrix.view = glm::mat4(1.0f);
   m_mvpMatrix.model = glm::mat4(1.0f);
+
+  this->OnInitUI();
 }
 
 void CSceneUI::AddControl(std::shared_ptr<CUIControl> control) {
@@ -52,15 +55,13 @@ void CSceneUI::UpdateBackground() {
 
 void CSceneUI::OnRender() {
   for (S_CUIRenderable renderable : *m_mainControl->GetRenderables()) {
-    m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(m_mainControl->x, m_mainControl->y, 0.0f));
-    m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(m_mainControl->width, m_mainControl->height, 1.0f));
+    m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(m_mainControl->x, m_mainControl->y, m_mainControl->z));
     renderable->OnRender(m_mvpMatrix);
   }
 
   for (S_CUIControl control : *m_mainControl->GetChildren()) {
     for (S_CUIRenderable renderable : *control->GetRenderables()) {
-      m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(control->x, control->y, 0.0f));
-      m_mvpMatrix.model = glm::scale(m_mvpMatrix.model, glm::vec3(control->width, control->height, 1.0f));
+      m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(control->x, control->y, control->z));
       renderable->OnRender(m_mvpMatrix);  // This is pretty naive.
                                           // Replace with instancing (& multidraw indirect).
     }
@@ -92,7 +93,7 @@ void CSceneUI::OnClick(unsigned int button, float x, float y) {
 ///
 
 CUIControl::CUIControl()
-  : x(0.0f), y(0.0f),
+  : x(0.0f), y(0.0f), z(0.0f),
     width(0.0f), height(0.0f)
 {
 }
@@ -144,6 +145,7 @@ CUISprite::~CUISprite() {
 }
 
 void CUISprite::OnRender(mvp_matrix_t &mvp) {
+  mvp.model = glm::scale(mvp.model, glm::vec3(m_texture->GetWidth(), m_texture->GetHeight(), 1.0f));
   m_texture->Use();
 
   glBindBuffer(GL_ARRAY_BUFFER, s_globalSpriteBuffer);
@@ -158,9 +160,24 @@ void CUISprite::SetTexture(CTexture *tex) {
 }
 
 ///
+/// CUIText
+///
+CUIText::CUIText(CText *text)
+  : m_text(text)
+{
+}
+
+void CUIText::SetText(const std::u32string &text) {
+  m_text->SetText(text);
+}
+
+void CUIText::OnRender(mvp_matrix_t &mvp) {
+  m_text->Render(mvp);
+}
+
+///
 /// CUIControl
 ///
-
 void CUIControl::HandleEvent(UIEvent event, ui_event_params_t &params) {
   if (event == UIEvent::CLICK) {
     printf("Got clicked at %f, %f with button %d\n", params.x, params.y, params.button);
@@ -168,7 +185,21 @@ void CUIControl::HandleEvent(UIEvent event, ui_event_params_t &params) {
 }
 
 ///
-/// CUIControlBackground
+/// CUIControlText
+///
+CUIControlText::CUIControlText(CFont *font, const std::u32string &text, unsigned int size)
+  : m_text(font, size, text),
+    m_uiText(new CUIText(&m_text))
+{
+  this->AddRenderable(m_uiText);
+}
+
+void CUIControlText::SetText(const std::u32string &text) {
+  m_uiText->SetText(text);
+}
+
+///
+/// CUIControlTexture
 ///
 
 CUIControlTexture::CUIControlTexture(CTexture *tex)

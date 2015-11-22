@@ -4,9 +4,11 @@
 #include "graphics.h"
 #include "shader.h"
 #include "texture.h"
+#include "text.h"
 
 #include <memory>
 #include <vector>
+#include <string>
 
 enum UIEvent {
   CLICK
@@ -48,6 +50,20 @@ private:
 
 typedef std::shared_ptr<CUISprite> S_CUISprite;
 
+class CUIText : public CUIRenderable {
+public:
+  CUIText(CText *text);
+
+  void SetText(const std::u32string &text);
+
+  virtual void OnRender(mvp_matrix_t &mvp);
+
+private:
+  CText *m_text;
+};
+
+typedef std::shared_ptr<CUIText> S_CUIText;
+
 class CUIControl {
 public:
   CUIControl();
@@ -57,7 +73,7 @@ public:
   std::vector< std::shared_ptr<CUIControl> >* GetChildren();
   std::vector<S_CUIRenderable>* GetRenderables();
 
-  float x, y, width, height;
+  float x, y, z, width, height;
 
 protected:
   void AddRenderable(S_CUIRenderable renderable);
@@ -81,12 +97,26 @@ private:
 
 typedef std::shared_ptr<CUIControlTexture> S_CUIControlTexture;
 
+class CUIControlText : public CUIControl {
+public:
+  CUIControlText(CFont *font, const std::u32string &text, unsigned int size);
+
+  void SetText(const std::u32string &text);
+
+private:
+  CText m_text;
+  S_CUIText m_uiText;
+};
+
+typedef std::shared_ptr<CUIControlText> S_CUIControlText;
+
 class CSceneUI : public CScene {
 public:
   CSceneUI();
   virtual ~CSceneUI();
 
   virtual void OnInit();
+  virtual void OnInitUI() = 0;
 
   void AddControl(std::shared_ptr<CUIControl> control);
 

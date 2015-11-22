@@ -5,6 +5,7 @@
 #include "shader.h"
 #include "font.h"
 #include "text.h"
+#include "ui.h"
 
 #include <GL/glew.h>
 
@@ -18,20 +19,23 @@
 CSceneMenu::CSceneMenu() {}
 CSceneMenu::~CSceneMenu() {}
 
-void CSceneMenu::OnInit() {
+void CSceneMenu::OnInitUI() {
   m_buttonTexture.LoadFromFile("assets/ui/button_test.png");
+  m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
 
   S_CUIControlTexture tex(new CUIControlTexture(&m_buttonTexture));
   tex->x = 80;
   tex->y = 40;
+  tex->z = -0.8f;
   this->AddControl(tex);
 
-  CSceneUI::OnInit();
+  S_CUIControlText text(new CUIControlText(&m_font, U"button :)", 32));
+  text->x = 200;
+  text->y = 100;
+  text->z = 0.8f;
+  this->AddControl(text);
 
   m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
-
-  m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
-  m_helloWorld.InitText(&m_font, 128, U"Hello Lato!");
 
   // We're done compiling shaders now.
   if (glReleaseShaderCompiler) {
@@ -41,9 +45,6 @@ void CSceneMenu::OnInit() {
 
 void CSceneMenu::OnRender() {
   CSceneUI::OnRender();
-
-  m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(300.0f, 300.0f, 0.0f));
-  m_helloWorld.Render(m_mvpMatrix);
 }
 
 void CSceneMenu::OnUpdate() {
