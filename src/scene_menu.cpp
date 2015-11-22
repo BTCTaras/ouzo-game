@@ -31,7 +31,6 @@ void CSceneMenu::OnInit() {
   m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
 
   m_font.LoadFromFile("assets/fonts/Ubuntu-C.ttf");
-  m_font.CreateAtlas(128);
   m_helloWorld.InitText(&m_font, 128, U"Hello World!");
 
   // We're done compiling shaders now.

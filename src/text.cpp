@@ -112,7 +112,7 @@ void CText::Render(mvp_matrix_t &mvp) {
 
   //glBindTexture(GL_TEXTURE_2D, 1); // Uses the button texture to make wireframe visible.
   //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Turn on wireframe.
-  glDrawArrays(GL_TRIANGLES, 0, m_fontBufferSize); // Render text.
+  glDrawArrays(GL_TRIANGLES, 0, m_fontBufferSize / sizeof(vertex_t)); // Render text.
   //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Turn off wireframe.
 
   GFX->End();
