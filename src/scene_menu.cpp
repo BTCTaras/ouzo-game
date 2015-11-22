@@ -29,7 +29,7 @@ void CSceneMenu::OnInitUI() {
   tex->z = -0.8f;
   this->AddControl(tex);
 
-  S_CUIControlText text(new CUIControlText(&m_font, U"button :)", 32));
+  S_CUIControlText text(new CUIControlText(&m_font, U"butt:)", 32));
   text->x = 200;
   text->y = 100;
   text->z = 0.8f;
