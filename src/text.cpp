@@ -12,12 +12,14 @@
 
 S_CProgram CText::s_fontProgram;
 
-CText::CText() {
+CText::CText()
+  : m_fontBuffer(0)
+{
   m_colour = { 1.0f, 1.0f, 1.0f }; // Start white
 }
 
 CText::CText(CFont *font, unsigned int size, const std::u32string &text)
-  : m_fontBuffer(0)
+  : CText()
 {
   this->InitText(font, size, text);
 }
@@ -102,6 +104,7 @@ void CText::Render(mvp_matrix_t &mvp) {
 
   if (atlas == nullptr) {
     atlas = m_font->CreateAtlas(m_size);
+    this->CreateTextBuffer();
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, m_fontBuffer);
