@@ -30,8 +30,8 @@ void CSceneMenu::OnInit() {
 
   m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
 
-  m_font.LoadFromFile("assets/fonts/Ubuntu-C.ttf");
-  m_helloWorld.InitText(&m_font, 128, U"Hello World!");
+  m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
+  m_helloWorld.InitText(&m_font, 128, U"Hello Lato!");
 
   // We're done compiling shaders now.
   if (glReleaseShaderCompiler) {
