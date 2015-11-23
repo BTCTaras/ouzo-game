@@ -16,6 +16,8 @@ public:
 
 	static CGame *Inst;
 
+	void InitGame();
+
 	void StartLoop();
 	void Stop();
 

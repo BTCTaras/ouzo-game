@@ -27,6 +27,7 @@ int main(int argc, char *argv[]) {
 
 	CGame game;
 	CGame::Inst = &game;
+	game.InitGame();
 	game.SetScene(new CSceneMenu);
 	game.StartLoop();
 	return 0;

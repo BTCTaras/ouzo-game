@@ -22,6 +22,9 @@ CGame::CGame()
 	:	m_targetFPS(60),
 		m_running(true)
 {
+}
+
+void CGame::InitGame() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -34,7 +37,7 @@ CGame::CGame()
 	// Centre the window
 	const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	glfwSetWindowPos(m_window, vidmode->width / 2 - GAME_START_WIDTH / 2,
-														 vidmode->height / 2 - GAME_START_HEIGHT / 2);
+		vidmode->height / 2 - GAME_START_HEIGHT / 2);
 
 	if (!m_window) {
 		fprintf(stderr, "ERROR: Could not create window!!\n");
@@ -89,7 +92,10 @@ void GLFW_OnResize(GLFWwindow *window, int width, int height) {
 	CGame::Inst->m_width = width;
 	CGame::Inst->m_height = height;
 	glViewport(0, 0, width, height);
-	CGame::Inst->GetScene()->OnResize(width, height);
+
+	if (CGame::Inst->GetScene() != nullptr) {
+		CGame::Inst->GetScene()->OnResize(width, height);
+	}
 }
 
 void GLFW_OnClick(GLFWwindow *window, int button, int action, int mods) {
