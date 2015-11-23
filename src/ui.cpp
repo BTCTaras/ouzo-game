@@ -49,8 +49,8 @@ void CSceneUI::OnResize(int width, int height) {
 
 void CSceneUI::UpdateBackground() {
   m_mainControl->SetTexture(this->GetBackgroundTexture());
-  m_mainControl->width = m_width;
-  m_mainControl->height = m_height;
+  m_mainControl->width = (float)m_width;
+  m_mainControl->height = (float)m_height;
 }
 
 void CSceneUI::OnRender() {
@@ -207,8 +207,8 @@ CUIControlTexture::CUIControlTexture(CTexture *tex)
 {
   if (tex != nullptr) {
     m_sprite->SetTexture(tex);
-    this->width = tex->GetWidth();
-    this->height = tex->GetHeight();
+    this->width = (float)tex->GetWidth();
+    this->height = (float)tex->GetHeight();
   }
 
   this->AddRenderable(m_sprite);

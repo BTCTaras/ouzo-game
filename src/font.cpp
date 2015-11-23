@@ -77,8 +77,8 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size * charCount, size, 0, GL_RED, GL_UNSIGNED_BYTE, texBuf);
   free(texBuf);
 
-  const float atlasWidth = size * charCount;
-  const float atlasHeight = size;
+  const float atlasWidth = (float)(size * charCount);
+  const float atlasHeight = (float)size;
 
   for (size_t i = 0; i < charCount; ++i) {
     unsigned long c = FONT_CHARS[i];

@@ -71,8 +71,8 @@ void CText::CreateTextBuffer() {
 
     float x2 = x + gdata->bitmapLeft;
     float y2 = -y - gdata->bitmapTop;
-    float w = gdata->width;
-    float h = gdata->height;
+    float w = (float)gdata->width;
+    float h = (float)gdata->height;
 
     float u1 = gdata->u1;
     float v1 = gdata->v2 - gdata->v1;
