@@ -5,6 +5,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <FreeImage.h>
+
 const unsigned int GAME_START_WIDTH = 1280;
 const unsigned int GAME_START_HEIGHT = 720;
 const char *GAME_START_TITLE = "Ouzo";
@@ -28,10 +30,41 @@ void CGame::InitGame() {
 															SDL_WINDOW_SHOWN
 														);
 
+	SDL_Surface *icon = this->LoadIcon("assets/icon.png");
+	SDL_SetWindowIcon(m_window, icon);
+	SDL_FreeSurface(icon);
+
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 
 	m_graphics.reset(new CGLGraphics);
 	m_graphics->Init(m_window);
+}
+
+SDL_Surface *CGame::LoadIcon(const char *file) {
+	FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
+	FIBITMAP *image = FreeImage_ConvertTo32Bits(bitmap);
+	FreeImage_FlipVertical(image);
+
+	SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(FreeImage_GetBits(image),
+																							 FreeImage_GetWidth(image),
+																						 	 FreeImage_GetHeight(image),
+																						   FreeImage_GetBPP(image),
+																						 	 FreeImage_GetPitch(image),
+																						 	 FreeImage_GetRedMask(image),
+																						   FreeImage_GetGreenMask(image),
+																						   FreeImage_GetBlueMask(image),
+																						   0);
+
+	// Workaround to transparent being black because of FreeImage
+	// Essentially just translates black to transparent.
+  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
+
+	// Make sure the icon is properly transparent. Should be default but just making sure...
+  SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
+
+	FreeImage_Unload(image);
+  FreeImage_Unload(bitmap);
+	return surf;
 }
 
 CGame::~CGame() {

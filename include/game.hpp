@@ -41,6 +41,8 @@ private:
 
 	void TranslateEvent(SDL_Event &event);
 
+	SDL_Surface *LoadIcon(const char *file);
+
 	void OnRender();
 	void OnUpdate();
 
