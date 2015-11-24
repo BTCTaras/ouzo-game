@@ -71,6 +71,8 @@ void CGLGraphics::Init(SDL_Window *window) {
   glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
 
   printf("OpenGL max texture size is %dx%d\n", textureSize, textureSize);
+
+  m_glMaxTextureSize = textureSize;
 }
 
 CGLGraphics::~CGLGraphics() {
@@ -127,6 +129,15 @@ S_CShader CGLGraphics::CreateShader(ShaderType type, const char *file) {
 S_CProgram CGLGraphics::CreateProgram(size_t count, S_CShader *shaders) {
   S_CGLProgram program(new CGLProgram(count, shaders));
   return program;
+}
+
+S_CAtlasFactory CGLGraphics::CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) {
+  S_CGLAtlasFactory factory(new CGLAtlasFactory(width, height, channels));
+  return factory;
+}
+
+unsigned int CGLGraphics::GetMaxTextureSize() {
+  return m_glMaxTextureSize;
 }
 
 void CGLGraphics::BeginScene() {

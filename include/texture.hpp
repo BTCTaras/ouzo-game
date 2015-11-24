@@ -2,6 +2,10 @@
 
 #include <memory>
 
+enum FilterType {
+  LINEAR, NEAREST_NEIGHBOUR
+};
+
 class CTexture {
 public:
   virtual void LoadFromFile(const char *file) = 0;

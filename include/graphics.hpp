@@ -2,6 +2,7 @@
 
 #include "shader.hpp"
 #include "texture.hpp"
+#include "atlas_factory.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -87,6 +88,17 @@ public:
   /// \param[in]  shaders The shaders to create this program with.
   ///
   virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) = 0;
+
+  ///
+  /// Creates an atlas factory.
+  ///
+  /// \param[in]  width     The width of the atlases to produce.
+  /// \param[in]  height    The height of the atlases to produce.
+  /// \param[in]  channels  The amount of channels the atlas should contain.
+  ///
+  virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) = 0;
+
+  virtual unsigned int GetMaxTextureSize() = 0;
 };
 
 typedef std::shared_ptr<CGraphics> S_CGraphics;
@@ -105,6 +117,9 @@ public:
   virtual S_CTexture CreateTexture(const char *file = NULL) override;
   virtual S_CShader CreateShader(ShaderType type, const char *file = NULL) override;
   virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
+  virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
+
+  virtual unsigned int GetMaxTextureSize() override;
 
   ///
   /// The vertex attribute containing the vertex position.
@@ -121,6 +136,8 @@ private:
   S_CProgram m_defaultProgram;
   SDL_GLContext m_context;
   SDL_Window *m_window;
+
+  unsigned int m_glMaxTextureSize;
 };
 
 typedef std::shared_ptr<CGLGraphics> S_CGLGraphics;

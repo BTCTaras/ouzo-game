@@ -1,7 +1,8 @@
 #include "font.hpp"
 #include "font_chars.hpp"
-
-#include <GL/glew.h>
+#include "atlas_factory.hpp"
+#include "graphics.hpp"
+#include "game.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,35 +51,21 @@ void CFont::LoadFromFile(const char *file, unsigned int index) {
 }
 
 S_CTexture CFont::CreateAtlas(unsigned int size) {
-  S_CGLTexture tex(new CGLTexture);
-  unsigned int handle = tex->GetOpenGLHandle();
-
-  if (handle <= 0) {
-    fprintf(stderr, "CFont::CreateAtlas: Texture passed has invalid OpenGL handle!!\n");
-    return nullptr;
-  }
-
   // Create the bitmaps
   FT_Set_Pixel_Sizes(m_fontFace, size, size);
 
-  // Upload all glyphs to video memory
-  glBindTexture(GL_TEXTURE_2D, handle);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
   size_t charCount = sizeof(FONT_CHARS) / sizeof(FONT_CHARS[0]);
-  const size_t texSize = size * size * charCount * sizeof(unsigned char);
-  unsigned char *texBuf = (unsigned char*)malloc(texSize);
-  memset(texBuf, 0, texSize);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, size * charCount, size, 0, GL_RED, GL_UNSIGNED_BYTE, texBuf);
-  free(texBuf);
+  const unsigned int atlasWidth = (float)(size * charCount);
+  const unsigned int atlasHeight = (float)size;
 
-  const float atlasWidth = (float)(size * charCount);
-  const float atlasHeight = (float)size;
+  const unsigned int maxTextureSize = GFX->GetMaxTextureSize();
+
+  if (atlasWidth * atlasHeight > maxTextureSize * maxTextureSize) {
+    fprintf(stderr, "Font atlas is too big to upload to the GPU!!\n");
+    return nullptr;
+  }
+
+  S_CAtlasFactory atlas = GFX->CreateAtlasFactory(atlasWidth, atlasHeight, 1);
 
   for (size_t i = 0; i < charCount; ++i) {
     unsigned long c = FONT_CHARS[i];
@@ -98,15 +85,22 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
     gdata.bitmapTop = g->bitmap_top;
     gdata.advanceX = g->advance.x;
     gdata.advanceY = g->advance.y;
-    gdata.u1 = (size * i) / atlasWidth;
-    gdata.v1 = 0.0f;
-    gdata.u2 = (size * i + gdata.width) / atlasWidth;
-    gdata.v2 = gdata.height / atlasHeight;
+
+    unsigned int atlasX = (size * i) % atlasWidth;
+    unsigned int atlasY = (size * i) / atlasHeight;
+
+/*    gdata.u1 = atlasX / atlasWidth;
+    gdata.v1 = atlasY / atlasHeight;
+    gdata.u2 = (atlasX + gdata.width) / atlasWidth;
+    gdata.v2 = (atlasY + gdata.height) / atlasHeight;*/
+
+    
     m_glyphData[c] = gdata;
 
-    glTexSubImage2D(GL_TEXTURE_2D, 0, size * i, 0, g->bitmap.width, g->bitmap.rows, GL_RED, GL_UNSIGNED_BYTE, g->bitmap.buffer);
+    atlas->Write(size * i, 0, gdata.width, gdata.height, g->bitmap.buffer);
   }
 
+  S_CTexture tex = atlas->MakeTexture(FilterType::LINEAR);
   m_atlasCache[size] = tex;
   return tex;
 }
