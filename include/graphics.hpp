@@ -24,18 +24,49 @@ typedef struct {
 
 class CGraphics {
 public:
-  ~CGraphics();
-  void Init();
+  virtual void Init() = 0;
+
+  ///
+  /// To be called at the beginning of a frame. Behaviour is
+  /// backend specific.
+  ///
+  virtual void BeginScene() = 0;
 
   ///
   /// Enables all vertex attributes and passes them to the current program.
   ///
-  void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr);
+  virtual void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr) = 0;
 
   ///
   /// Disables all vertex attributes *and unbinds any bound programs*.
   ///
-  void End();
+  virtual void End() = 0;
+
+  ///
+  /// Finishes off a frame. Behaviour is backend specific, though
+  /// swapping the buffers is essentially guaranteed.
+  ///
+  virtual void EndScene() = 0;
+
+  ///
+  /// Returns a basic program that applies the diffuse material to a shape.
+  ///
+  virtual S_CProgram GetDefaultProgram() = 0;
+};
+
+class CGLGraphics : public CGraphics {
+public:
+  ~CGLGraphics();
+
+  virtual void Init() override;
+
+  virtual void BeginScene() override;
+
+  virtual void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr) override;
+
+  virtual void End() override;
+
+  virtual void EndScene() override;
 
   ///
   /// The vertex attribute containing the vertex position.
@@ -47,10 +78,7 @@ public:
   ///
   static const unsigned int VERT_ATTRIB_TEX_COORDS;
 
-  S_CProgram GetDefaultProgram();
-
 private:
-  unsigned int m_vao; // Stores the vertex attributes.
+  unsigned int m_vao; // Stores the vertex attributes. Needed for OpenGL 3.0
   S_CProgram m_defaultProgram;
-
 };
