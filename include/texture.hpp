@@ -4,18 +4,28 @@
 
 class CTexture {
 public:
-  CTexture();
-  CTexture(const char *file);
-  CTexture(unsigned int id);
-  CTexture(const CTexture &tex);
-  ~CTexture();
+  virtual void LoadFromFile(const char *file) = 0;
 
-  void LoadFromFile(const char *file);
+  virtual void Use() = 0;
 
-  void Use();
+  virtual unsigned int GetWidth() = 0;
+  virtual unsigned int GetHeight() = 0;
+};
 
-  unsigned int GetWidth();
-  unsigned int GetHeight();
+typedef std::shared_ptr<CTexture> S_CTexture;
+
+class CGLTexture : public CTexture {
+public:
+  CGLTexture();
+  CGLTexture(const char *file);
+  ~CGLTexture();
+
+  virtual unsigned int GetWidth() override;
+  virtual unsigned int GetHeight() override;
+
+  virtual void Use() override;
+
+  virtual void LoadFromFile(const char *file) override;
 
   unsigned int GetOpenGLHandle();
 
@@ -24,4 +34,4 @@ private:
   unsigned int m_width, m_height;
 };
 
-typedef std::shared_ptr<CTexture> S_CTexture;
+typedef std::shared_ptr<CGLTexture> S_CGLTexture;

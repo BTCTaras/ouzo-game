@@ -5,31 +5,21 @@
 
 #include <stdio.h>
 
-CTexture::CTexture() {
+CGLTexture::CGLTexture() {
   glGenTextures(1, &m_id);
 }
 
-
-CTexture::CTexture(unsigned int id) {
-  m_id = id;
-}
-
-CTexture::CTexture(const CTexture &tex)
-  : CTexture(tex.m_id)
-{
-}
-
-CTexture::~CTexture() {
+CGLTexture::~CGLTexture() {
   glDeleteTextures(1, &m_id);
 }
 
-CTexture::CTexture(const char *file)
-  : CTexture()
+CGLTexture::CGLTexture(const char *file)
+  : CGLTexture()
 {
   this->LoadFromFile(file);
 }
 
-void CTexture::LoadFromFile(const char *file) {
+void CGLTexture::LoadFromFile(const char *file) {
   FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
   FIBITMAP *image = FreeImage_ConvertTo32Bits(bitmap); // Make sure there is an alpha channel
   FreeImage_FlipVertical(image); // Images are loaded upside down for some reason
@@ -60,18 +50,18 @@ void CTexture::LoadFromFile(const char *file) {
   FreeImage_Unload(bitmap);
 }
 
-unsigned int CTexture::GetOpenGLHandle() {
+unsigned int CGLTexture::GetOpenGLHandle() {
   return m_id;
 }
 
-unsigned int CTexture::GetWidth() {
+unsigned int CGLTexture::GetWidth() {
   return m_width;
 }
 
-unsigned int CTexture::GetHeight() {
+unsigned int CGLTexture::GetHeight() {
   return m_height;
 }
 
-void CTexture::Use() {
+void CGLTexture::Use() {
   glBindTexture(GL_TEXTURE_2D, m_id);
 }

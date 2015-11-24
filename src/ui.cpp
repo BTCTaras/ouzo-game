@@ -68,7 +68,7 @@ void CSceneUI::OnRender() {
   }
 }
 
-CTexture* CSceneUI::GetBackgroundTexture() {
+S_CTexture CSceneUI::GetBackgroundTexture() {
   return nullptr;
 }
 
@@ -121,7 +121,7 @@ std::vector<S_CUIRenderable>* CUIControl::GetRenderables() {
 unsigned int CUISprite::s_globalSpriteBuffer = 0;
 unsigned int CUISprite::s_activeSprites = 0;
 
-CUISprite::CUISprite(CTexture *tex) {
+CUISprite::CUISprite(S_CTexture tex) {
   if (tex != nullptr) {
     this->SetTexture(tex);
   }
@@ -155,7 +155,7 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
   GFX->End();
 }
 
-void CUISprite::SetTexture(CTexture *tex) {
+void CUISprite::SetTexture(S_CTexture tex) {
   m_texture = tex;
 }
 
@@ -202,7 +202,7 @@ void CUIControlText::SetText(const std::u32string &text) {
 /// CUIControlTexture
 ///
 
-CUIControlTexture::CUIControlTexture(CTexture *tex)
+CUIControlTexture::CUIControlTexture(S_CTexture tex)
   : m_sprite(new CUISprite(nullptr))
 {
   if (tex != nullptr) {
@@ -214,6 +214,6 @@ CUIControlTexture::CUIControlTexture(CTexture *tex)
   this->AddRenderable(m_sprite);
 }
 
-void CUIControlTexture::SetTexture(CTexture *tex) {
+void CUIControlTexture::SetTexture(S_CTexture tex) {
   m_sprite->SetTexture(tex);
 }

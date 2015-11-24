@@ -20,10 +20,10 @@ CSceneMenu::CSceneMenu() {}
 CSceneMenu::~CSceneMenu() {}
 
 void CSceneMenu::OnInitUI() {
-  m_buttonTexture.LoadFromFile("assets/ui/button_test.png");
+  m_buttonTexture = GFX->CreateTexture("assets/ui/button_test.png");
   m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
 
-  S_CUIControlTexture tex(new CUIControlTexture(&m_buttonTexture));
+  S_CUIControlTexture tex(new CUIControlTexture(m_buttonTexture));
   tex->x = 80;
   tex->y = 40;
   tex->z = -0.8f;
@@ -35,7 +35,7 @@ void CSceneMenu::OnInitUI() {
   text->z = 0.8f;
   this->AddControl(text);
 
-  m_texture.LoadFromFile("assets/backgrounds/test.jpeg");
+  m_texture = GFX->CreateTexture("assets/backgrounds/test.jpeg");
 
   // We're done compiling shaders now.
   if (glReleaseShaderCompiler) {
@@ -51,10 +51,10 @@ void CSceneMenu::OnUpdate() {
 
 }
 
-void CSceneMenu::OnLeave(S_CScene *scene) {
+void CSceneMenu::OnLeave(CScene *scene) {
 
 }
 
-CTexture* CSceneMenu::GetBackgroundTexture() {
-  return &m_texture;
+S_CTexture CSceneMenu::GetBackgroundTexture() {
+  return m_texture;
 }

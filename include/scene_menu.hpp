@@ -12,16 +12,16 @@ public:
   CSceneMenu();
   ~CSceneMenu();
 
-  virtual void OnUpdate();
-  virtual void OnLeave(S_CScene *scene);
-  virtual void OnRender();
-  virtual void OnInitUI();
+  virtual void OnUpdate() override;
+  virtual void OnLeave(CScene *scene) override;
+  virtual void OnRender() override;
+  virtual void OnInitUI() override;
 
-  virtual CTexture* GetBackgroundTexture();
+  virtual S_CTexture GetBackgroundTexture() override;
 
 private:
-  CTexture m_buttonTexture;
-  CTexture m_texture;
+  S_CTexture m_buttonTexture;
+  S_CTexture m_texture;
 
   S_CProgram m_fontProgram;
   CFont m_font;

@@ -1,6 +1,7 @@
 #include "graphics.hpp"
 
 #include "shader.hpp"
+#include "texture.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -78,6 +79,16 @@ CGLGraphics::~CGLGraphics() {
 
 S_CProgram CGLGraphics::GetDefaultProgram() {
   return m_defaultProgram;
+}
+
+S_CTexture CGLGraphics::CreateTexture(const char *file) {
+  S_CGLTexture tex(new CGLTexture);
+
+  if (file != NULL) {
+    tex->LoadFromFile(file);
+  }
+
+  return tex;
 }
 
 void CGLGraphics::BeginScene() {

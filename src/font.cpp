@@ -50,7 +50,7 @@ void CFont::LoadFromFile(const char *file, unsigned int index) {
 }
 
 S_CTexture CFont::CreateAtlas(unsigned int size) {
-  S_CTexture tex(new CTexture);
+  S_CGLTexture tex(new CGLTexture);
   unsigned int handle = tex->GetOpenGLHandle();
 
   if (handle <= 0) {

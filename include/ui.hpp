@@ -32,18 +32,17 @@ typedef std::shared_ptr<CUIRenderable> S_CUIRenderable;
 
 class CUISprite : public CUIRenderable {
 public:
-  CUISprite(CTexture *tex = nullptr);
+  CUISprite(S_CTexture tex = nullptr);
   ~CUISprite();
 
-  void SetTexture(CTexture *tex);
+  void SetTexture(S_CTexture tex);
 
   virtual void OnRender(mvp_matrix_t &mvp);
 
 static unsigned int s_globalSpriteBuffer;
 
 private:
-  CTexture *m_texture;
-
+  S_CTexture m_texture;
 
   static unsigned int s_activeSprites;
 };
@@ -87,9 +86,9 @@ typedef std::shared_ptr<CUIControl> S_CUIControl;
 
 class CUIControlTexture : public CUIControl {
 public:
-  CUIControlTexture(CTexture *texture = nullptr);
+  CUIControlTexture(S_CTexture texture = nullptr);
 
-  void SetTexture(CTexture *texture);
+  void SetTexture(S_CTexture texture);
 
 private:
   S_CUISprite m_sprite;
@@ -121,7 +120,7 @@ public:
   void AddControl(std::shared_ptr<CUIControl> control);
 
   virtual void OnRender();
-  virtual CTexture* GetBackgroundTexture();
+  virtual S_CTexture GetBackgroundTexture();
 
   void UpdateBackground();
 

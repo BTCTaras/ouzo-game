@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shader.hpp"
+#include "texture.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -54,6 +55,12 @@ public:
   /// Returns a basic program that applies the diffuse material to a shape.
   ///
   virtual S_CProgram GetDefaultProgram() = 0;
+
+  ///
+  /// Returns a basic texture object that works with this renderer.
+  /// \param[in]  file  Load the texture from a file, at the same time, too. Can be NULL.
+  ///
+  virtual S_CTexture CreateTexture(const char *file = NULL) = 0;
 };
 
 typedef std::shared_ptr<CGraphics> S_CGraphics;
@@ -73,6 +80,8 @@ public:
   virtual void EndScene() override;
 
   virtual S_CProgram GetDefaultProgram() override;
+
+  virtual S_CTexture CreateTexture(const char *file = NULL) override;
 
   ///
   /// The vertex attribute containing the vertex position.
