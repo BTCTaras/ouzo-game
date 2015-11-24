@@ -60,13 +60,13 @@ SDL_Surface *CGame::LoadIcon(const char *file) {
 
 	// Workaround to transparent being black because of FreeImage
 	// Essentially just translates black to transparent.
-  SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
+	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
 
 	// Make sure the icon is properly transparent. Should be default but just making sure...
-  SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
+	SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
 
 	FreeImage_Unload(image);
-  FreeImage_Unload(bitmap);
+	FreeImage_Unload(bitmap);
 	return surf;
 }
 
@@ -159,9 +159,11 @@ void CGame::StartLoop() {
 
 		lastTime = SDL_GetTicks();
 
-		// Give the CPU a short break
-		// TODO: Make this configurable? Some people like having a million FPS...
-		SDL_Delay(1);
+		if (!m_vsync) {
+			// Give the CPU a short break
+			// TODO: Make this configurable? Some people like having a million FPS...
+			SDL_Delay(1);
+		}
 	}
 }
 
