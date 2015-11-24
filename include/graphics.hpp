@@ -3,6 +3,7 @@
 #include "shader.hpp"
 
 #include <glm/glm.hpp>
+#include <memory>
 
 ///
 /// Represents a vertex. Values in order (floats): x, y, z, u, v.
@@ -54,6 +55,8 @@ public:
   virtual S_CProgram GetDefaultProgram() = 0;
 };
 
+typedef std::shared_ptr<CGraphics> S_CGraphics;
+
 class CGLGraphics : public CGraphics {
 public:
   ~CGLGraphics();
@@ -67,6 +70,8 @@ public:
   virtual void End() override;
 
   virtual void EndScene() override;
+
+  virtual S_CProgram GetDefaultProgram() override;
 
   ///
   /// The vertex attribute containing the vertex position.
@@ -82,3 +87,5 @@ private:
   unsigned int m_vao; // Stores the vertex attributes. Needed for OpenGL 3.0
   S_CProgram m_defaultProgram;
 };
+
+typedef std::shared_ptr<CGLGraphics> S_CGLGraphics;

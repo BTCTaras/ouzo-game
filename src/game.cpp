@@ -25,19 +25,31 @@ CGame::CGame()
 }
 
 void CGame::InitGame() {
+	// We want to target OpenGL 3.3
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+
+	// We don't want deprecated OpenGL functions.
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Forbid compatibility
+
 	glfwWindowHint(GLFW_RESIZABLE, GL_TRUE);
 	glfwWindowHint(GLFW_VISIBLE, GL_FALSE);
 
-	m_window = glfwCreateWindow(GAME_START_WIDTH, GAME_START_HEIGHT, GAME_START_TITLE, NULL, NULL);
+
+	m_window = glfwCreateWindow(GAME_START_WIDTH,
+															GAME_START_HEIGHT,
+															GAME_START_TITLE,
+															NULL,	// No fullscreen.
+															NULL // Don't share the context with anyone.
+														);
 
 	// Centre the window
 	const GLFWvidmode *vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-	glfwSetWindowPos(m_window, vidmode->width / 2 - GAME_START_WIDTH / 2,
-		vidmode->height / 2 - GAME_START_HEIGHT / 2);
+	glfwSetWindowPos(m_window,
+		vidmode->width / 2 - GAME_START_WIDTH / 2,
+		vidmode->height / 2 - GAME_START_HEIGHT / 2
+	);
 
 	if (!m_window) {
 		fprintf(stderr, "ERROR: Could not create window!!\n");
@@ -45,10 +57,12 @@ void CGame::InitGame() {
 		exit(1);
 	}
 
+	// Make sure our GL calls go to this window.
 	glfwMakeContextCurrent(m_window);
 
 	static bool inittedGLEW = false;
 
+	// Initialise GLEW if needed.
 	if (!inittedGLEW) {
 		glewExperimental = GL_TRUE;
 
@@ -70,7 +84,8 @@ void CGame::InitGame() {
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 	this->InitGL();
 
-	m_graphics.Init();
+	m_graphics.reset(new CGLGraphics);
+	m_graphics->Init();
 
 	glfwShowWindow(m_window);
 }
@@ -125,7 +140,7 @@ void CGame::StartLoop() {
 
 	while (!glfwWindowShouldClose(m_window) && m_running) {
 		double now = glfwGetTime();
-		double dt = now - lastTime;
+		double dt = now - lastTime; // This is the time difference between last frame and this frame.
 		m_deltaTime = (float)dt;
 
 		this->OnUpdate();
@@ -133,7 +148,8 @@ void CGame::StartLoop() {
 
 		lastTime = glfwGetTime();
 
-		glfwSwapBuffers(m_window);
+		m_graphics->EndScene();
+		glfwSwapBuffers(m_window); // TODO: Replace this with CGraphics::EndScene
 		glfwPollEvents();
 
 		// Give the CPU a short break
@@ -155,8 +171,8 @@ void CGame::SetVerticalSync(bool vsync) {
 	glfwSwapInterval(vsync ? 1 : 0);
 }
 
-CGraphics *CGame::GetGraphics() {
-	return &m_graphics;
+S_CGraphics CGame::GetGraphics() {
+	return m_graphics;
 }
 
 void CGame::SetScene(CScene *scene) {
@@ -181,7 +197,7 @@ void CGame::InitGL() {
 }
 
 void CGame::OnRender() {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	m_graphics->BeginScene();
 	m_scene->OnRender();
 }
 

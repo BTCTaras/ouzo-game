@@ -1,7 +1,7 @@
-#include "scene_game.hpp"
+#include "scene_gamemode.hpp"
 
 #include <GL/glew.h>
 
-CSceneGame::CSceneGame() {
+CSceneGamemode::CSceneGamemode() {
 
 }

@@ -27,7 +27,7 @@ public:
 	void SetScene(CScene *scene);
 	S_CScene GetScene();
 
-	CGraphics *GetGraphics();
+	S_CGraphics GetGraphics();
 
 	unsigned int GetWidth();
 	unsigned int GetHeight();
@@ -48,6 +48,5 @@ private:
 	GLFWwindow *m_window;
 
 	S_CScene m_scene;
-
-	CGraphics m_graphics;
+	S_CGraphics m_graphics;
 };

@@ -6,5 +6,5 @@ class CSceneGamemode : public CScene {
 public:
   CSceneGamemode();
 
-  virtual unsigned int GetGamemodeID() = 0;
+  virtual unsigned short GetGamemodeID() = 0;
 };

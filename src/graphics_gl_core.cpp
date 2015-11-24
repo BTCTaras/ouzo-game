@@ -14,8 +14,8 @@ const unsigned int CGLGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
 void CGLGraphics::Init() {
   glGenVertexArrays(1, &m_vao);
-  glEnable(GL_TEXTURE_2D);
 
+  // Load the default program.
   S_CShader shaders[] = {
     S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/diffuse.vsh")),
     S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/diffuse.fsh"))
@@ -23,9 +23,11 @@ void CGLGraphics::Init() {
 
   m_defaultProgram.reset(new CProgram(2, shaders));
 
+  // Make sure transparent objects are rendered properly.
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+  // Ensures that objects behind objects are occluded.
   glEnable(GL_DEPTH_TEST);
   glDepthFunc(GL_LEQUAL);
 
@@ -43,6 +45,10 @@ CGLGraphics::~CGLGraphics() {
 
 S_CProgram CGLGraphics::GetDefaultProgram() {
   return m_defaultProgram;
+}
+
+void CGLGraphics::BeginScene() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
@@ -95,8 +101,9 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 }
 
 void CGLGraphics::End() {
-  glDisableVertexAttribArray(CGraphics::VERT_ATTRIB_TEX_COORDS);
-  glDisableVertexAttribArray(CGraphics::VERT_ATTRIB_POS);
+  // idk why this is necessary but it is
+  glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_TEX_COORDS);
+  glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_POS);
 }
 
 void CGLGraphics::EndScene() {
