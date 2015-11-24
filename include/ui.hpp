@@ -1,10 +1,10 @@
 #pragma once
 
-#include "scene.h"
-#include "graphics.h"
-#include "shader.h"
-#include "texture.h"
-#include "text.h"
+#include "scene.hpp"
+#include "graphics.hpp"
+#include "shader.hpp"
+#include "texture.hpp"
+#include "text.hpp"
 
 #include <memory>
 #include <vector>

@@ -1,10 +1,10 @@
-#include "ui.h"
+#include "ui.hpp"
 
 #include <GL/glew.h>
 
-#include "graphics.h"
-#include "texture.h"
-#include "game.h"
+#include "graphics.hpp"
+#include "texture.hpp"
+#include "game.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

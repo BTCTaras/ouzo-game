@@ -1,5 +1,5 @@
-#include "font.h"
-#include "font_chars.h"
+#include "font.hpp"
+#include "font_chars.hpp"
 
 #include <GL/glew.h>
 

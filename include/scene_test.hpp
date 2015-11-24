@@ -1,6 +1,6 @@
 #pragma once
 
-#include "scene.h"
+#include "scene.hpp"
 
 class CSceneTest : public CScene {
 public:

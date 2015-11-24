@@ -1,4 +1,4 @@
-#include "scene_osu.h"
+#include "scene_osu.hpp"
 
 unsigned short CSceneOsu::GetGamemodeID() {
   return (unsigned short)0x0;

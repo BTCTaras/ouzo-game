@@ -1,5 +1,5 @@
-#include "game.h"
-#include "scene_menu.h"
+#include "game.hpp"
+#include "scene_menu.hpp"
 
 #include <stdio.h>
 

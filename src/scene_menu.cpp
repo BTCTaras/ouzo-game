@@ -1,11 +1,11 @@
-#include "scene_menu.h"
+#include "scene_menu.hpp"
 
-#include "graphics.h"
-#include "game.h"
-#include "shader.h"
-#include "font.h"
-#include "text.h"
-#include "ui.h"
+#include "graphics.hpp"
+#include "game.hpp"
+#include "shader.hpp"
+#include "font.hpp"
+#include "text.hpp"
+#include "ui.hpp"
 
 #include <GL/glew.h>
 

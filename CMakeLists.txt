@@ -2,7 +2,7 @@ CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(ouzo)
 
 # Finds all source files and adds them.
-FILE(GLOB OUZO_SRC "src/*.cpp" "include/*.h")
+FILE(GLOB OUZO_SRC "src/*.cpp" "include/*.hpp")
 ADD_EXECUTABLE(ouzo ${OUZO_SRC})
 
 # Fetch modules from ./cmake/Modules

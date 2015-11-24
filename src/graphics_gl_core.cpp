@@ -1,6 +1,6 @@
-#include "graphics.h"
+#include "graphics.hpp"
 
-#include "shader.h"
+#include "shader.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -97,8 +97,6 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 void CGLGraphics::End() {
   glDisableVertexAttribArray(CGraphics::VERT_ATTRIB_TEX_COORDS);
   glDisableVertexAttribArray(CGraphics::VERT_ATTRIB_POS);
-
-  glUseProgram(0);
 }
 
 void CGLGraphics::EndScene() {

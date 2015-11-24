@@ -1,12 +1,12 @@
-#include "text.h"
+#include "text.hpp"
 
 #include <GL/glew.h>
 
-#include "shader.h"
-#include "graphics.h"
-#include "game.h"
-#include "font.h"
-#include "texture.h"
+#include "shader.hpp"
+#include "graphics.hpp"
+#include "game.hpp"
+#include "font.hpp"
+#include "texture.hpp"
 
 #include <vector>
 

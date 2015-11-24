@@ -1,9 +1,9 @@
 #pragma once
 
-#include "graphics.h"
-#include "shader.h"
-#include "texture.h"
-#include "font.h"
+#include "graphics.hpp"
+#include "shader.hpp"
+#include "texture.hpp"
+#include "font.hpp"
 
 #include <string>
 #include <memory>

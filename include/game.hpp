@@ -1,7 +1,7 @@
 #pragma once
 
-#include "scene.h"
-#include "graphics.h"
+#include "scene.hpp"
+#include "graphics.hpp"
 
 #define GFX CGame::Inst->GetGraphics()
 
