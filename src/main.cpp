@@ -5,6 +5,8 @@
 
 #include <GL/glew.h>
 
+#include <SDL2/SDL_main.h>
+
 int main(int argc, char *argv[]) {
 	CGame game;
 	CGame::Inst = &game;
@@ -13,13 +15,3 @@ int main(int argc, char *argv[]) {
 	game.StartLoop();
 	return 0;
 }
-
-#ifdef _WIN32
-#include <Windows.h>
-
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
-	char *args[1] = { "no" };
-	return main(0, args); // no arguments for windows because it's a cunt
-}
-
-#endif
