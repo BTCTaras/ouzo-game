@@ -9,10 +9,41 @@
 #include <GL/glew.h>
 #include <stdio.h>
 
+#include <SDL2/SDL.h>
+
 const unsigned int CGLGraphics::VERT_ATTRIB_POS = 0;
 const unsigned int CGLGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
-void CGLGraphics::Init() {
+void CGLGraphics::Init(SDL_Window *window) {
+  SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+
+  // Create an OpenGL 3.3 context.
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+
+  // Use the core profile.
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+
+  m_context = SDL_GL_CreateContext(window); // Create an OpenGL context.
+  SDL_GL_MakeCurrent(window, m_context); // Make sure our OpenGL calls are directed to this context.
+
+  m_window = window;
+
+  static bool inittedGLEW = false;
+
+  // Initialise GLEW if needed.
+  if (!inittedGLEW) {
+    glewExperimental = GL_TRUE;
+
+    if (glewInit() != GLEW_OK) {
+      fprintf(stderr, "Failed to initialise GLEW!!\n");
+      exit(2);
+      return;
+    }
+
+    inittedGLEW = true;
+  }
+
   glGenVertexArrays(1, &m_vao);
 
   // Load the default program.
@@ -41,6 +72,8 @@ CGLGraphics::~CGLGraphics() {
   if (m_vao > 0) {
     glDeleteVertexArrays(1, &m_vao);
   }
+
+  SDL_GL_DeleteContext(m_context);
 }
 
 S_CProgram CGLGraphics::GetDefaultProgram() {
@@ -107,5 +140,5 @@ void CGLGraphics::End() {
 }
 
 void CGLGraphics::EndScene() {
-
+  SDL_GL_SwapWindow(m_window);
 }

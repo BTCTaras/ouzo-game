@@ -4,6 +4,7 @@
 
 #include <glm/glm.hpp>
 #include <memory>
+#include <SDL2/SDL.h>
 
 ///
 /// Represents a vertex. Values in order (floats): x, y, z, u, v.
@@ -25,7 +26,7 @@ typedef struct {
 
 class CGraphics {
 public:
-  virtual void Init() = 0;
+  virtual void Init(SDL_Window *window) = 0;
 
   ///
   /// To be called at the beginning of a frame. Behaviour is
@@ -61,7 +62,7 @@ class CGLGraphics : public CGraphics {
 public:
   ~CGLGraphics();
 
-  virtual void Init() override;
+  virtual void Init(SDL_Window *window) override;
 
   virtual void BeginScene() override;
 
@@ -86,6 +87,8 @@ public:
 private:
   unsigned int m_vao; // Stores the vertex attributes. Needed for OpenGL 3.0
   S_CProgram m_defaultProgram;
+  SDL_GLContext m_context;
+  SDL_Window *m_window;
 };
 
 typedef std::shared_ptr<CGLGraphics> S_CGLGraphics;

@@ -6,6 +6,7 @@
 #define GFX CGame::Inst->GetGraphics()
 
 #include <memory>
+#include <SDL2/SDL.h>
 
 struct GLFWwindow;
 
@@ -35,7 +36,10 @@ public:
 	unsigned int m_width, m_height;
 
 private:
-	void InitGL();
+	void Event_OnResize(int width, int height);
+	void Event_OnClick(int x, int y, int button, bool press);
+
+	void TranslateEvent(SDL_Event &event);
 
 	void OnRender();
 	void OnUpdate();
@@ -45,7 +49,7 @@ private:
 	bool m_vsync;
 
 	bool m_running;
-	GLFWwindow *m_window;
+	SDL_Window *m_window;
 
 	S_CScene m_scene;
 	S_CGraphics m_graphics;
