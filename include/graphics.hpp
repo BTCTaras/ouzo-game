@@ -25,6 +25,10 @@ typedef struct {
   float r, g, b;
 } colour_t;
 
+enum ShaderType {
+  VERTEX_SHADER, FRAGMENT_SHADER
+};
+
 class CGraphics {
 public:
   virtual void Init(SDL_Window *window) = 0;
@@ -61,6 +65,28 @@ public:
   /// \param[in]  file  Load the texture from a file, at the same time, too. Can be NULL.
   ///
   virtual S_CTexture CreateTexture(const char *file = NULL) = 0;
+
+  ///
+  /// Loads a shader from a file.
+  /// File names must be specified without their extension.
+  /// The function will decide the final extension, usually, it'll be the typical
+  /// shader extension for the backend in question prefixed by the shader type.
+  ///
+  /// E.g.    OpenGL:   <name>.frag.glsl / <name>.vert.glsl
+  ///         Direct3D: <name>.frag.hlsl / <name>.vert.hlsl
+  ///
+  /// \param[in]
+  /// \param[in]  file  The file to load this shader from.
+  ///
+  virtual S_CShader CreateShader(ShaderType type, const char *file = NULL) = 0;
+
+  ///
+  /// Creates a program from several shader objects.
+  ///
+  /// \param[in]  count   The amount of shaders passed into this function.
+  /// \param[in]  shaders The shaders to create this program with.
+  ///
+  virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) = 0;
 };
 
 typedef std::shared_ptr<CGraphics> S_CGraphics;
@@ -70,18 +96,15 @@ public:
   ~CGLGraphics();
 
   virtual void Init(SDL_Window *window) override;
-
   virtual void BeginScene() override;
-
   virtual void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr) override;
-
   virtual void End() override;
-
   virtual void EndScene() override;
 
   virtual S_CProgram GetDefaultProgram() override;
-
   virtual S_CTexture CreateTexture(const char *file = NULL) override;
+  virtual S_CShader CreateShader(ShaderType type, const char *file = NULL) override;
+  virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
 
   ///
   /// The vertex attribute containing the vertex position.

@@ -28,9 +28,6 @@ void CGame::InitGame() {
 															SDL_WINDOW_SHOWN
 														);
 
-	const GLubyte *glVersion = glGetString(GL_VERSION);
-	printf("Graphics Driver: %s\n", glVersion);
-
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 
 	m_graphics.reset(new CGLGraphics);

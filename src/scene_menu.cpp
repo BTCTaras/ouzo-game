@@ -36,11 +36,6 @@ void CSceneMenu::OnInitUI() {
   this->AddControl(text);
 
   m_texture = GFX->CreateTexture("assets/backgrounds/test.jpeg");
-
-  // We're done compiling shaders now.
-  if (glReleaseShaderCompiler) {
-    glReleaseShaderCompiler();
-  }
 }
 
 void CSceneMenu::OnRender() {

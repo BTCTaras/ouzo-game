@@ -27,11 +27,11 @@ CText::CText(CFont *font, unsigned int size, const std::u32string &text)
 void CText::InitText(CFont *font, unsigned int size, const std::u32string &text) {
   if (s_fontProgram == nullptr) {
     S_CShader fontShaders[] = {
-      S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/uitext.vsh")),
-      S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/uitext.fsh")),
+      GFX->CreateShader(ShaderType::VERTEX_SHADER, "assets/shaders/uitext"),
+      GFX->CreateShader(ShaderType::FRAGMENT_SHADER, "assets/shaders/uitext"),
     };
 
-    s_fontProgram.reset(new CProgram(2, fontShaders));
+    s_fontProgram = GFX->CreateProgram(2, fontShaders);
   }
 
   if (m_fontBuffer == 0) {
@@ -114,7 +114,9 @@ void CText::Render(mvp_matrix_t &mvp) {
   glBindBuffer(GL_ARRAY_BUFFER, m_fontBuffer);
 
   GFX->Begin(mvp, s_fontProgram);
-  glUniform3f(s_fontProgram->GetUniformLocation("u_FontColour"), m_colour.r, m_colour.g, m_colour.b);
+
+  S_CGLProgram fontProg = std::static_pointer_cast<CGLProgram>(s_fontProgram);
+  glUniform3f(fontProg->GetUniformLocation("u_FontColour"), m_colour.r, m_colour.g, m_colour.b);
   atlas->Use();
 
   //glBindTexture(GL_TEXTURE_2D, 1); // Uses the button texture to make wireframe visible.

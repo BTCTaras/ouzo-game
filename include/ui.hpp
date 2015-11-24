@@ -39,12 +39,11 @@ public:
 
   virtual void OnRender(mvp_matrix_t &mvp);
 
-static unsigned int s_globalSpriteBuffer;
-
 private:
   S_CTexture m_texture;
 
   static unsigned int s_activeSprites;
+  static unsigned int s_globalSpriteBuffer;
 };
 
 typedef std::shared_ptr<CUISprite> S_CUISprite;

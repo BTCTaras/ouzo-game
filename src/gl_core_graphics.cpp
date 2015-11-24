@@ -9,6 +9,8 @@
 
 #include <GL/glew.h>
 #include <stdio.h>
+#include <string>
+#include <sstream>
 
 #include <SDL2/SDL.h>
 
@@ -47,13 +49,15 @@ void CGLGraphics::Init(SDL_Window *window) {
 
   glGenVertexArrays(1, &m_vao);
 
-  // Load the default program.
-  S_CShader shaders[] = {
-    S_CShader(new CShader(GL_VERTEX_SHADER, "assets/shaders/diffuse.vsh")),
-    S_CShader(new CShader(GL_FRAGMENT_SHADER, "assets/shaders/diffuse.fsh"))
-  };
+  S_CShader defaultVert = this->CreateShader(ShaderType::VERTEX_SHADER, "assets/shaders/diffuse");
+  S_CShader defaultFrag = this->CreateShader(ShaderType::FRAGMENT_SHADER, "assets/shaders/diffuse");
 
-  m_defaultProgram.reset(new CProgram(2, shaders));
+  // Load the default program.
+  S_CShader shaders[] = { defaultVert, defaultFrag };
+  m_defaultProgram = this->CreateProgram(2, shaders);
+
+  const GLubyte *glVersion = glGetString(GL_VERSION);
+  printf("Graphics Driver: %s\n", glVersion);
 
   // Make sure transparent objects are rendered properly.
   glEnable(GL_BLEND);
@@ -91,6 +95,40 @@ S_CTexture CGLGraphics::CreateTexture(const char *file) {
   return tex;
 }
 
+static const char *GL_SHADER_FILE_EXT = "glsl";
+
+S_CShader CGLGraphics::CreateShader(ShaderType type, const char *file) {
+  std::ostringstream str;
+  std::string typeExt =
+    type == ShaderType::VERTEX_SHADER ? "vert" : "frag";
+
+  str << file << "." << typeExt << "." << GL_SHADER_FILE_EXT;
+  std::string filename = str.str();
+
+  GLenum glType;
+  switch (type) {
+    case VERTEX_SHADER:
+      glType = GL_VERTEX_SHADER;
+      break;
+
+    case FRAGMENT_SHADER:
+      glType = GL_FRAGMENT_SHADER;
+      break;
+
+    default:
+      glType = GL_VERTEX_SHADER;
+      break;
+  }
+
+  S_CGLShader shader = S_CGLShader(new CGLShader(glType, filename.c_str()));
+  return shader;
+}
+
+S_CProgram CGLGraphics::CreateProgram(size_t count, S_CShader *shaders) {
+  S_CGLProgram program(new CGLProgram(count, shaders));
+  return program;
+}
+
 void CGLGraphics::BeginScene() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -102,7 +140,9 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
   }
 
   // if program points to 0, fall back to the default (diffuse) program.
-  S_CProgram prog = (program != nullptr) ? program : m_defaultProgram;
+  S_CGLProgram prog = std::static_pointer_cast<CGLProgram>(
+      (program != nullptr) ? program : m_defaultProgram
+    );
   prog->Use();
 
   // compute the MVP matrix
