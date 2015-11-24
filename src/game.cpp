@@ -20,15 +20,16 @@ CGame::CGame()
 }
 
 void CGame::InitGame() {
-	m_window = SDL_CreateWindow(GAME_START_TITLE,
-															SDL_WINDOWPOS_CENTERED,
-															SDL_WINDOWPOS_CENTERED,
-															GAME_START_WIDTH,
-															GAME_START_HEIGHT,
+	m_window = SDL_CreateWindow(
+		GAME_START_TITLE,
+		SDL_WINDOWPOS_CENTERED,
+		SDL_WINDOWPOS_CENTERED,
+		GAME_START_WIDTH,
+		GAME_START_HEIGHT,
 
-															SDL_WINDOW_OPENGL 	|
-															SDL_WINDOW_SHOWN
-														);
+		SDL_WINDOW_OPENGL 	|
+		SDL_WINDOW_SHOWN
+	);
 
 	SDL_Surface *icon = this->LoadIcon("assets/icon.png");
 	SDL_SetWindowIcon(m_window, icon);
@@ -45,15 +46,17 @@ SDL_Surface *CGame::LoadIcon(const char *file) {
 	FIBITMAP *image = FreeImage_ConvertTo32Bits(bitmap);
 	FreeImage_FlipVertical(image);
 
-	SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(FreeImage_GetBits(image),
-																							 FreeImage_GetWidth(image),
-																						 	 FreeImage_GetHeight(image),
-																						   FreeImage_GetBPP(image),
-																						 	 FreeImage_GetPitch(image),
-																						 	 FreeImage_GetRedMask(image),
-																						   FreeImage_GetGreenMask(image),
-																						   FreeImage_GetBlueMask(image),
-																						   0);
+	SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(
+		FreeImage_GetBits(image),
+		FreeImage_GetWidth(image),
+		FreeImage_GetHeight(image),
+		FreeImage_GetBPP(image),
+		FreeImage_GetPitch(image),
+		FreeImage_GetRedMask(image),
+		FreeImage_GetGreenMask(image),
+		FreeImage_GetBlueMask(image),
+		0
+	);
 
 	// Workaround to transparent being black because of FreeImage
 	// Essentially just translates black to transparent.
