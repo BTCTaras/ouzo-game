@@ -19,6 +19,8 @@
 const unsigned int CGLGraphics::VERT_ATTRIB_POS = 0;
 const unsigned int CGLGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
+static void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
+
 void CGLGraphics::Init(SDL_Window *window) {
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
@@ -75,6 +77,16 @@ void CGLGraphics::Init(SDL_Window *window) {
   printf("OpenGL max texture size is %dx%d\n", textureSize, textureSize);
 
   m_glMaxTextureSize = textureSize;
+
+  if (GL_ARB_debug_output) {
+	  printf("GL_ARB_debug_output is supported!! Enabling debug output...\n");
+	  glDebugMessageCallbackARB(GL_DebugCallback, this);
+	  glEnable(GL_DEBUG_OUTPUT);
+  }
+}
+
+void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+	printf("Driver Message: %s\n", message);
 }
 
 CGLGraphics::~CGLGraphics() {
