@@ -3,6 +3,7 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include "atlas_factory.hpp"
+#include "buffer.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -98,6 +99,14 @@ public:
   ///
   virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) = 0;
 
+  ///
+  /// Creates a generic buffer stored in video memory.
+  ///
+  /// \param[in]  type        Specifies what this buffer contains.
+  /// \param[in]  storageType Specifies how the data stored in this buffer is accessed.
+  ///
+  virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) = 0;
+
   virtual unsigned int GetMaxTextureSize() = 0;
 };
 
@@ -118,6 +127,7 @@ public:
   virtual S_CShader CreateShader(ShaderType type, const char *file = NULL) override;
   virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
   virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
+  virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
 
   virtual unsigned int GetMaxTextureSize() override;
 

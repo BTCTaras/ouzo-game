@@ -2,6 +2,8 @@
 
 #include "shader.hpp"
 #include "texture.hpp"
+#include "atlas_factory.hpp"
+#include "buffer.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -134,6 +136,11 @@ S_CProgram CGLGraphics::CreateProgram(size_t count, S_CShader *shaders) {
 S_CAtlasFactory CGLGraphics::CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) {
   S_CGLAtlasFactory factory(new CGLAtlasFactory(width, height, channels));
   return factory;
+}
+
+S_CBuffer CGLGraphics::CreateBuffer(BufferType type, BufferStorageType storageType) {
+  S_CGLBuffer buffer(new CGLBuffer(type, storageType));
+  return buffer;
 }
 
 unsigned int CGLGraphics::GetMaxTextureSize() {
