@@ -25,9 +25,19 @@ public:
   virtual void Orphan(size_t dataSize, void *data) = 0;
 
   ///
-  /// Returns the storage type of the buffer.
+  /// Gets the size of the buffer in bytes.
+  ///
+  virtual size_t GetSize() = 0;
+
+  ///
+  /// Returns the type of the buffer.
   ///
   BufferType GetType();
+
+  ///
+  /// Returns the storage type of the buffer.
+  ///
+  BufferStorageType GetStorageType();
 
 protected:
   BufferType m_type;
@@ -42,6 +52,7 @@ public:
   ~CGLBuffer();
 
   virtual void Orphan(size_t dataSize, void *data) override;
+  virtual size_t GetSize() override;
 
   ///
   /// Returns the OpenGL handle of this buffer.
@@ -67,6 +78,7 @@ public:
 
 private:
   unsigned int m_id;
+  size_t m_size;
 };
 
 typedef std::shared_ptr<CGLBuffer> S_CGLBuffer;

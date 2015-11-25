@@ -8,3 +8,7 @@ CBuffer::CBuffer(BufferType type, BufferStorageType storageType) {
 BufferType CBuffer::GetType() {
   return m_type;
 }
+
+BufferStorageType CBuffer::GetStorageType() {
+  return m_storageType;
+}

@@ -31,6 +31,16 @@ enum ShaderType {
   VERTEX_SHADER, FRAGMENT_SHADER
 };
 
+enum PrimitiveType {
+  POINTS,
+  LINE_STRIP,
+  LINE_LOOP,
+  LINES,
+  TRIANGLE_STRIP,
+  TRIANGLE_FAN,
+  TRIANGLES,
+};
+
 class CGraphics {
 public:
   virtual void Init(SDL_Window *window) = 0;
@@ -45,6 +55,23 @@ public:
   /// Enables all vertex attributes and passes them to the current program.
   ///
   virtual void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr) = 0;
+
+  ///
+  /// Draws a model.
+  ///
+  /// \param[in]  primitive     Specifies how the vertices shall be connected.
+  /// \param[in]  vertexBuffer  The buffer containing the model vertices.
+  /// \param[in]  elementBuffer The buffer containing the model indices.
+  ///
+  virtual void Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffer elementBuffer = nullptr) = 0;
+
+  ///
+  /// Sets the texture to draw with.
+  ///
+  /// \param[in]  tex   The texture to use.
+  /// \param[in]  slot  What slot to assign it to. Used for multitexturing.
+  ///
+  virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) = 0;
 
   ///
   /// Disables all vertex attributes *and unbinds any bound programs*.
@@ -128,6 +155,8 @@ public:
   virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
   virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
   virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
+  virtual void Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffer elementBuffer = nullptr) override;
+  virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
 
   virtual unsigned int GetMaxTextureSize() override;
 
@@ -140,6 +169,13 @@ public:
   /// The vertex atrtribute containing the texture coordinates.
   ///
   static const unsigned int VERT_ATTRIB_TEX_COORDS;
+
+  ///
+  /// Converts the given PrimitiveType to an OpenGL enum.
+  ///
+  /// \param[in]  type  The primitive type to convert.
+  ///
+  static unsigned int GetOpenGLPrimitiveTypeEnum(PrimitiveType type);
 
 private:
   unsigned int m_vao; // Stores the vertex attributes. Needed for OpenGL 3.0

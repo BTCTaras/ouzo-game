@@ -202,6 +202,67 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
                       );
 }
 
+void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffer elementBuffer) {
+  S_CGLBuffer gl_vertexBuffer = std::static_pointer_cast<CGLBuffer>(vertexBuffer);
+  S_CGLBuffer gl_elementBuffer = std::static_pointer_cast<CGLBuffer>(elementBuffer);
+
+  // Specify what vertex buffer to use for drawing
+  glBindBuffer(GL_ARRAY_BUFFER, gl_vertexBuffer->GetOpenGLHandle());
+
+  GLenum gl_primitive = CGLGraphics::GetOpenGLPrimitiveTypeEnum(primitive);
+
+  if (gl_elementBuffer != nullptr) {
+    // We have an element buffer, use glDrawElements
+    // Specify what element buffer to use
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_elementBuffer->GetOpenGLHandle());
+    glDrawElements(
+      gl_primitive,
+      elementBuffer->GetSize() / sizeof(unsigned short), // Amount of elements = elem buffer size / elem size
+      GL_UNSIGNED_SHORT, // Each element is an unsigned short
+      NULL // We've already bound our indices as a buffer
+    );
+  } else {
+    // We have no element buffer, draw regularily
+    glDrawArrays(
+      gl_primitive,
+      0, // The first vertex is at 0
+      vertexBuffer->GetSize() / sizeof(vertex_t) // Amount of vertices = vertex buffer size / vertex size
+    );
+  }
+}
+
+void CGLGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
+  S_CGLTexture gl_tex = std::static_pointer_cast<CGLTexture>(tex);
+  glActiveTexture(GL_TEXTURE0 + slot); // slot must be offset by GL_TEXTURE0
+
+  if (gl_tex != nullptr) {
+    glBindTexture(GL_TEXTURE_2D, gl_tex->GetOpenGLHandle());
+  } else {
+    glBindTexture(GL_TEXTURE_2D, 0);
+  }
+}
+
+unsigned int CGLGraphics::GetOpenGLPrimitiveTypeEnum(PrimitiveType primitive) {
+  switch (primitive) {
+    case PrimitiveType::POINTS:
+      return GL_POINTS;
+    case PrimitiveType::LINE_STRIP:
+      return GL_LINE_STRIP;
+    case PrimitiveType::LINE_LOOP:
+      return GL_LINE_LOOP;
+    case PrimitiveType::LINES:
+      return GL_LINES;
+    case PrimitiveType::TRIANGLE_STRIP:
+      return GL_TRIANGLE_STRIP;
+    case PrimitiveType::TRIANGLE_FAN:
+      return GL_TRIANGLE_FAN;
+    case PrimitiveType::TRIANGLES:
+      return GL_TRIANGLES;
+    default:
+      return GL_FALSE;
+  }
+}
+
 void CGLGraphics::End() {
   // idk why this is necessary but it is
   glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_TEX_COORDS);

@@ -21,6 +21,12 @@ void CGLBuffer::Orphan(size_t dataSize, void *data) {
 
   GLenum storageTypeEnum = CGLBuffer::GetOpenGLBufferStorageTypeEnum(m_storageType);
   glBufferData(typeEnum, dataSize, data, storageTypeEnum);
+
+  m_size = dataSize;
+}
+
+size_t CGLBuffer::GetSize() {
+  return m_size;
 }
 
 unsigned int CGLBuffer::GetOpenGLHandle() {

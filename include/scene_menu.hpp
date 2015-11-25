@@ -6,6 +6,7 @@
 #include "texture.hpp"
 #include "font.hpp"
 #include "text.hpp"
+#include "buffer.hpp"
 
 class CSceneMenu : public CSceneUI {
 public:
@@ -26,4 +27,6 @@ private:
   S_CProgram m_fontProgram;
   CFont m_font;
   CText m_helloWorld;
+
+  S_CBuffer m_testBuffer;
 };
