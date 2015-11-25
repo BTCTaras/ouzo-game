@@ -29,6 +29,12 @@ void CGLGraphics::Init(SDL_Window *window) {
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
   // Use the core profile.
+#ifdef OUZO_DEBUG
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG | SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+#else
+  SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+#endif
+
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
   m_context = SDL_GL_CreateContext(window); // Create an OpenGL context.
@@ -78,11 +84,13 @@ void CGLGraphics::Init(SDL_Window *window) {
 
   m_glMaxTextureSize = textureSize;
 
+#ifdef OUZO_DEBUG
   if (GL_ARB_debug_output) {
 	  printf("GL_ARB_debug_output is supported!! Enabling debug output...\n");
 	  glDebugMessageCallbackARB(GL_DebugCallback, this);
 	  glEnable(GL_DEBUG_OUTPUT);
   }
+#endif
 }
 
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
