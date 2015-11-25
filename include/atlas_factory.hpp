@@ -9,7 +9,7 @@ public:
   CAtlasFactory(unsigned int width, unsigned int height, unsigned int channels);
 
   virtual void Write(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned char *data) = 0;
-  virtual S_CTexture MakeTexture(FilterType type = FilterType::LINEAR) = 0;
+  virtual S_CTexture GetTexture(FilterType type = FilterType::LINEAR) = 0;
 
   unsigned int GetWidth();
   unsigned int GetHeight();
@@ -27,9 +27,12 @@ public:
   ~CGLAtlasFactory();
 
   virtual void Write(unsigned int x, unsigned int y, unsigned int w, unsigned int h, unsigned char *data) override;
-  virtual S_CTexture MakeTexture(FilterType type = FilterType::LINEAR) override;
+  virtual S_CTexture GetTexture(FilterType type = FilterType::LINEAR) override;
+
 private:
-  unsigned char *m_data;
+	unsigned int GetImageFormat();
+
+	S_CGLTexture m_atlasTex;
 };
 
 typedef std::shared_ptr<CGLAtlasFactory> S_CGLAtlasFactory;

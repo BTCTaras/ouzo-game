@@ -55,8 +55,8 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
   FT_Set_Pixel_Sizes(m_fontFace, size, size);
 
   size_t charCount = sizeof(FONT_CHARS) / sizeof(FONT_CHARS[0]);
-  const unsigned int atlasWidth = (float)(size * charCount);
-  const unsigned int atlasHeight = (float)size;
+  const float atlasWidth = (float)(size * charCount);
+  const float atlasHeight = (float)size;
 
   const unsigned int maxTextureSize = GFX->GetMaxTextureSize();
 
@@ -65,7 +65,7 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
     return nullptr;
   }
 
-  S_CAtlasFactory atlas = GFX->CreateAtlasFactory(atlasWidth, atlasHeight, 1);
+  S_CAtlasFactory atlas = GFX->CreateAtlasFactory((unsigned int)atlasWidth, (unsigned int)atlasHeight, 1);
 
   for (size_t i = 0; i < charCount; ++i) {
     unsigned long c = FONT_CHARS[i];
@@ -85,22 +85,16 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
     gdata.bitmapTop = g->bitmap_top;
     gdata.advanceX = g->advance.x;
     gdata.advanceY = g->advance.y;
-
-    unsigned int atlasX = (size * i) % atlasWidth;
-    unsigned int atlasY = (size * i) / atlasHeight;
-
-/*    gdata.u1 = atlasX / atlasWidth;
-    gdata.v1 = atlasY / atlasHeight;
-    gdata.u2 = (atlasX + gdata.width) / atlasWidth;
-    gdata.v2 = (atlasY + gdata.height) / atlasHeight;*/
-
-    
+	gdata.u1 = (size * i) / atlasWidth;
+	gdata.v1 = 0.0f;
+	gdata.u2 = (size * i + gdata.width) / atlasWidth;
+	gdata.v2 = gdata.height / atlasHeight;
     m_glyphData[c] = gdata;
 
     atlas->Write(size * i, 0, gdata.width, gdata.height, g->bitmap.buffer);
   }
 
-  S_CTexture tex = atlas->MakeTexture(FilterType::LINEAR);
+  S_CTexture tex = atlas->GetTexture(FilterType::LINEAR);
   m_atlasCache[size] = tex;
   return tex;
 }
