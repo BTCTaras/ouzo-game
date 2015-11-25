@@ -37,20 +37,20 @@ void CSceneMenu::OnInitUI() {
 
   m_testBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 
-  vertex_t vertices[] = {
+  /*vertex_t vertices[] = {
     { 64.0f, 0.0f, 0.9f, 0.5f, 0.0f },
     { 0.0f, 128.0f, 0.9f, 0.0f, 1.0f },
     { 128.0f, 128.0f, 0.9f, 1.0f, 1.0f },
   };
 
-  m_testBuffer->Orphan(sizeof(vertices), vertices);
+  m_testBuffer->Orphan(sizeof(vertices), vertices);*/
 }
 
 void CSceneMenu::OnRender() {
   CSceneUI::OnRender();
 
   // Set the position of our triangle
-  m_mvpMatrix.model = glm::translate(
+  /*m_mvpMatrix.model = glm::translate(
     glm::mat4(1.0f), // Identity matrix (no transformation)
     glm::vec3(128.0f, 128.0f, 0.0f) // Translate the identity by this vector
   );
@@ -63,7 +63,7 @@ void CSceneMenu::OnRender() {
     m_testBuffer // Draw our triangle buffer
   );
 
-  GFX->End();
+  GFX->End();*/
 }
 
 void CSceneMenu::OnUpdate() {

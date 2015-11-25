@@ -13,7 +13,7 @@
 S_CProgram CText::s_fontProgram;
 
 CText::CText()
-  : m_fontBuffer(0)
+  : m_fontBuffer(nullptr)
 {
   m_colour = { 1.0f, 1.0f, 1.0f }; // Start white
 }
@@ -34,8 +34,8 @@ void CText::InitText(CFont *font, unsigned int size, const std::u32string &text)
     s_fontProgram = GFX->CreateProgram(2, fontShaders);
   }
 
-  if (m_fontBuffer == 0) {
-    glGenBuffers(1, &m_fontBuffer);
+  if (m_fontBuffer == nullptr) {
+    m_fontBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
   }
 
   m_size = size;
@@ -49,11 +49,7 @@ void CText::SetText(const std::u32string &text) {
   this->CreateTextBuffer();
 }
 
-CText::~CText() {
-  if (m_fontBuffer > 0) {
-    glDeleteBuffers(1, &m_fontBuffer);
-  }
-}
+CText::~CText() {}
 
 void CText::CreateTextBuffer() {
   std::vector<vertex_t> vertices;
@@ -94,9 +90,7 @@ void CText::CreateTextBuffer() {
   }
 
   m_fontBufferSize = vertices.size() * sizeof(vertex_t);
-
-  glBindBuffer(GL_ARRAY_BUFFER, m_fontBuffer);
-  glBufferData(GL_ARRAY_BUFFER, m_fontBufferSize, &vertices[0], GL_STATIC_DRAW);
+  m_fontBuffer->Orphan(m_fontBufferSize, &vertices[0]);
 }
 
 void CText::SetColour(colour_t colour) {
@@ -111,22 +105,20 @@ void CText::Render(mvp_matrix_t &mvp) {
     this->CreateTextBuffer();
   }
 
-  glBindBuffer(GL_ARRAY_BUFFER, m_fontBuffer);
-
   GFX->Begin(mvp, s_fontProgram);
 
   S_CGLProgram fontProg = std::static_pointer_cast<CGLProgram>(s_fontProgram);
   glUniform3f(fontProg->GetUniformLocation("u_FontColour"), m_colour.r, m_colour.g, m_colour.b);
-  atlas->Use();
 
-  //glBindTexture(GL_TEXTURE_2D, 1); // Uses the button texture to make wireframe visible.
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // Turn on wireframe.
-  glDrawArrays(GL_TRIANGLES, 0, m_fontBufferSize / sizeof(vertex_t)); // Render text.
-  //glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // Turn off wireframe.
+  GFX->SetTexture(atlas, 0);
+  GFX->Draw(
+    PrimitiveType::TRIANGLES,
+    m_fontBuffer
+  );
 
   GFX->End();
 }
 
-unsigned int CText::GetBuffer() {
+S_CBuffer CText::GetBuffer() {
   return m_fontBuffer;
 }

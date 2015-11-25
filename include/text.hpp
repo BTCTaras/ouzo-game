@@ -4,6 +4,7 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include "font.hpp"
+#include "buffer.hpp"
 
 #include <string>
 #include <memory>
@@ -20,7 +21,7 @@ public:
   void SetText(const std::u32string &text);
 
   void Render(mvp_matrix_t &mvp);
-  unsigned int GetBuffer();
+  S_CBuffer GetBuffer();
 
 private:
   void CreateTextBuffer();
@@ -28,13 +29,14 @@ private:
   static S_CProgram s_fontProgram;
 
   std::u32string m_text;
-  unsigned int m_fontBuffer;
   unsigned int m_fontBufferSize;
   unsigned int m_size;
 
   colour_t m_colour;
 
   CFont *m_font;
+
+  S_CBuffer m_fontBuffer;
 };
 
 typedef std::shared_ptr<CFont> S_CFont;
