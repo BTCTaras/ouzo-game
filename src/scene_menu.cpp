@@ -22,15 +22,11 @@ void CSceneMenu::OnInitUI() {
 	m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
 
 	S_CUIControlTexture tex(new CUIControlTexture(m_buttonTexture));
-	tex->x = 80;
-	tex->y = 40;
-	tex->z = -0.8f;
+	tex->SetPosition(80, 40, -0.8f);
 	this->AddControl(tex);
 
 	S_CUIControlText text(new CUIControlText(&m_font, U"butt:)", 32));
-	text->x = 200;
-	text->y = 100;
-	text->z = 0.8f;
+	text->SetPosition(200, 100, 0.8f);
 	this->AddControl(text);
 
 	m_texture = GFX->CreateTexture("assets/backgrounds/test.jpeg");

@@ -102,6 +102,17 @@ void CUIControl::AddChild(std::shared_ptr<CUIControl> control) {
 	m_children.push_back(control);
 }
 
+void CUIControl::SetPosition(float x, float y, float z) {
+	this->x = x;
+	this->y = y;
+	this->z = z;
+}
+
+void CUIControl::SetSize(float width, float height) {
+	this->width = width;
+	this->height = height;
+}
+
 void CUIControl::AddRenderable(S_CUIRenderable renderable) {
 	m_renderables.push_back(renderable);
 }

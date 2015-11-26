@@ -66,6 +66,8 @@ public:
 	virtual void HandleEvent(UIEvent event, ui_event_params_t &params);
 
 	void AddChild(std::shared_ptr<CUIControl> control);
+	void SetPosition(float x = 0.0f, float y = 0.0f, float z = 0.0f);
+	void SetSize(float width = 0.0f, float height = 0.0f);
 	std::vector< std::shared_ptr<CUIControl> >* GetChildren();
 	std::vector<S_CUIRenderable>* GetRenderables();
 
@@ -81,6 +83,10 @@ private:
 
 typedef std::shared_ptr<CUIControl> S_CUIControl;
 
+///
+/// TEXTURE
+///
+
 class CUIControlTexture : public CUIControl {
 public:
 	CUIControlTexture(S_CTexture texture = nullptr);
@@ -92,6 +98,10 @@ private:
 };
 
 typedef std::shared_ptr<CUIControlTexture> S_CUIControlTexture;
+
+///
+/// TEXT
+///
 
 class CUIControlText : public CUIControl {
 public:
@@ -105,6 +115,10 @@ private:
 };
 
 typedef std::shared_ptr<CUIControlText> S_CUIControlText;
+
+///
+/// SCENE
+///
 
 class CSceneUI : public CScene {
 public:
