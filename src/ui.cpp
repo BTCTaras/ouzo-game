@@ -98,7 +98,7 @@ CUIControl::CUIControl()
 {
 }
 
-void CUIControl::AddChild(S_CUIControl control) {
+void CUIControl::AddChild(std::shared_ptr<CUIControl> control) {
   m_children.push_back(control);
 }
 
@@ -118,39 +118,26 @@ std::vector<S_CUIRenderable>* CUIControl::GetRenderables() {
 /// CUISprite
 ///
 
-unsigned int CUISprite::s_globalSpriteBuffer = 0;
-unsigned int CUISprite::s_activeSprites = 0;
+S_CBuffer CUISprite::s_globalSpriteBuffer = nullptr;
 
 CUISprite::CUISprite(S_CTexture tex) {
   if (tex != nullptr) {
     this->SetTexture(tex);
   }
 
-  if (s_globalSpriteBuffer == 0) {
-    glGenBuffers(1, &s_globalSpriteBuffer);
-    glBindBuffer(GL_ARRAY_BUFFER, s_globalSpriteBuffer);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(QUAD_VERTICES), QUAD_VERTICES, GL_STATIC_DRAW);
-  }
-
-  s_activeSprites++;
-}
-
-CUISprite::~CUISprite() {
-  s_activeSprites--;
-
-  if (s_activeSprites == 0) {
-    glDeleteBuffers(1, &s_globalSpriteBuffer);
-    s_globalSpriteBuffer = 0;
+  if (s_globalSpriteBuffer == nullptr) {
+	s_globalSpriteBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
+	s_globalSpriteBuffer->Orphan(sizeof(QUAD_VERTICES), (void*)QUAD_VERTICES);
   }
 }
 
 void CUISprite::OnRender(mvp_matrix_t &mvp) {
   mvp.model = glm::scale(mvp.model, glm::vec3(m_texture->GetWidth(), m_texture->GetHeight(), 1.0f));
-  m_texture->Use();
 
-  //GFX->Begin(mvp);
-  //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-  //GFX->End();
+  GFX->Begin(mvp, s_globalSpriteBuffer);
+  GFX->SetTexture(m_texture);
+  GFX->Draw(PrimitiveType::TRIANGLE_STRIP);
+  GFX->End();
 }
 
 void CUISprite::SetTexture(S_CTexture tex) {

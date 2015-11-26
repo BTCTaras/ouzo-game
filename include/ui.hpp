@@ -5,6 +5,7 @@
 #include "shader.hpp"
 #include "texture.hpp"
 #include "text.hpp"
+#include "buffer.hpp"
 
 #include <memory>
 #include <vector>
@@ -33,7 +34,6 @@ typedef std::shared_ptr<CUIRenderable> S_CUIRenderable;
 class CUISprite : public CUIRenderable {
 public:
   CUISprite(S_CTexture tex = nullptr);
-  ~CUISprite();
 
   void SetTexture(S_CTexture tex);
 
@@ -41,9 +41,7 @@ public:
 
 private:
   S_CTexture m_texture;
-
-  static unsigned int s_activeSprites;
-  static unsigned int s_globalSpriteBuffer;
+  static S_CBuffer s_globalSpriteBuffer;
 };
 
 typedef std::shared_ptr<CUISprite> S_CUISprite;
