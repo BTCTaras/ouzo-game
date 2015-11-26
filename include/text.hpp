@@ -12,13 +12,13 @@
 class CText {
 public:
 	CText();
-	CText(CFont *font, unsigned int size, const std::u32string &text);
+	CText(CFont *font, unsigned int size, const std::string &text);
 	~CText();
 
 	void SetColour(colour_t colour);
-	void InitText(CFont *font, unsigned int size, const std::u32string &text);
+	void InitText(CFont *font, unsigned int size, const std::string &text);
 
-	void SetText(const std::u32string &text);
+	void SetText(const std::string &text);
 
 	void Render(mvp_matrix_t &mvp);
 	S_CBuffer GetBuffer();
@@ -28,7 +28,7 @@ private:
 
 	static S_CProgram s_fontProgram;
 
-	std::u32string m_text;
+	std::string m_text;
 	unsigned int m_fontBufferSize;
 	unsigned int m_size;
 

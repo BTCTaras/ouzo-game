@@ -50,7 +50,7 @@ class CUIText : public CUIRenderable {
 public:
 	CUIText(CText *text);
 
-	void SetText(const std::u32string &text);
+	void SetText(const std::string &text);
 
 	virtual void OnRender(mvp_matrix_t &mvp);
 
@@ -105,9 +105,9 @@ typedef std::shared_ptr<CUIControlTexture> S_CUIControlTexture;
 
 class CUIControlText : public CUIControl {
 public:
-	CUIControlText(CFont *font, const std::u32string &text, unsigned int size);
+	CUIControlText(CFont *font, const std::string &text, unsigned int size);
 
-	void SetText(const std::u32string &text);
+	void SetText(const std::string &text);
 
 private:
 	CText m_text;
@@ -115,6 +115,36 @@ private:
 };
 
 typedef std::shared_ptr<CUIControlText> S_CUIControlText;
+
+///
+/// BUTTON
+///
+
+class CUIControlButton : public CUIControl {
+public:
+	CUIControlButton(
+		CFont *font, 
+		const std::string &text, 
+		unsigned int fontSize,
+		colour_t colour = { 0.1f, 0.1f, 0.1f }, 
+		colour_t textColour = { 1.0f, 1.0f, 1.0f }
+	);
+	CUIControlButton(
+		CFont *font, 
+		const std::string &text, 
+		unsigned int fontSize, 
+		unsigned int width, 
+		unsigned int height, 
+		colour_t colour = {0.1f, 0.1f, 0.1f}, 
+		colour_t textColour = { 1.0f, 1.0f, 1.0f }
+	);
+
+	void SetText(const std::string &text);
+	void SetColour(colour_t colour);
+
+private:
+	S_CUIControlText m_controlText;
+};
 
 ///
 /// SCENE
@@ -128,7 +158,7 @@ public:
 	virtual void OnInit();
 	virtual void OnInitUI() = 0;
 
-	void AddControl(std::shared_ptr<CUIControl> control);
+	void AddControl(S_CUIControl control);
 
 	virtual void OnRender();
 	virtual S_CTexture GetBackgroundTexture();
@@ -138,6 +168,7 @@ public:
 	virtual void OnResize(int width, int height);
 	virtual void OnClick(unsigned int button, float width, float height);
 
+
 protected:
 	mvp_matrix_t m_mvpMatrix;
 
@@ -146,5 +177,7 @@ private:
 	S_CProgram m_program;
 
 	int m_width, m_height;
+
+	void RenderControl(S_CUIControl control, mvp_matrix_t &matrix);
 
 };

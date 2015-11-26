@@ -36,7 +36,7 @@ void CSceneUI::OnInit() {
 	this->OnInitUI();
 }
 
-void CSceneUI::AddControl(std::shared_ptr<CUIControl> control) {
+void CSceneUI::AddControl(S_CUIControl control) {
 	m_mainControl->AddChild(control);
 }
 
@@ -54,17 +54,17 @@ void CSceneUI::UpdateBackground() {
 }
 
 void CSceneUI::OnRender() {
-	for (S_CUIRenderable renderable : *m_mainControl->GetRenderables()) {
-		m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(m_mainControl->x, m_mainControl->y, m_mainControl->z));
-		renderable->OnRender(m_mvpMatrix);
+	RenderControl(m_mainControl, m_mvpMatrix);
+}
+
+void CSceneUI::RenderControl(S_CUIControl control, mvp_matrix_t &matrix) {
+	for (S_CUIRenderable renderable : *control->GetRenderables()) {
+		matrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(control->x, control->y, control->z));
+		renderable->OnRender(matrix);
 	}
 
-	for (S_CUIControl control : *m_mainControl->GetChildren()) {
-		for (S_CUIRenderable renderable : *control->GetRenderables()) {
-			m_mvpMatrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(control->x, control->y, control->z));
-			renderable->OnRender(m_mvpMatrix);  // This is pretty naive.
-												// Replace with instancing (& multidraw indirect).
-		}
+	for (S_CUIControl child : *control->GetChildren()) {
+		RenderControl(child, matrix);
 	}
 }
 
@@ -87,7 +87,6 @@ void CSceneUI::OnClick(unsigned int button, float x, float y) {
 		}
 	}
 }
-
 ///
 /// CUIControl
 ///
@@ -163,7 +162,7 @@ CUIText::CUIText(CText *text)
 {
 }
 
-void CUIText::SetText(const std::u32string &text) {
+void CUIText::SetText(const std::string &text) {
 	m_text->SetText(text);
 }
 
@@ -183,14 +182,14 @@ void CUIControl::HandleEvent(UIEvent event, ui_event_params_t &params) {
 ///
 /// CUIControlText
 ///
-CUIControlText::CUIControlText(CFont *font, const std::u32string &text, unsigned int size)
+CUIControlText::CUIControlText(CFont *font, const std::string &text, unsigned int size)
 	: m_text(font, size, text),
 	m_uiText(new CUIText(&m_text))
 {
 	this->AddRenderable(m_uiText);
 }
 
-void CUIControlText::SetText(const std::u32string &text) {
+void CUIControlText::SetText(const std::string &text) {
 	m_uiText->SetText(text);
 }
 

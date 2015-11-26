@@ -25,7 +25,7 @@ void CSceneMenu::OnInitUI() {
 	tex->SetPosition(80, 40, -0.8f);
 	this->AddControl(tex);
 
-	S_CUIControlText text(new CUIControlText(&m_font, U"butt:)", 32));
+	S_CUIControlText text(new CUIControlText(&m_font, u8"Test Button", 32));
 	text->SetPosition(200, 100, 0.8f);
 	this->AddControl(text);
 

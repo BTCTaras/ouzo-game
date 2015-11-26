@@ -18,13 +18,13 @@ CText::CText()
 	m_colour = { 1.0f, 1.0f, 1.0f }; // Start white
 }
 
-CText::CText(CFont *font, unsigned int size, const std::u32string &text)
+CText::CText(CFont *font, unsigned int size, const std::string &text)
 	: CText()
 {
 	this->InitText(font, size, text);
 }
 
-void CText::InitText(CFont *font, unsigned int size, const std::u32string &text) {
+void CText::InitText(CFont *font, unsigned int size, const std::string &text) {
 	if (s_fontProgram == nullptr) {
 		S_CShader fontShaders[] = {
 		  GFX->CreateShader(ShaderType::VERTEX_SHADER, "assets/shaders/uitext"),
@@ -44,7 +44,7 @@ void CText::InitText(CFont *font, unsigned int size, const std::u32string &text)
 	this->SetText(text);
 }
 
-void CText::SetText(const std::u32string &text) {
+void CText::SetText(const std::string &text) {
 	m_text = text;
 	this->CreateTextBuffer();
 }
