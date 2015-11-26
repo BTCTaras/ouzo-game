@@ -7,7 +7,7 @@
 #include <GL/glew.h>
 
 CGLAtlasFactory::CGLAtlasFactory(unsigned int width, unsigned int height, unsigned int channels)
-  : CAtlasFactory(width, height, channels)
+	: CAtlasFactory(width, height, channels)
 {
 	m_atlasTex.reset(new CGLTexture);
 
@@ -34,13 +34,13 @@ void CGLAtlasFactory::Write(unsigned int x, unsigned int y, unsigned int w, unsi
 
 S_CTexture CGLAtlasFactory::GetTexture(FilterType type) {
 
-  GLenum glFilterType =
-    (type == FilterType::NEAREST_NEIGHBOUR ? GL_NEAREST : GL_LINEAR);
+	GLenum glFilterType =
+		(type == FilterType::NEAREST_NEIGHBOUR ? GL_NEAREST : GL_LINEAR);
 
-  glBindTexture(GL_TEXTURE_2D, m_atlasTex->GetOpenGLHandle());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilterType);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilterType);
-  return m_atlasTex;
+	glBindTexture(GL_TEXTURE_2D, m_atlasTex->GetOpenGLHandle());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilterType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilterType);
+	return m_atlasTex;
 }
 
 unsigned int CGLAtlasFactory::GetImageFormat() {

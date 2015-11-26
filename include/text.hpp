@@ -11,32 +11,32 @@
 
 class CText {
 public:
-  CText();
-  CText(CFont *font, unsigned int size, const std::u32string &text);
-  ~CText();
+	CText();
+	CText(CFont *font, unsigned int size, const std::u32string &text);
+	~CText();
 
-  void SetColour(colour_t colour);
-  void InitText(CFont *font, unsigned int size, const std::u32string &text);
+	void SetColour(colour_t colour);
+	void InitText(CFont *font, unsigned int size, const std::u32string &text);
 
-  void SetText(const std::u32string &text);
+	void SetText(const std::u32string &text);
 
-  void Render(mvp_matrix_t &mvp);
-  S_CBuffer GetBuffer();
+	void Render(mvp_matrix_t &mvp);
+	S_CBuffer GetBuffer();
 
 private:
-  void CreateTextBuffer();
+	void CreateTextBuffer();
 
-  static S_CProgram s_fontProgram;
+	static S_CProgram s_fontProgram;
 
-  std::u32string m_text;
-  unsigned int m_fontBufferSize;
-  unsigned int m_size;
+	std::u32string m_text;
+	unsigned int m_fontBufferSize;
+	unsigned int m_size;
 
-  colour_t m_colour;
+	colour_t m_colour;
 
-  CFont *m_font;
+	CFont *m_font;
 
-  S_CBuffer m_fontBuffer;
+	S_CBuffer m_fontBuffer;
 };
 
 typedef std::shared_ptr<CFont> S_CFont;

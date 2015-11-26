@@ -14,8 +14,8 @@ const char *GAME_START_TITLE = "Ouzo";
 CGame *CGame::Inst = nullptr;
 
 CGame::CGame()
-	:	m_targetFPS(60),
-		m_running(true)
+	: m_targetFPS(60),
+	m_running(true)
 {
 }
 
@@ -27,9 +27,9 @@ void CGame::InitGame() {
 		GAME_START_WIDTH,
 		GAME_START_HEIGHT,
 
-		SDL_WINDOW_OPENGL 	|
+		SDL_WINDOW_OPENGL |
 		SDL_WINDOW_SHOWN
-	);
+		);
 
 	SDL_Surface *icon = this->LoadIcon("assets/icon.png");
 	SDL_SetWindowIcon(m_window, icon);
@@ -56,7 +56,7 @@ SDL_Surface *CGame::LoadIcon(const char *file) {
 		FreeImage_GetGreenMask(image),
 		FreeImage_GetBlueMask(image),
 		0
-	);
+		);
 
 	// Workaround to transparent being black because of FreeImage
 	// Essentially just translates black to transparent.
@@ -84,7 +84,7 @@ unsigned int CGame::GetHeight() {
 }
 
 void CGame::Event_OnResize(int width, int height) {
- 	this->m_width = width;
+	this->m_width = width;
 	this->m_height = height;
 	glViewport(0, 0, width, height);
 
@@ -99,45 +99,45 @@ void CGame::Event_OnClick(int x, int y, int button, bool press) {
 
 void CGame::TranslateEvent(SDL_Event &event) {
 	switch (event.type) {
-		case SDL_QUIT:
-			m_running = false;
+	case SDL_QUIT:
+		m_running = false;
+		break;
+
+	case SDL_MOUSEBUTTONUP:
+	case SDL_MOUSEBUTTONDOWN:
+	{
+		int button;
+		switch (event.button.button) {
+		case SDL_BUTTON_LEFT:
+			button = 0;
 			break;
-
-		case SDL_MOUSEBUTTONUP:
-		case SDL_MOUSEBUTTONDOWN:
-		{
-			int button;
-			switch (event.button.button) {
-				case SDL_BUTTON_LEFT:
-					button = 0;
-					break;
-				case SDL_BUTTON_RIGHT:
-					button = 1;
-					break;
-				case SDL_BUTTON_MIDDLE:
-					button = 2;
-					break;
-				default:
-					button = 0xFF;
-					break;
-			}
-
-			bool pressed = event.button.state == SDL_PRESSED;
-			this->Event_OnClick(event.button.x, event.button.y, button, pressed);
+		case SDL_BUTTON_RIGHT:
+			button = 1;
+			break;
+		case SDL_BUTTON_MIDDLE:
+			button = 2;
+			break;
+		default:
+			button = 0xFF;
 			break;
 		}
 
-		case SDL_WINDOWEVENT:
-			switch (event.window.event) {
-				case SDL_WINDOWEVENT_SIZE_CHANGED:
-					this->Event_OnResize(event.window.data1, event.window.data2);
-					break;
-			}
-			break;
+		bool pressed = event.button.state == SDL_PRESSED;
+		this->Event_OnClick(event.button.x, event.button.y, button, pressed);
+		break;
+	}
 
-		case SDL_APP_LOWMEMORY:
-			abort(); // ALLAHU AKBAR
+	case SDL_WINDOWEVENT:
+		switch (event.window.event) {
+		case SDL_WINDOWEVENT_SIZE_CHANGED:
+			this->Event_OnResize(event.window.data1, event.window.data2);
 			break;
+		}
+		break;
+
+	case SDL_APP_LOWMEMORY:
+		abort(); // ALLAHU AKBAR
+		break;
 	}
 }
 

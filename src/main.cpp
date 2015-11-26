@@ -4,8 +4,7 @@
 #include <stdio.h>
 
 #include <GL/glew.h>
-
-#include <SDL2/SDL_main.h>
+#undef main
 
 int main(int argc, char *argv[]) {
 	CGame game;

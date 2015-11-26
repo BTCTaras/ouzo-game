@@ -10,23 +10,23 @@
 
 class CSceneMenu : public CSceneUI {
 public:
-  CSceneMenu();
-  ~CSceneMenu();
+	CSceneMenu();
+	~CSceneMenu();
 
-  virtual void OnUpdate() override;
-  virtual void OnLeave(CScene *scene) override;
-  virtual void OnRender() override;
-  virtual void OnInitUI() override;
+	virtual void OnUpdate() override;
+	virtual void OnLeave(CScene *scene) override;
+	virtual void OnRender() override;
+	virtual void OnInitUI() override;
 
-  virtual S_CTexture GetBackgroundTexture() override;
+	virtual S_CTexture GetBackgroundTexture() override;
 
 private:
-  S_CTexture m_buttonTexture;
-  S_CTexture m_texture;
+	S_CTexture m_buttonTexture;
+	S_CTexture m_texture;
 
-  S_CProgram m_fontProgram;
-  CFont m_font;
-  CText m_helloWorld;
+	S_CProgram m_fontProgram;
+	CFont m_font;
+	CText m_helloWorld;
 
-  S_CBuffer m_testBuffer;
+	S_CBuffer m_testBuffer;
 };
