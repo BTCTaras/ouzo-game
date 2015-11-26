@@ -148,11 +148,9 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
   mvp.model = glm::scale(mvp.model, glm::vec3(m_texture->GetWidth(), m_texture->GetHeight(), 1.0f));
   m_texture->Use();
 
-  glBindBuffer(GL_ARRAY_BUFFER, s_globalSpriteBuffer);
-
-  GFX->Begin(mvp);
-  glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-  GFX->End();
+  //GFX->Begin(mvp);
+  //glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+  //GFX->End();
 }
 
 void CUISprite::SetTexture(S_CTexture tex) {

@@ -171,7 +171,7 @@ void CGLGraphics::BeginScene() {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
+void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program) {
   // OpenGL handles are 0 when uninitialised
   if (m_vao == 0) {
     fprintf(stderr, "WARNING: CGraphics has no VAO!!\n");
@@ -196,6 +196,11 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
 
   // Specify where to store our vertex attributes
   glBindVertexArray(m_vao);
+
+  // Specify where to find our data
+  S_CGLBuffer gl_buffer = std::static_pointer_cast<CGLBuffer>(vertexBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, gl_buffer->GetOpenGLHandle());
+  m_currentBuffer = vertexBuffer; // For use in CGLGraphics::Draw.
 
   // Enable the vertex attrib array idk why but you gotta do this
   glEnableVertexAttribArray(CGLGraphics::VERT_ATTRIB_POS);
@@ -222,16 +227,11 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CProgram program) {
                       );
 }
 
-void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffer elementBuffer) {
-  S_CGLBuffer gl_vertexBuffer = std::static_pointer_cast<CGLBuffer>(vertexBuffer);
-  S_CGLBuffer gl_elementBuffer = std::static_pointer_cast<CGLBuffer>(elementBuffer);
-
-  // Specify what vertex buffer to use for drawing
-  glBindBuffer(GL_ARRAY_BUFFER, gl_vertexBuffer->GetOpenGLHandle());
-
+void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
   GLenum gl_primitive = CGLGraphics::GetOpenGLPrimitiveTypeEnum(primitive);
 
-  if (gl_elementBuffer != nullptr) {
+  if (elementBuffer != nullptr) {
+	S_CGLBuffer gl_elementBuffer = std::static_pointer_cast<CGLBuffer>(elementBuffer);
     // We have an element buffer, use glDrawElements
     // Specify what element buffer to use
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_elementBuffer->GetOpenGLHandle());
@@ -246,7 +246,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffe
     glDrawArrays(
       gl_primitive,
       0, // The first vertex is at 0
-      vertexBuffer->GetSize() / sizeof(vertex_t) // Amount of vertices = vertex buffer size / vertex size
+      m_currentBuffer->GetSize() / sizeof(vertex_t) // Amount of vertices = vertex buffer size / vertex size
     );
   }
 }
@@ -287,6 +287,8 @@ void CGLGraphics::End() {
   // idk why this is necessary but it is
   glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_TEX_COORDS);
   glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_POS);
+
+  m_currentBuffer = nullptr;
 }
 
 void CGLGraphics::EndScene() {

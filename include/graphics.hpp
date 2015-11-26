@@ -54,16 +54,19 @@ public:
   ///
   /// Enables all vertex attributes and passes them to the current program.
   ///
-  virtual void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr) = 0;
+  /// \param[in]	mvp				The MVP matrix to use for rendering.
+  /// \param[in]	vertexBuffer	The vertex buffer to use for rendering.
+  /// \param[in]	program			The program to use for rendering.
+  ///
+  virtual void Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program = nullptr) = 0;
 
   ///
-  /// Draws a model.
+  /// Draws a model. The vertex buffer is specified by CGraphics::Begin.
   ///
   /// \param[in]  primitive     Specifies how the vertices shall be connected.
-  /// \param[in]  vertexBuffer  The buffer containing the model vertices.
   /// \param[in]  elementBuffer The buffer containing the model indices.
   ///
-  virtual void Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffer elementBuffer = nullptr) = 0;
+  virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
 
   ///
   /// Sets the texture to draw with.
@@ -145,7 +148,7 @@ public:
 
   virtual void Init(SDL_Window *window) override;
   virtual void BeginScene() override;
-  virtual void Begin(mvp_matrix_t &mvp, S_CProgram program = nullptr) override;
+  virtual void Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program = nullptr) override;
   virtual void End() override;
   virtual void EndScene() override;
 
@@ -155,7 +158,7 @@ public:
   virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
   virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
   virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
-  virtual void Draw(PrimitiveType primitive, S_CBuffer vertexBuffer, S_CBuffer elementBuffer = nullptr) override;
+  virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
   virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
 
   virtual unsigned int GetMaxTextureSize() override;
@@ -182,6 +185,7 @@ private:
   S_CProgram m_defaultProgram;
   SDL_GLContext m_context;
   SDL_Window *m_window;
+  S_CBuffer m_currentBuffer;
 
   unsigned int m_glMaxTextureSize;
 };
