@@ -28,17 +28,17 @@ typedef struct {
 } colour_t;
 
 enum ShaderType {
-	VERTEX_SHADER, FRAGMENT_SHADER
+	GFX_VERTEX_SHADER, GFX_FRAGMENT_SHADER
 };
 
 enum PrimitiveType {
-	POINTS,
-	LINE_STRIP,
-	LINE_LOOP,
-	LINES,
-	TRIANGLE_STRIP,
-	TRIANGLE_FAN,
-	TRIANGLES,
+	GFX_POINTS,
+	GFX_LINE_STRIP,
+	GFX_LINE_LOOP,
+	GFX_LINES,
+	GFX_TRIANGLE_STRIP,
+	GFX_TRIANGLE_FAN,
+	GFX_TRIANGLES,
 };
 
 class CGraphics {
@@ -137,6 +137,16 @@ public:
 	///
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) = 0;
 
+	///
+	///	Defines the area that this CGraphics object shall render to.
+	///
+	///	\param[in]	x	The x coordinate of the viewport, relative to the window.
+	/// \param[in]	y	The y coordinate of the viewport, relative to the window.
+	/// \param[in]	w	The width of the viewport.
+	/// \param[in]	h	The height of the viewport.
+	///
+	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) = 0;
+
 	virtual unsigned int GetMaxTextureSize() = 0;
 };
 
@@ -160,6 +170,7 @@ public:
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
 	virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
+	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) override;
 
 	virtual unsigned int GetMaxTextureSize() override;
 

@@ -41,6 +41,8 @@ void CSceneUI::AddControl(S_CUIControl control) {
 }
 
 void CSceneUI::OnResize(int width, int height) {
+	CScene::OnResize(width, height);
+
 	m_width = width;
 	m_height = height;
 	m_mvpMatrix.projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
@@ -146,7 +148,7 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
 
 	GFX->Begin(mvp, s_globalSpriteBuffer);
 	GFX->SetTexture(m_texture);
-	GFX->Draw(PrimitiveType::TRIANGLE_STRIP);
+	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
 	GFX->End();
 }
 

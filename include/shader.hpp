@@ -38,12 +38,12 @@ public:
 typedef std::shared_ptr<CShader> S_CShader;
 
 enum ShaderUniformType {
-	FLOAT, INT,
-	VEC4F, VEC4I,
-	VEC3F, VEC3I,
-	VEC2F, VEC2I,
-	MAT4x4F,
-	MAT3x3F,
+	GFX_FLOAT, GFX_INT,
+	GFX_VEC4F, GFX_VEC4I,
+	GFX_VEC3F, GFX_VEC3I,
+	GFX_VEC2F, GFX_VEC2I,
+	GFX_MAT4x4F,
+	GFX_MAT3x3F,
 
 	// TODO: Make array versions of each type
 };

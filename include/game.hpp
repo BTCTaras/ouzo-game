@@ -5,10 +5,22 @@
 
 #define GFX CGame::Inst->GetGraphics()
 
+#ifdef _WIN32
+#include <Windows.h>
+#endif
+
 #include <memory>
 #include <SDL2/SDL.h>
 
 struct GLFWwindow;
+
+enum GraphicsAPI {
+	OPENGL_CORE,
+	
+#ifdef _WIN32
+	DIRECT3D9
+#endif
+};
 
 class CGame {
 public:
@@ -17,7 +29,7 @@ public:
 
 	static CGame *Inst;
 
-	void InitGame();
+	void InitGame(GraphicsAPI api);
 
 	void StartLoop();
 	void Stop();
@@ -35,13 +47,17 @@ public:
 
 	unsigned int m_width, m_height;
 
+#ifdef _WIN32
+	HWND GetWindow_Win32();
+#endif
+
 private:
 	void Event_OnResize(int width, int height);
 	void Event_OnClick(int x, int y, int button, bool press);
 
 	void TranslateEvent(SDL_Event &event);
 
-	SDL_Surface *LoadIcon(const char *file);
+	SDL_Surface *LoadIconFromFile(const char *file);
 
 	void OnRender();
 	void OnUpdate();
@@ -55,4 +71,8 @@ private:
 
 	S_CScene m_scene;
 	S_CGraphics m_graphics;
+
+#ifdef _WIN32
+	HWND m_win32Window;
+#endif
 };

@@ -94,34 +94,34 @@ void CGLProgram::SetUniform(ShaderUniformType type, const char *name, void *valu
 	const GLint *ints = (const GLint*)values;
 
 	switch (type) {
-	case ShaderUniformType::FLOAT:
+	case ShaderUniformType::GFX_FLOAT:
 		glUniform1f(loc, floats[0]);
 		break;
-	case ShaderUniformType::INT:
+	case ShaderUniformType::GFX_INT:
 		glUniform1i(loc, ints[0]);
 		break;
-	case ShaderUniformType::VEC4F:
+	case ShaderUniformType::GFX_VEC4F:
 		glUniform4f(loc, floats[0], floats[1], floats[2], floats[3]);
 		break;
-	case ShaderUniformType::VEC4I:
+	case ShaderUniformType::GFX_VEC4I:
 		glUniform4i(loc, ints[0], ints[1], ints[2], ints[3]);
 		break;
-	case ShaderUniformType::VEC3F:
+	case ShaderUniformType::GFX_VEC3F:
 		glUniform3f(loc, floats[0], floats[1], floats[2]);
 		break;
-	case ShaderUniformType::VEC3I:
+	case ShaderUniformType::GFX_VEC3I:
 		glUniform3i(loc, ints[0], ints[1], ints[2]);
 		break;
-	case ShaderUniformType::VEC2F:
+	case ShaderUniformType::GFX_VEC2F:
 		glUniform2f(loc, floats[0], floats[1]);
 		break;
-	case ShaderUniformType::VEC2I:
+	case ShaderUniformType::GFX_VEC2I:
 		glUniform2i(loc, ints[0], ints[1]);
 		break;
-	case ShaderUniformType::MAT4x4F:
+	case ShaderUniformType::GFX_MAT4x4F:
 		glUniformMatrix4fv(loc, 1, GL_FALSE, floats);
 		break;
-	case ShaderUniformType::MAT3x3F:
+	case ShaderUniformType::GFX_MAT3x3F:
 		glUniformMatrix3fv(loc, 1, GL_FALSE, floats);
 		break;
 	}

@@ -68,8 +68,8 @@ void CGLGraphics::Init(SDL_Window *window) {
 
 	glGenVertexArrays(1, &m_vao);
 
-	S_CShader defaultVert = this->CreateShader(ShaderType::VERTEX_SHADER, "assets/shaders/diffuse");
-	S_CShader defaultFrag = this->CreateShader(ShaderType::FRAGMENT_SHADER, "assets/shaders/diffuse");
+	S_CShader defaultVert = this->CreateShader(ShaderType::GFX_VERTEX_SHADER, "assets/shaders/diffuse");
+	S_CShader defaultFrag = this->CreateShader(ShaderType::GFX_FRAGMENT_SHADER, "assets/shaders/diffuse");
 
 	// Load the default program.
 	S_CShader shaders[] = { defaultVert, defaultFrag };
@@ -183,6 +183,10 @@ CGLGraphics::~CGLGraphics() {
 	SDL_GL_DeleteContext(m_context);
 }
 
+void CGLGraphics::SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) {
+	glViewport(x, y, w, h);
+}
+
 S_CProgram CGLGraphics::GetDefaultProgram() {
 	return m_defaultProgram;
 }
@@ -202,18 +206,18 @@ static const char *GL_SHADER_FILE_EXT = "glsl";
 S_CShader CGLGraphics::CreateShader(ShaderType type, const char *file) {
 	std::ostringstream str;
 	std::string typeExt =
-		type == ShaderType::VERTEX_SHADER ? "vert" : "frag";
+		type == ShaderType::GFX_VERTEX_SHADER ? "vert" : "frag";
 
 	str << file << "." << typeExt << "." << GL_SHADER_FILE_EXT;
 	std::string filename = str.str();
 
 	GLenum glType;
 	switch (type) {
-	case VERTEX_SHADER:
+	case GFX_VERTEX_SHADER:
 		glType = GL_VERTEX_SHADER;
 		break;
 
-	case FRAGMENT_SHADER:
+	case GFX_FRAGMENT_SHADER:
 		glType = GL_FRAGMENT_SHADER;
 		break;
 
@@ -344,19 +348,19 @@ void CGLGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
 
 unsigned int CGLGraphics::GetOpenGLPrimitiveTypeEnum(PrimitiveType primitive) {
 	switch (primitive) {
-	case PrimitiveType::POINTS:
+	case PrimitiveType::GFX_POINTS:
 		return GL_POINTS;
-	case PrimitiveType::LINE_STRIP:
+	case PrimitiveType::GFX_LINE_STRIP:
 		return GL_LINE_STRIP;
-	case PrimitiveType::LINE_LOOP:
+	case PrimitiveType::GFX_LINE_LOOP:
 		return GL_LINE_LOOP;
-	case PrimitiveType::LINES:
+	case PrimitiveType::GFX_LINES:
 		return GL_LINES;
-	case PrimitiveType::TRIANGLE_STRIP:
+	case PrimitiveType::GFX_TRIANGLE_STRIP:
 		return GL_TRIANGLE_STRIP;
-	case PrimitiveType::TRIANGLE_FAN:
+	case PrimitiveType::GFX_TRIANGLE_FAN:
 		return GL_TRIANGLE_FAN;
-	case PrimitiveType::TRIANGLES:
+	case PrimitiveType::GFX_TRIANGLES:
 		return GL_TRIANGLES;
 	default:
 		return GL_FALSE;

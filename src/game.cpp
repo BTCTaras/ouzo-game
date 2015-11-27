@@ -1,4 +1,10 @@
 #include "game.hpp"
+#include "graphics.hpp"
+
+#ifdef _WIN32
+#include "d3d/d3d_graphics.hpp"
+#include <Windows.h>
+#endif
 
 #include <GL/glew.h>
 
@@ -19,29 +25,63 @@ CGame::CGame()
 {
 }
 
-void CGame::InitGame() {
+void CGame::InitGame(GraphicsAPI api) {
+	Uint32 windowFlags =
+		((api == GraphicsAPI::OPENGL_CORE) ? SDL_WINDOW_OPENGL : NULL) |
+		SDL_WINDOW_HIDDEN;
+
 	m_window = SDL_CreateWindow(
 		GAME_START_TITLE,
 		SDL_WINDOWPOS_CENTERED,
 		SDL_WINDOWPOS_CENTERED,
 		GAME_START_WIDTH,
 		GAME_START_HEIGHT,
+		windowFlags
+	);
 
-		SDL_WINDOW_OPENGL |
-		SDL_WINDOW_SHOWN
-		);
+	if (!m_window) {
+		SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Couldn't create SDL window!!", NULL);
+		return;
+	}
 
-	SDL_Surface *icon = this->LoadIcon("assets/icon.png");
+	// TODO: Make this work on Windows. It does nothing on OpenGL Core
+	// and crashes on Direct3D.
+	// Maybe try setting the icon via Win32 directly?
+#ifndef _WIN32
+	SDL_Surface *icon = this->LoadIconFromFile("assets/icon.png");
 	SDL_SetWindowIcon(m_window, icon);
 	SDL_FreeSurface(icon);
+#endif
 
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 
-	m_graphics.reset(new CGLGraphics);
+	switch (api) {
+	case GraphicsAPI::OPENGL_CORE:
+		m_graphics.reset(new CGLGraphics);
+		break;
+
+#ifdef _WIN32
+	case GraphicsAPI::DIRECT3D9:
+		// TODO: Make D3D version configurable
+		m_graphics.reset(new CD3DGraphics(D3DVersion::D3D10));
+		break;
+#endif
+	}
+
+	SDL_ShowWindow(m_window);
+
+#ifdef _WIN32
+	m_win32Window = GetActiveWindow();
+#endif
+
 	m_graphics->Init(m_window);
 }
 
-SDL_Surface *CGame::LoadIcon(const char *file) {
+HWND CGame::GetWindow_Win32() {
+	return m_win32Window;
+}
+
+SDL_Surface *CGame::LoadIconFromFile(const char *file) {
 	FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
 	FIBITMAP *image = FreeImage_ConvertTo32Bits(bitmap);
 	FreeImage_FlipVertical(image);
@@ -56,14 +96,12 @@ SDL_Surface *CGame::LoadIcon(const char *file) {
 		FreeImage_GetGreenMask(image),
 		FreeImage_GetBlueMask(image),
 		0
-		);
+	);
 
 	// Workaround to transparent being black because of FreeImage
 	// Essentially just translates black to transparent.
 	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
 
-	// Make sure the icon is properly transparent. Should be default but just making sure...
-	SDL_SetSurfaceBlendMode(surf, SDL_BLENDMODE_BLEND);
 
 	FreeImage_Unload(image);
 	FreeImage_Unload(bitmap);
@@ -86,7 +124,8 @@ unsigned int CGame::GetHeight() {
 void CGame::Event_OnResize(int width, int height) {
 	this->m_width = width;
 	this->m_height = height;
-	glViewport(0, 0, width, height);
+	
+	m_graphics->SetViewport(0, 0, width, height);
 
 	if (this->GetScene() != nullptr) {
 		this->GetScene()->OnResize(width, height);

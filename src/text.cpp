@@ -27,8 +27,8 @@ CText::CText(CFont *font, unsigned int size, const std::string &text)
 void CText::InitText(CFont *font, unsigned int size, const std::string &text) {
 	if (s_fontProgram == nullptr) {
 		S_CShader fontShaders[] = {
-		  GFX->CreateShader(ShaderType::VERTEX_SHADER, "assets/shaders/uitext"),
-		  GFX->CreateShader(ShaderType::FRAGMENT_SHADER, "assets/shaders/uitext"),
+		  GFX->CreateShader(ShaderType::GFX_VERTEX_SHADER, "assets/shaders/uitext"),
+		  GFX->CreateShader(ShaderType::GFX_FRAGMENT_SHADER, "assets/shaders/uitext"),
 		};
 
 		s_fontProgram = GFX->CreateProgram(2, fontShaders);
@@ -107,10 +107,10 @@ void CText::Render(mvp_matrix_t &mvp) {
 
 	GFX->Begin(mvp, m_fontBuffer, s_fontProgram);
 
-	s_fontProgram->SetUniform(ShaderUniformType::VEC3F, "u_FontColour", &m_colour);
+	s_fontProgram->SetUniform(ShaderUniformType::GFX_VEC3F, "u_FontColour", &m_colour);
 
 	GFX->SetTexture(atlas, 0);
-	GFX->Draw(PrimitiveType::TRIANGLES);
+	GFX->Draw(PrimitiveType::GFX_TRIANGLES);
 
 	GFX->End();
 }
