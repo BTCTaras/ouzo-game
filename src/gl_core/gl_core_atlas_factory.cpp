@@ -45,7 +45,8 @@ S_CTexture CGLAtlasFactory::GetTexture(FilterType type) {
 
 unsigned int CGLAtlasFactory::GetImageFormat() {
 	GLenum format;
-	switch (m_channels) {
+
+  switch (m_channels) {
 	case 1:
 		format = GL_RED;
 		break;
@@ -58,6 +59,9 @@ unsigned int CGLAtlasFactory::GetImageFormat() {
 	case 4:
 		format = GL_RGBA;
 		break;
+  default:
+    format = GL_RGBA;
+    break;
 	}
 
 	return format;
