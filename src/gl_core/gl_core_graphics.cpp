@@ -20,7 +20,14 @@ const unsigned int CGLGraphics::VERT_ATTRIB_POS = 0;
 const unsigned int CGLGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
 #ifdef OUZO_DEBUG
-static void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
+
+// Not sure why this hackiness is needed but it is.
+#ifdef _WIN32
+void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
+#else
+void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
+#endif
+
 #endif
 
 void CGLGraphics::Init(SDL_Window *window) {
@@ -90,14 +97,81 @@ void CGLGraphics::Init(SDL_Window *window) {
 	if (GL_ARB_debug_output) {
 		printf("GL_ARB_debug_output is supported!! Enabling debug output...\n");
 		glDebugMessageCallbackARB(GL_DebugCallback, this);
-		glEnable(GL_DEBUG_OUTPUT);
+		glDebugMessageControlARB(GL_DONT_CARE, GL_DEBUG_TYPE_OTHER_ARB, GL_DONT_CARE, 0, NULL, GL_FALSE);
+		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 	}
 #endif
 }
 
 #ifdef OUZO_DEBUG
+#ifdef _WIN32
+void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+#else
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam) {
-	printf("Driver Message: %s\n", message);
+#endif
+	char *typeName;
+	switch (type) {
+	case GL_DEBUG_TYPE_ERROR_ARB:
+		typeName = "ERROR";
+		break;
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: // behaviour*
+		typeName = "DEPRECATED_BEHAVIOUR";
+		break;
+	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB: // behaviour*
+		typeName = "UNDEFINED_BEHAVIOUR";
+		break;
+	case GL_DEBUG_TYPE_PORTABILITY_ARB:
+		typeName = "PORTABILITY";
+		break;
+	case GL_DEBUG_TYPE_PERFORMANCE_ARB:
+		typeName = "PERFORMANCE";
+		break;
+	case GL_DEBUG_TYPE_OTHER_ARB:
+	default:
+		typeName = "OTHER";
+		break;
+	}
+
+	char *severityName;
+	switch (severity) {
+	case GL_DEBUG_SEVERITY_HIGH_ARB:
+		severityName = "HIGH";
+		break;
+	case GL_DEBUG_SEVERITY_MEDIUM_ARB:
+		severityName = "MEDIUM";
+		break;
+	case GL_DEBUG_SEVERITY_LOW_ARB:
+		severityName = "LOW";
+		break;
+	default:
+		severityName = "N/A";
+		break;
+	}
+
+	char *sourceName;
+	switch (source) {
+	case GL_DEBUG_SOURCE_API_ARB:
+		sourceName = "API";
+		break;
+	case GL_DEBUG_SOURCE_WINDOW_SYSTEM_ARB:
+		sourceName = "WINDOW_SYSTEM";
+		break;
+	case GL_DEBUG_SOURCE_SHADER_COMPILER_ARB:
+		sourceName = "SHADER_COMPILER";
+		break;
+	case GL_DEBUG_SOURCE_THIRD_PARTY_ARB:
+		sourceName = "THIRD_PARTY";
+		break;
+	case GL_DEBUG_SOURCE_APPLICATION_ARB:
+		sourceName = "APPLICATION";
+		break;
+	case GL_DEBUG_SOURCE_OTHER_ARB:
+	default:
+		sourceName = "OTHER";
+		break;
+	}
+
+	printf("[%s] Driver Message from %s (%s): %s\n", severityName, sourceName, typeName, message);
 }
 #endif
 
