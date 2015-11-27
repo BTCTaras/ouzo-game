@@ -44,6 +44,10 @@ void CGLProgram::Use() {
 	glUseProgram(m_id);
 }
 
+unsigned int CGLProgram::GetOpenGLHandle() {
+	return m_id;
+}
+
 unsigned int CGLProgram::GetUniformLocation(const char *name, bool ignoreUniformNotFound) {
 	std::string sname = name;
 
@@ -78,5 +82,47 @@ void CGLProgram::Link() {
 		std::unique_ptr<GLchar> str(new GLchar[buflen]);
 		glGetProgramInfoLog(m_id, buflen, NULL, str.get());
 		fprintf(stderr, "Failed to link program: %s\n", str.get());
+	}
+}
+
+void CGLProgram::SetUniform(ShaderUniformType type, const char *name, void *values) {
+	this->Use();
+
+	GLint loc = this->GetUniformLocation(name);
+
+	const GLfloat *floats = (const GLfloat*)values;
+	const GLint *ints = (const GLint*)values;
+
+	switch (type) {
+	case ShaderUniformType::FLOAT:
+		glUniform1f(loc, floats[0]);
+		break;
+	case ShaderUniformType::INT:
+		glUniform1i(loc, ints[0]);
+		break;
+	case ShaderUniformType::VEC4F:
+		glUniform4f(loc, floats[0], floats[1], floats[2], floats[3]);
+		break;
+	case ShaderUniformType::VEC4I:
+		glUniform4i(loc, ints[0], ints[1], ints[2], ints[3]);
+		break;
+	case ShaderUniformType::VEC3F:
+		glUniform3f(loc, floats[0], floats[1], floats[2]);
+		break;
+	case ShaderUniformType::VEC3I:
+		glUniform3i(loc, ints[0], ints[1], ints[2]);
+		break;
+	case ShaderUniformType::VEC2F:
+		glUniform2f(loc, floats[0], floats[1]);
+		break;
+	case ShaderUniformType::VEC2I:
+		glUniform2i(loc, ints[0], ints[1]);
+		break;
+	case ShaderUniformType::MAT4x4F:
+		glUniformMatrix4fv(loc, 1, GL_FALSE, floats);
+		break;
+	case ShaderUniformType::MAT3x3F:
+		glUniformMatrix3fv(loc, 1, GL_FALSE, floats);
+		break;
 	}
 }

@@ -37,6 +37,17 @@ public:
 
 typedef std::shared_ptr<CShader> S_CShader;
 
+enum ShaderUniformType {
+	FLOAT, INT,
+	VEC4F, VEC4I,
+	VEC3F, VEC3I,
+	VEC2F, VEC2I,
+	MAT4x4F,
+	MAT3x3F,
+
+	// TODO: Make array versions of each type
+};
+
 class CGLShader : public CShader {
 public:
 	CGLShader(unsigned int type);
@@ -82,6 +93,14 @@ public:
 	///
 	virtual void Use() = 0;
 
+	///
+	///	Sets a program variable.
+	///
+	/// \param[in]	type	The type of the program variable.
+	/// \param[in]	values	One or more values to pass into the shader.
+	///
+	virtual void SetUniform(ShaderUniformType type, const char *name, void *values) = 0;
+
 };
 
 typedef std::shared_ptr<CProgram> S_CProgram;
@@ -93,7 +112,7 @@ public:
 	~CGLProgram();
 
 	virtual void LoadFromShaders(size_t count, S_CShader *shaders) override;
-
+	virtual void SetUniform(ShaderUniformType type, const char *name, void *values) override;
 	virtual void Use() override;
 
 	///

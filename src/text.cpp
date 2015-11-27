@@ -107,8 +107,7 @@ void CText::Render(mvp_matrix_t &mvp) {
 
 	GFX->Begin(mvp, m_fontBuffer, s_fontProgram);
 
-	S_CGLProgram fontProg = std::static_pointer_cast<CGLProgram>(s_fontProgram);
-	glUniform3f(fontProg->GetUniformLocation("u_FontColour"), m_colour.r, m_colour.g, m_colour.b);
+	s_fontProgram->SetUniform(ShaderUniformType::VEC3F, "u_FontColour", &m_colour);
 
 	GFX->SetTexture(atlas, 0);
 	GFX->Draw(PrimitiveType::TRIANGLES);
