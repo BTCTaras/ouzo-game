@@ -19,7 +19,9 @@
 const unsigned int CGLGraphics::VERT_ATTRIB_POS = 0;
 const unsigned int CGLGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
-static void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
+#ifdef OUZO_DEBUG
+static void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
+#endif
 
 void CGLGraphics::Init(SDL_Window *window) {
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
@@ -93,9 +95,11 @@ void CGLGraphics::Init(SDL_Window *window) {
 #endif
 }
 
-void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
+#ifdef OUZO_DEBUG
+void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam) {
 	printf("Driver Message: %s\n", message);
 }
+#endif
 
 CGLGraphics::~CGLGraphics() {
 	if (m_vao > 0) {
