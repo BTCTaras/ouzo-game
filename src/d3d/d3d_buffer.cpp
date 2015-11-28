@@ -7,7 +7,7 @@
 #include <Windows.h>
 #include <d3d9.h>
 
-const DWORD CD3DBuffer::DEFAULT_BUFFER_FVF = D3DFVF_XYZ | D3DFVF_TEX0;
+const DWORD CD3DBuffer::DEFAULT_BUFFER_FVF = D3DFVF_XYZ | D3DFVF_TEX1;
 
 CD3DBuffer::CD3DBuffer(BufferType type, BufferStorageType storageType)
 	: CBuffer(type, storageType)
