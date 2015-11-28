@@ -18,12 +18,6 @@ typedef struct {
 } vertex_t;
 
 typedef struct {
-	glm::mat4 projection;
-	glm::mat4 view;
-	glm::mat4 model;
-} mvp_matrix_t;
-
-typedef struct {
 	float r, g, b;
 } colour_t;
 
@@ -36,6 +30,53 @@ enum PrimitiveType {
 	GFX_TRIANGLE_FAN,
 	GFX_TRIANGLES,
 };
+
+class CMatrix;
+typedef std::shared_ptr<CMatrix> S_CMatrix;
+
+class CMatrix {
+public:
+	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) = 0;
+	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) = 0;
+	virtual void Translate(float x, float y, float z = 0.0f) = 0;
+	virtual void Rotate(float x, float y, float z) = 0;
+	virtual void Scale(float x, float y, float z) = 0;
+	virtual void LoadIdentity() = 0;
+
+	virtual S_CMatrix operator*(S_CMatrix other) = 0;
+
+	virtual float* ValuePointer() = 0;
+};
+
+S_CMatrix operator*(S_CMatrix first, S_CMatrix second);
+
+typedef struct {
+	S_CMatrix projection;
+	S_CMatrix view;
+	S_CMatrix model;
+} mvp_matrix_t;
+
+class CGLMatrix : public CMatrix {
+public:
+	CGLMatrix(glm::mat4 *mat = nullptr);
+
+	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) override;
+	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) override;
+	virtual void Translate(float x, float y, float z = 0.0f) override;
+	virtual void Rotate(float x, float y, float z) override;
+	virtual void Scale(float x, float y, float z) override;
+	virtual void LoadIdentity() override;
+
+	virtual S_CMatrix operator*(S_CMatrix other) override;
+
+	virtual float* ValuePointer() override;
+	glm::mat4* GetGLMMatrix();
+
+private:
+	glm::mat4 m_internalMat;
+};
+
+typedef std::shared_ptr<CGLMatrix> S_CGLMatrix;
 
 class CGraphics {
 public:
@@ -134,6 +175,11 @@ public:
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) = 0;
 
 	///
+	/// Creates an identity matrix.
+	///
+	virtual S_CMatrix CreateIdentityMatrix() = 0;
+
+	///
 	///	Defines the area that this CGraphics object shall render to.
 	///
 	///	\param[in]	x	The x coordinate of the viewport, relative to the window.
@@ -164,6 +210,7 @@ public:
 	virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
 	virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
+	virtual S_CMatrix CreateIdentityMatrix() override;
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
 	virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
 	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) override;

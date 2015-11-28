@@ -108,13 +108,17 @@ S_CBuffer CD3DGraphics::CreateBuffer(BufferType type, BufferStorageType storageT
 	return S_CD3DBuffer(new CD3DBuffer(type, storageType));
 }
 
+S_CMatrix CD3DGraphics::CreateIdentityMatrix() {
+	return S_CMatrix();
+}
+
 void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 	D3DPRIMITIVETYPE prim = GetD3DPrimitiveType(primitive);
 	S_CD3DBuffer buffer = std::static_pointer_cast<CD3DBuffer>(m_currentBuffer);
 
 	d3ddev->SetFVF(CD3DBuffer::DEFAULT_BUFFER_FVF);
 	d3ddev->SetStreamSource(0, buffer->m_buffer, 0, sizeof(vertex_t));
-	d3ddev->DrawPrimitive(prim, 0, GetPrimitiveCount(primitive, buffer->GetSize() / sizeof(vertex_t)));
+	d3ddev->DrawPrimitive(prim, 0, (UINT)GetPrimitiveCount(primitive, buffer->GetSize() / sizeof(vertex_t)));
 }
 
 void CD3DGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
@@ -159,7 +163,7 @@ float CD3DGraphics::GetPrimitiveCount(PrimitiveType type, size_t vertexCount) {
 
 	case PrimitiveType::GFX_LINE_STRIP:
 	case PrimitiveType::GFX_POINTS:
-		return vertexCount;
+		return (float)vertexCount;
 
 	case PrimitiveType::GFX_TRIANGLES:
 		return vertexCount / 3.0f;

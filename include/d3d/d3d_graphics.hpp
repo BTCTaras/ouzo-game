@@ -28,6 +28,7 @@ public:
 	virtual S_CProgram CreateProgram(size_t count, S_CShader *shaders) override;
 	virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
+	virtual S_CMatrix CreateIdentityMatrix() override;
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
 	virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
 	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) override;

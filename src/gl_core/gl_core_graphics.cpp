@@ -191,6 +191,10 @@ S_CProgram CGLGraphics::GetDefaultProgram() {
 	return m_defaultProgram;
 }
 
+S_CMatrix CGLGraphics::CreateIdentityMatrix() {
+	return S_CGLMatrix(new CGLMatrix);
+}
+
 S_CTexture CGLGraphics::CreateTexture(const char *file) {
 	S_CGLTexture tex(new CGLTexture);
 
@@ -251,12 +255,11 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram pr
 	prog->Use();
 
 	// compute the MVP matrix
-	glm::mat4 mvpMat = mvp.projection * mvp.view * mvp.model;
-
+	S_CMatrix mvpMat = mvp.projection * mvp.view * mvp.model;
 	unsigned int mvpLoc = prog->GetUniformLocation("u_MVPMatrix", true);
 
 	// upload our MVP matrix
-	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, glm::value_ptr(mvpMat));
+	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, mvpMat->ValuePointer());
 
 	unsigned int texLoc = prog->GetUniformLocation("u_Texture", true);
 	glUniform1i(texLoc, 0); // we wanna use the texture in slot 0 (GL_TEXTURE0)

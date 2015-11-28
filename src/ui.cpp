@@ -29,9 +29,9 @@ CSceneUI::CSceneUI() {
 CSceneUI::~CSceneUI() {}
 
 void CSceneUI::OnInit() {
-	m_mvpMatrix.projection = glm::mat4(1.0f);
-	m_mvpMatrix.view = glm::mat4(1.0f);
-	m_mvpMatrix.model = glm::mat4(1.0f);
+	m_mvpMatrix.projection = GFX->CreateIdentityMatrix();
+	m_mvpMatrix.view = GFX->CreateIdentityMatrix();
+	m_mvpMatrix.model = GFX->CreateIdentityMatrix();
 
 	this->OnInitUI();
 }
@@ -45,7 +45,7 @@ void CSceneUI::OnResize(int width, int height) {
 
 	m_width = width;
 	m_height = height;
-	m_mvpMatrix.projection = glm::ortho(0.0f, (float)width, (float)height, 0.0f, -1.0f, 1.0f);
+	m_mvpMatrix.projection->Orthographic(0.0f, (float)width, (float)height, 0.0f);
 	this->UpdateBackground();
 }
 
@@ -61,7 +61,8 @@ void CSceneUI::OnRender() {
 
 void CSceneUI::RenderControl(S_CUIControl control, mvp_matrix_t &matrix) {
 	for (S_CUIRenderable renderable : *control->GetRenderables()) {
-		matrix.model = glm::translate(glm::mat4(1.0f), glm::vec3(control->x, control->y, control->z));
+		matrix.model->LoadIdentity();
+		matrix.model->Translate(control->x, control->y, control->z);
 		renderable->OnRender(matrix);
 	}
 
@@ -144,7 +145,11 @@ CUISprite::CUISprite(S_CTexture tex) {
 }
 
 void CUISprite::OnRender(mvp_matrix_t &mvp) {
-	mvp.model = glm::scale(mvp.model, glm::vec3(m_texture->GetWidth(), m_texture->GetHeight(), 1.0f));
+	mvp.model->Scale(
+		(float)m_texture->GetWidth(),
+		(float)m_texture->GetHeight(),
+		1.0f
+	);
 
 	GFX->Begin(mvp, s_globalSpriteBuffer);
 	GFX->SetTexture(m_texture);
