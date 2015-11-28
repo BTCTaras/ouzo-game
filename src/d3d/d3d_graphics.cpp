@@ -63,7 +63,7 @@ void CD3DGraphics::SetViewport(unsigned int x, unsigned int y, unsigned int w, u
 
 void CD3DGraphics::BeginScene() {
 	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
-	d3ddev->Clear(0, NULL, D3DCLEAR_ZBUFFER, 0x0, 1.0f, 0);
+	d3ddev->Clear(0, NULL, D3DCLEAR_ZBUFFER, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 	d3ddev->BeginScene();
 }
 

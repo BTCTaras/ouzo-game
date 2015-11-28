@@ -12,35 +12,6 @@ const DWORD CD3DBuffer::DEFAULT_BUFFER_FVF = D3DFVF_XYZ | D3DFVF_TEX1;
 CD3DBuffer::CD3DBuffer(BufferType type, BufferStorageType storageType)
 	: CBuffer(type, storageType)
 {
-	HRESULT result;
-
-	switch (type) {
-	case BufferType::VERTEX_BUFFER:
-		result = GFX_D3D_DEV->CreateVertexBuffer(
-			3 * sizeof(vertex_t),
-			D3DUSAGE_WRITEONLY,
-			DEFAULT_BUFFER_FVF,
-			D3DPOOL_DEFAULT,
-			(IDirect3DVertexBuffer9**)&m_buffer,
-			NULL
-		);
-		break;
-
-	case BufferType::ELEMENT_BUFFER:
-		result = GFX_D3D_DEV->CreateIndexBuffer(
-			sizeof(unsigned short),
-			D3DUSAGE_WRITEONLY,
-			D3DFMT_INDEX16,
-			D3DPOOL_DEFAULT,
-			(IDirect3DIndexBuffer9**)&m_buffer,
-			NULL
-		);
-	}
-	
-	if (!WinUtils::CheckResult(result)) {
-		fprintf(stderr, "Failed to create buffer!!\n");
-		return;
-	}
 }
 
 CD3DBuffer::~CD3DBuffer() {
@@ -52,19 +23,41 @@ CD3DBuffer::~CD3DBuffer() {
 void CD3DBuffer::Orphan(size_t dataSize, void *data) {
 	VOID *pData;
 
+	HRESULT result;
+
 	// We have to do adventurous things like this because D3D is stupid.
 	switch (m_type) {
 	case BufferType::VERTEX_BUFFER:
 	{
-		LPDIRECT3DVERTEXBUFFER9 vertBuf = (LPDIRECT3DVERTEXBUFFER9)m_buffer;
-		vertBuf->Lock(0, 0, &pData, D3DLOCK_DISCARD);
+		LPDIRECT3DVERTEXBUFFER9 buffer;
+		result = GFX_D3D_DEV->CreateVertexBuffer(
+			dataSize,
+			D3DUSAGE_WRITEONLY,
+			DEFAULT_BUFFER_FVF,
+			D3DPOOL_DEFAULT,
+			&buffer,
+			NULL
+		);
+
+		m_buffer = buffer;
+		buffer->Lock(0, 0, &pData, D3DLOCK_DISCARD);
 		break;
 	}
 
 	case BufferType::ELEMENT_BUFFER:
 	{
-		LPDIRECT3DINDEXBUFFER9 indexBuf = (LPDIRECT3DINDEXBUFFER9)m_buffer;
-		indexBuf->Lock(0, 0, &pData, D3DLOCK_DISCARD);
+		LPDIRECT3DINDEXBUFFER9 buffer;
+		result = GFX_D3D_DEV->CreateIndexBuffer(
+			dataSize,
+			D3DUSAGE_WRITEONLY,
+			D3DFMT_INDEX16,
+			D3DPOOL_DEFAULT,
+			&buffer,
+			NULL
+		);
+
+		m_buffer = buffer;
+		buffer->Lock(0, 0, &pData, D3DLOCK_DISCARD);
 		break;
 	}
 	}
