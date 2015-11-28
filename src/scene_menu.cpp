@@ -22,7 +22,7 @@ void CSceneMenu::OnInitUI() {
 	m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
 
 	S_CUIControlTexture tex(new CUIControlTexture(m_buttonTexture));
-	tex->SetPosition(80, 40, 0.0f);
+	tex->SetPosition(80, 40, -0.8f);
 	this->AddControl(tex);
 
 	S_CUIControlText text(new CUIControlText(&m_font, u8"Test Button", 32));
@@ -31,7 +31,7 @@ void CSceneMenu::OnInitUI() {
 
 	m_texture = GFX->CreateTexture("assets/backgrounds/test.jpeg");
 
-	m_testBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
+	/*m_testBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 
 	vertex_t vertices[] = {
 	  { 64.0f, 0.0f, -0.8f, 0.5f, 0.0f },
@@ -39,22 +39,11 @@ void CSceneMenu::OnInitUI() {
 	  { 128.0f, 128.0f, -0.8f, 1.0f, 1.0f },
 	};
 
-	m_testBuffer->Orphan(sizeof(vertices), vertices);
+	m_testBuffer->Orphan(sizeof(vertices), vertices);*/
 }
 
 void CSceneMenu::OnRender() {
-	//CSceneUI::OnRender();
-
-	// Set the position of our triangle
-	m_mvpMatrix.model->LoadIdentity();
-	m_mvpMatrix.model->Translate(50.0f, 50.0f, 0.0f);
-
-	GFX->SetTexture(m_buttonTexture, 0); // No texture in slot 0
-	GFX->Begin(m_mvpMatrix, m_testBuffer); // Begin with our MVP matrix
-
-	GFX->Draw(PrimitiveType::GFX_TRIANGLES); // Connect our vertices to form triangles
-
-	GFX->End();
+	CSceneUI::OnRender();
 }
 
 void CSceneMenu::OnUpdate() {

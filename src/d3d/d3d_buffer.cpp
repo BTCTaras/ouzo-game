@@ -18,7 +18,7 @@ CD3DBuffer::CD3DBuffer(BufferType type, BufferStorageType storageType)
 	case BufferType::VERTEX_BUFFER:
 		result = GFX_D3D_DEV->CreateVertexBuffer(
 			3 * sizeof(vertex_t),
-			NULL,
+			D3DUSAGE_WRITEONLY,
 			DEFAULT_BUFFER_FVF,
 			D3DPOOL_DEFAULT,
 			(IDirect3DVertexBuffer9**)&m_buffer,
@@ -29,7 +29,7 @@ CD3DBuffer::CD3DBuffer(BufferType type, BufferStorageType storageType)
 	case BufferType::ELEMENT_BUFFER:
 		result = GFX_D3D_DEV->CreateIndexBuffer(
 			sizeof(unsigned short),
-			NULL,
+			D3DUSAGE_WRITEONLY,
 			D3DFMT_INDEX16,
 			D3DPOOL_DEFAULT,
 			(IDirect3DIndexBuffer9**)&m_buffer,
@@ -57,14 +57,14 @@ void CD3DBuffer::Orphan(size_t dataSize, void *data) {
 	case BufferType::VERTEX_BUFFER:
 	{
 		LPDIRECT3DVERTEXBUFFER9 vertBuf = (LPDIRECT3DVERTEXBUFFER9)m_buffer;
-		vertBuf->Lock(0, 0, &pData, NULL);
+		vertBuf->Lock(0, 0, &pData, D3DLOCK_DISCARD);
 		break;
 	}
 
 	case BufferType::ELEMENT_BUFFER:
 	{
 		LPDIRECT3DINDEXBUFFER9 indexBuf = (LPDIRECT3DINDEXBUFFER9)m_buffer;
-		indexBuf->Lock(0, 0, &pData, NULL);
+		indexBuf->Lock(0, 0, &pData, D3DLOCK_DISCARD);
 		break;
 	}
 	}

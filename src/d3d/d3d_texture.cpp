@@ -20,13 +20,39 @@ CD3DTexture::~CD3DTexture() {
 }
 
 void CD3DTexture::LoadFromFile(const char *file) {
-	HRESULT result = D3DXCreateTextureFromFile(GFX_D3D_DEV, file, &m_d3dtexture);
+	HRESULT result = D3DXCreateTextureFromFileEx(
+		GFX_D3D_DEV,
+		file,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT_NONPOW2,
+		D3DX_DEFAULT,
+		0,
+		D3DFMT_UNKNOWN,
+		D3DPOOL_MANAGED,
+		D3DX_DEFAULT,
+		D3DX_DEFAULT,
+		0,
+		NULL,
+		NULL,
+		&m_d3dtexture
+	);
 
 	if (!WinUtils::CheckResult(result)) {
 		fprintf(stderr, "Failed to load texture \"%s\"!!\n", file);
 		m_d3dtexture = NULL;
 		return;
 	}
+
+	D3DXIMAGE_INFO info;
+	result = D3DXGetImageInfoFromFile(file, &info);
+
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "Failed to retrieve image info from file \"%s\"!!\n", file);
+		return;
+	}
+
+	m_width = info.Width;
+	m_height = info.Height;
 }
 
 void CD3DTexture::Use() {

@@ -151,8 +151,8 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
 		1.0f
 	);
 
-	GFX->Begin(mvp, s_globalSpriteBuffer);
 	GFX->SetTexture(m_texture);
+	GFX->Begin(mvp, s_globalSpriteBuffer);
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
 	GFX->End();
 }
