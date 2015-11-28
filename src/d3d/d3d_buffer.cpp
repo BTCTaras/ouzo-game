@@ -43,6 +43,12 @@ CD3DBuffer::CD3DBuffer(BufferType type, BufferStorageType storageType)
 	}
 }
 
+CD3DBuffer::~CD3DBuffer() {
+	if (m_buffer != NULL) {
+		m_buffer->Release();
+	}
+}
+
 void CD3DBuffer::Orphan(size_t dataSize, void *data) {
 	VOID *pData;
 
@@ -51,14 +57,14 @@ void CD3DBuffer::Orphan(size_t dataSize, void *data) {
 	case BufferType::VERTEX_BUFFER:
 	{
 		LPDIRECT3DVERTEXBUFFER9 vertBuf = (LPDIRECT3DVERTEXBUFFER9)m_buffer;
-		vertBuf->Lock(0, 0, &pData, D3DLOCK_DISCARD);
+		vertBuf->Lock(0, 0, &pData, NULL);
 		break;
 	}
 
 	case BufferType::ELEMENT_BUFFER:
 	{
 		LPDIRECT3DINDEXBUFFER9 indexBuf = (LPDIRECT3DINDEXBUFFER9)m_buffer;
-		indexBuf->Lock(0, 0, &pData, D3DLOCK_DISCARD);
+		indexBuf->Lock(0, 0, &pData, NULL);
 		break;
 	}
 	}

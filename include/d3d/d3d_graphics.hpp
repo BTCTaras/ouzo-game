@@ -86,6 +86,7 @@ class CD3DBuffer : public CBuffer {
 	friend class CD3DGraphics;
 public:
 	CD3DBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC);
+	~CD3DBuffer();
 
 	virtual void Orphan(size_t dataSize, void *data) override;
 	virtual size_t GetSize() override;
@@ -94,7 +95,7 @@ public:
 
 private:
 	size_t m_size;
-	LPDIRECT3DVERTEXBUFFER9 m_buffer;
+	LPDIRECT3DRESOURCE9 m_buffer;
 };
 
 typedef std::shared_ptr<CD3DBuffer> S_CD3DBuffer;

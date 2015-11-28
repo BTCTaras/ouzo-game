@@ -43,6 +43,8 @@ void CD3DGraphics::Init(SDL_Window *window) {
 	}
 
 	d3ddev->SetRenderState(D3DRS_ZENABLE, TRUE);
+	d3ddev->SetRenderState(D3DRS_LIGHTING, FALSE);
+	d3ddev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CW);
 }
 
 CD3DGraphics::~CD3DGraphics() {
@@ -68,14 +70,30 @@ void CD3DGraphics::BeginScene() {
 void CD3DGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program) {
 	m_currentBuffer = vertexBuffer;
 
-	S_CD3DMatrix d3dproj = std::static_pointer_cast<CD3DMatrix>(mvp.projection);
-	d3ddev->SetTransform(D3DTS_PROJECTION, d3dproj->GetD3DXHandle());
-
-	S_CD3DMatrix d3dview = std::static_pointer_cast<CD3DMatrix>(mvp.view);
-	d3ddev->SetTransform(D3DTS_VIEW, d3dview->GetD3DXHandle());
+	HRESULT result;
 
 	S_CD3DMatrix d3dmodel = std::static_pointer_cast<CD3DMatrix>(mvp.model);
-	d3ddev->SetTransform(D3DTS_WORLD, d3dmodel->GetD3DXHandle());
+	result = d3ddev->SetTransform(D3DTS_WORLD, d3dmodel->GetD3DXHandle());
+
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "Failed to set world matrix!!\n");
+	}
+
+	S_CD3DMatrix d3dview = std::static_pointer_cast<CD3DMatrix>(mvp.view);
+	result = d3ddev->SetTransform(D3DTS_VIEW, d3dview->GetD3DXHandle());
+
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "Failed to set view matrix!!\n");
+		return;
+	}
+
+	S_CD3DMatrix d3dproj = std::static_pointer_cast<CD3DMatrix>(mvp.projection);
+	result = d3ddev->SetTransform(D3DTS_PROJECTION, d3dproj->GetD3DXHandle());
+
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "Failed to set projection matrix!!\n");
+		return;
+	}
 }
 
 void CD3DGraphics::End() {
@@ -125,14 +143,53 @@ void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 	D3DPRIMITIVETYPE prim = GetD3DPrimitiveType(primitive);
 	S_CD3DBuffer buffer = std::static_pointer_cast<CD3DBuffer>(m_currentBuffer);
 
-	d3ddev->SetFVF(CD3DBuffer::DEFAULT_BUFFER_FVF);
-	d3ddev->SetStreamSource(0, buffer->m_buffer, 0, sizeof(vertex_t));
-	d3ddev->DrawPrimitive(prim, 0, (UINT)GetPrimitiveCount(primitive, buffer->GetSize() / sizeof(vertex_t)));
+	HRESULT result;
+
+	result = d3ddev->SetFVF(CD3DBuffer::DEFAULT_BUFFER_FVF);
+
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "Failed to set the vertex format!!\n");
+		return;
+	}
+
+	result = d3ddev->SetStreamSource(0, (IDirect3DVertexBuffer9*)buffer->m_buffer, 0, sizeof(vertex_t));
+	
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "Failed to set the stream source!!\n");
+	}
+
+	if (elementBuffer != nullptr) {
+		S_CD3DBuffer indexBuf = std::static_pointer_cast<CD3DBuffer>(elementBuffer);
+		d3ddev->SetIndices((IDirect3DIndexBuffer9*)indexBuf->m_buffer);
+
+		UINT primCount = (UINT)GetPrimitiveCount(primitive, indexBuf->GetSize() / sizeof(unsigned short));
+		result = d3ddev->DrawIndexedPrimitive(
+			prim,
+			0,
+			0,
+			buffer->GetSize() / sizeof(vertex_t),
+			0,
+			primCount
+		);
+	} else {
+		UINT primCount = (UINT)GetPrimitiveCount(primitive, buffer->GetSize() / sizeof(vertex_t));
+		result = d3ddev->DrawPrimitive(
+			prim,
+			0,
+			primCount
+		);
+	}
+
+	if (!WinUtils::CheckResult(result)) {
+		fprintf(stderr, "DrawPrimitive call failed!!\n");
+	}
 }
 
 void CD3DGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
-	S_CD3DTexture d3dtex = std::static_pointer_cast<CD3DTexture>(tex);
-	d3ddev->SetTexture(slot, d3dtex->GetD3DHandle());
+	if (tex != nullptr) {
+		S_CD3DTexture d3dtex = std::static_pointer_cast<CD3DTexture>(tex);
+		d3ddev->SetTexture(slot, d3dtex->GetD3DHandle());
+	}
 }
 
 unsigned int CD3DGraphics::GetMaxTextureSize() {

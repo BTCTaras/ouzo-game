@@ -33,33 +33,28 @@ void CSceneMenu::OnInitUI() {
 
 	m_testBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 
-	/*vertex_t vertices[] = {
-	  { 64.0f, 0.0f, 0.9f, 0.5f, 0.0f },
-	  { 0.0f, 128.0f, 0.9f, 0.0f, 1.0f },
-	  { 128.0f, 128.0f, 0.9f, 1.0f, 1.0f },
+	vertex_t vertices[] = {
+	  { 64.0f, 0.0f, -0.8f, 0.5f, 0.0f },
+	  { 0.0f, 128.0f, -0.8f, 0.0f, 1.0f },
+	  { 128.0f, 128.0f, -0.8f, 1.0f, 1.0f },
 	};
 
-	m_testBuffer->Orphan(sizeof(vertices), vertices);*/
+	m_testBuffer->Orphan(sizeof(vertices), vertices);
 }
 
 void CSceneMenu::OnRender() {
-	CSceneUI::OnRender();
+	//CSceneUI::OnRender();
 
 	// Set the position of our triangle
-	/*m_mvpMatrix.model = glm::translate(
-	  glm::mat4(1.0f), // Identity matrix (no transformation)
-	  glm::vec3(128.0f, 128.0f, 0.0f) // Translate the identity by this vector
-	);
+	m_mvpMatrix.model->LoadIdentity();
+	m_mvpMatrix.model->Translate(50.0f, 50.0f, 0.0f);
 
-	GFX->Begin(m_mvpMatrix); // Begin with our MVP matrix
+	GFX->SetTexture(m_buttonTexture, 0); // No texture in slot 0
+	GFX->Begin(m_mvpMatrix, m_testBuffer); // Begin with our MVP matrix
 
-	GFX->SetTexture(nullptr, 0); // No texture in slot 0
-	GFX->Draw(
-	  PrimitiveType::TRIANGLES, // Connect our vertices to form triangles
-	  m_testBuffer // Draw our triangle buffer
-	);
+	GFX->Draw(PrimitiveType::GFX_TRIANGLES); // Connect our vertices to form triangles
 
-	GFX->End();*/
+	GFX->End();
 }
 
 void CSceneMenu::OnUpdate() {

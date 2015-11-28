@@ -21,7 +21,7 @@ void CD3DMatrix::Orthographic(float left, float right, float bottom, float top, 
 
 void CD3DMatrix::Translate(float x, float y, float z) {
 	D3DXMATRIX translation;
-	D3DXMatrixTranslation(&translation, x, y, -z);
+	D3DXMatrixTranslation(&translation, x, y, z);
 	m_internalMat *= translation;
 }
 
