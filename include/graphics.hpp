@@ -27,10 +27,6 @@ typedef struct {
 	float r, g, b;
 } colour_t;
 
-enum ShaderType {
-	GFX_VERTEX_SHADER, GFX_FRAGMENT_SHADER
-};
-
 enum PrimitiveType {
 	GFX_POINTS,
 	GFX_LINE_STRIP,

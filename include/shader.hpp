@@ -4,8 +4,14 @@
 #include <string>
 #include <map>
 
+enum ShaderType {
+	GFX_VERTEX_SHADER, GFX_FRAGMENT_SHADER
+};
+
 class CShader {
 public:
+	CShader(ShaderType type);
+
 	///
 	/// Loads and compiles a shader from a file.
 	///
@@ -33,6 +39,14 @@ public:
 	/// Decrements the attachment counter.
 	///
 	virtual void OnDetach() = 0;
+
+	///
+	/// Returns the type of this shader.
+	///
+	ShaderType GetType();
+
+protected:
+	ShaderType m_type;
 };
 
 typedef std::shared_ptr<CShader> S_CShader;
@@ -50,8 +64,8 @@ enum ShaderUniformType {
 
 class CGLShader : public CShader {
 public:
-	CGLShader(unsigned int type);
-	CGLShader(unsigned int type, const char *file);
+	CGLShader(ShaderType type);
+	CGLShader(ShaderType type, const char *file);
 	~CGLShader();
 
 	virtual void LoadFromFile(const char *file) override;

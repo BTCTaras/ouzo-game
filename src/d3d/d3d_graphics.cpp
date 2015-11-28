@@ -133,12 +133,16 @@ S_CTexture CD3DGraphics::CreateTexture(const char * file) {
 	return nullptr;
 }
 
-S_CShader CD3DGraphics::CreateShader(ShaderType type, const char * file) {
-	return nullptr;
+S_CShader CD3DGraphics::CreateShader(ShaderType type, const char *file) {
+	S_CD3DShader shader = S_CD3DShader(new CD3DShader(type));
+	shader->LoadFromFile(file);
+	return shader;
 }
 
-S_CProgram CD3DGraphics::CreateProgram(size_t count, S_CShader * shaders) {
-	return nullptr;
+S_CProgram CD3DGraphics::CreateProgram(size_t count, S_CShader *shaders) {
+	S_CProgram program = S_CProgram(new CD3DProgram);
+	program->LoadFromShaders(count, shaders);
+	return program;
 }
 
 S_CAtlasFactory CD3DGraphics::CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) {
@@ -172,3 +176,12 @@ D3DVersion CD3DGraphics::GetD3DVersion() {
 }
 
 #endif
+
+void CD3DProgram::LoadFromShaders(size_t count, S_CShader *shaders) {
+}
+
+void CD3DProgram::Use() {
+}
+
+void CD3DProgram::SetUniform(ShaderUniformType type, const char *name, void *values) {
+}

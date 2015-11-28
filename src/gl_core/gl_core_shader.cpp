@@ -5,12 +5,28 @@
 #include <stdio.h>
 #include <memory>
 
-CGLShader::CGLShader(unsigned int type)
-	: m_id(0),
-	m_attachmentCounter(0),
-	m_chunkName("N/A")
+CGLShader::CGLShader(ShaderType type)
+	:	CShader(type),
+		m_id(0),
+		m_attachmentCounter(0),
+		m_chunkName("N/A")
 {
-	m_id = glCreateShader(type);
+	GLenum glType;
+	switch (type) {
+	case GFX_VERTEX_SHADER:
+		glType = GL_VERTEX_SHADER;
+		break;
+
+	case GFX_FRAGMENT_SHADER:
+		glType = GL_FRAGMENT_SHADER;
+		break;
+
+	default:
+		fprintf(stderr, "Invalid shader type passed to CGLShader::CGLShader (%d)!!\n", (unsigned int)type);
+		return;
+	}
+
+	m_id = glCreateShader(glType);
 }
 
 CGLShader::~CGLShader() {
@@ -21,7 +37,7 @@ CGLShader::~CGLShader() {
 	glDeleteShader(m_id);
 }
 
-CGLShader::CGLShader(unsigned int type, const char *file)
+CGLShader::CGLShader(ShaderType type, const char *file)
 	: CGLShader(type)
 {
 	this->LoadFromFile(file);

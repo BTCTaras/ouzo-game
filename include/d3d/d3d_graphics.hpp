@@ -85,12 +85,21 @@ typedef std::shared_ptr<CD3DBuffer> S_CD3DBuffer;
 
 class CD3DShader : public CShader {
 public:
-	virtual void LoadFromFile(const char *file) = 0;
+	CD3DShader(ShaderType type);
+	~CD3DShader();
+
+	virtual void LoadFromFile(const char *file) override;
 	virtual void Load(const char *chunkName, const char *source) override;
 	virtual const std::string& GetChunkName() override;
 	virtual void OnAttach() override;
 	virtual void OnDetach() override;
+
+private:
+	ID3D11DeviceChild *m_shader;
+	std::string m_chunkName;
 };
+
+typedef std::shared_ptr<CD3DShader> S_CD3DShader;
 
 ///
 ///	CD3DProgram
@@ -102,3 +111,5 @@ public:
 	virtual void Use() override;
 	virtual void SetUniform(ShaderUniformType type, const char *name, void *values) override;
 };
+
+typedef std::shared_ptr<CD3DProgram> S_CD3DProgram;

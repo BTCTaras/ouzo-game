@@ -211,22 +211,7 @@ S_CShader CGLGraphics::CreateShader(ShaderType type, const char *file) {
 	str << file << "." << typeExt << "." << GL_SHADER_FILE_EXT;
 	std::string filename = str.str();
 
-	GLenum glType;
-	switch (type) {
-	case GFX_VERTEX_SHADER:
-		glType = GL_VERTEX_SHADER;
-		break;
-
-	case GFX_FRAGMENT_SHADER:
-		glType = GL_FRAGMENT_SHADER;
-		break;
-
-	default:
-		glType = GL_VERTEX_SHADER;
-		break;
-	}
-
-	S_CGLShader shader = S_CGLShader(new CGLShader(glType, filename.c_str()));
+	S_CGLShader shader = S_CGLShader(new CGLShader(type, filename.c_str()));
 	return shader;
 }
 
