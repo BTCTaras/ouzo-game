@@ -3,17 +3,9 @@
 #include "graphics.hpp"
 #include "buffer.hpp"
 
-#include <d3d11.h>
-#include <dxgi.h>
+#include <d3d9.h>
 
 #include <memory>
-
-// Must be in order so D3D versions can be checked with lt and gt.
-enum D3DVersion {
-	WARP,
-	D3D9,
-	D3D10,
-};
 
 ///
 ///	CD3DGraphics
@@ -21,7 +13,7 @@ enum D3DVersion {
 
 class CD3DGraphics : public CGraphics {
 public:
-	CD3DGraphics(D3DVersion version);
+	CD3DGraphics();
 	~CD3DGraphics();
 
 	virtual void Init(SDL_Window *window) override;
@@ -42,19 +34,11 @@ public:
 
 	virtual unsigned int GetMaxTextureSize() override;
 
-	ID3D11Device *GetDevice();
-	ID3D11DeviceContext *GetDeviceContext();
-
-	D3DVersion GetD3DVersion();
+	LPDIRECT3DDEVICE9 GetDevice();
 
 private:
-	IDXGISwapChain *swapChain;
-	ID3D11Device *dev;
-	ID3D11DeviceContext *devcon;
-
-	D3DVersion m_d3dversion;
-
-	ID3D11RenderTargetView *m_backBuffer;
+	LPDIRECT3D9 d3d;
+	LPDIRECT3DDEVICE9 d3ddev;
 };
 
 #define GFX_D3D std::static_pointer_cast<CD3DGraphics>(CGame::Inst->GetGraphics())
@@ -82,7 +66,7 @@ typedef std::shared_ptr<CD3DBuffer> S_CD3DBuffer;
 ///
 /// CD3DShader
 ///
-
+/*
 class CD3DShader : public CShader {
 public:
 	CD3DShader(ShaderType type);
@@ -95,7 +79,9 @@ public:
 	virtual void OnDetach() override;
 
 private:
-	ID3D11DeviceChild *m_shader;
+	static void LoadToBuffer(const char *file, char *buffer);
+	static LARGE_INTEGER GetFileSize(const char *file);
+
 	std::string m_chunkName;
 };
 
@@ -112,4 +98,4 @@ public:
 	virtual void SetUniform(ShaderUniformType type, const char *name, void *values) override;
 };
 
-typedef std::shared_ptr<CD3DProgram> S_CD3DProgram;
+typedef std::shared_ptr<CD3DProgram> S_CD3DProgram;*/

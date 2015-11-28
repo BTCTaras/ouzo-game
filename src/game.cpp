@@ -63,7 +63,7 @@ void CGame::InitGame(GraphicsAPI api) {
 #ifdef _WIN32
 	case GraphicsAPI::DIRECT3D9:
 		// TODO: Make D3D version configurable
-		m_graphics.reset(new CD3DGraphics(D3DVersion::D3D10));
+		m_graphics.reset(new CD3DGraphics);
 		break;
 #endif
 	}
