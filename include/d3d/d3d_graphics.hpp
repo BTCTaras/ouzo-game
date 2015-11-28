@@ -73,6 +73,31 @@ private:
 typedef std::shared_ptr<CD3DBuffer> S_CD3DBuffer;
 
 ///
+/// CTexture
+///
+
+class CD3DTexture : public CTexture {
+public:
+	CD3DTexture();
+	~CD3DTexture();
+
+	virtual void LoadFromFile(const char *file) override;
+
+	virtual void Use() override;
+	
+	virtual unsigned int GetWidth() override;
+	virtual unsigned int GetHeight() override;
+
+	LPDIRECT3DTEXTURE9 GetD3DHandle();
+
+private:
+	LPDIRECT3DTEXTURE9 m_d3dtexture;
+	unsigned int m_width, m_height;
+};
+
+typedef std::shared_ptr<CD3DTexture> S_CD3DTexture;
+
+///
 /// CD3DShader
 ///
 /*

@@ -60,7 +60,7 @@ void CD3DGraphics::SetViewport(unsigned int x, unsigned int y, unsigned int w, u
 }
 
 void CD3DGraphics::BeginScene() {
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 255, 0), 1.0f, 0);
 	d3ddev->Clear(0, NULL, D3DCLEAR_ZBUFFER, 0x0, 1.0f, 0);
 	d3ddev->BeginScene();
 }
@@ -82,8 +82,10 @@ S_CProgram CD3DGraphics::GetDefaultProgram() {
 	return nullptr;
 }
 
-S_CTexture CD3DGraphics::CreateTexture(const char * file) {
-	return nullptr;
+S_CTexture CD3DGraphics::CreateTexture(const char *file) {
+	S_CD3DTexture tex = S_CD3DTexture(new CD3DTexture);
+	tex->LoadFromFile(file);
+	return tex;
 }
 
 S_CShader CD3DGraphics::CreateShader(ShaderType type, const char *file) {
@@ -116,6 +118,8 @@ void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 }
 
 void CD3DGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
+	S_CD3DTexture d3dtex = std::static_pointer_cast<CD3DTexture>(tex);
+	d3ddev->SetTexture(slot, d3dtex->GetD3DHandle());
 }
 
 unsigned int CD3DGraphics::GetMaxTextureSize() {
@@ -164,6 +168,8 @@ float CD3DGraphics::GetPrimitiveCount(PrimitiveType type, size_t vertexCount) {
 	case PrimitiveType::GFX_TRIANGLE_FAN:
 		return vertexCount - 2.0f;
 	}
+
+	return 0.0f;
 }
 
 #endif
