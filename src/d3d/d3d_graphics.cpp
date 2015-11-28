@@ -25,6 +25,8 @@ void CD3DGraphics::Init(SDL_Window *window) {
 	pp.hDeviceWindow = CGame::Inst->GetWindow_Win32();
 	pp.Windowed = TRUE;
 	pp.SwapEffect = D3DSWAPEFFECT_DISCARD;
+	pp.EnableAutoDepthStencil = TRUE;
+	pp.AutoDepthStencilFormat = D3DFMT_D16;
 
 	HRESULT result = d3d->CreateDevice(
 		D3DADAPTER_DEFAULT,
@@ -39,6 +41,8 @@ void CD3DGraphics::Init(SDL_Window *window) {
 		fprintf(stderr, "Failed to create a Direct3D device!!\n");
 		return;
 	}
+
+	d3ddev->SetRenderState(D3DRS_ZENABLE, TRUE);
 }
 
 CD3DGraphics::~CD3DGraphics() {
@@ -56,15 +60,17 @@ void CD3DGraphics::SetViewport(unsigned int x, unsigned int y, unsigned int w, u
 }
 
 void CD3DGraphics::BeginScene() {
-	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0.0f);
+	d3ddev->Clear(0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
+	d3ddev->Clear(0, NULL, D3DCLEAR_ZBUFFER, 0x0, 1.0f, 0);
 	d3ddev->BeginScene();
 }
 
 void CD3DGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program) {
-	
+	m_currentBuffer = vertexBuffer;
 }
 
 void CD3DGraphics::End() {
+	m_currentBuffer = nullptr;
 }
 
 void CD3DGraphics::EndScene() {
@@ -101,6 +107,12 @@ S_CBuffer CD3DGraphics::CreateBuffer(BufferType type, BufferStorageType storageT
 }
 
 void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
+	D3DPRIMITIVETYPE prim = GetD3DPrimitiveType(primitive);
+	S_CD3DBuffer buffer = std::static_pointer_cast<CD3DBuffer>(m_currentBuffer);
+
+	d3ddev->SetFVF(CD3DBuffer::DEFAULT_BUFFER_FVF);
+	d3ddev->SetStreamSource(0, buffer->m_buffer, 0, sizeof(vertex_t));
+	d3ddev->DrawPrimitive(prim, 0, GetPrimitiveCount(primitive, buffer->GetSize() / sizeof(vertex_t)));
 }
 
 void CD3DGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
@@ -112,6 +124,46 @@ unsigned int CD3DGraphics::GetMaxTextureSize() {
 
 LPDIRECT3DDEVICE9 CD3DGraphics::GetDevice() {
 	return d3ddev;
+}
+
+D3DPRIMITIVETYPE CD3DGraphics::GetD3DPrimitiveType(PrimitiveType type) {
+	switch (type) {
+	case PrimitiveType::GFX_LINES:
+		return D3DPT_LINELIST;
+	case PrimitiveType::GFX_LINE_STRIP:
+		return D3DPT_LINESTRIP;
+	case PrimitiveType::GFX_POINTS:
+		return D3DPT_POINTLIST;
+	case PrimitiveType::GFX_TRIANGLES:
+		return D3DPT_TRIANGLELIST;
+	case PrimitiveType::GFX_TRIANGLE_FAN:
+		return D3DPT_TRIANGLEFAN;
+	case PrimitiveType::GFX_TRIANGLE_STRIP:
+		return D3DPT_TRIANGLESTRIP;
+	default:
+		// We have to do adventurous things like this because D3D is stupid.
+		fprintf(stderr, "Unsupported primitive type %d!! Falling back to GFX_TRIANGLES.\n", type);
+		return D3DPT_TRIANGLELIST;
+	}
+}
+
+float CD3DGraphics::GetPrimitiveCount(PrimitiveType type, size_t vertexCount) {
+	// We have to do adventurous things like this because D3D is stupid.
+	switch (type) {
+	case PrimitiveType::GFX_LINES:
+		return vertexCount / 2.0f;
+
+	case PrimitiveType::GFX_LINE_STRIP:
+	case PrimitiveType::GFX_POINTS:
+		return vertexCount;
+
+	case PrimitiveType::GFX_TRIANGLES:
+		return vertexCount / 3.0f;
+
+	case PrimitiveType::GFX_TRIANGLE_STRIP:
+	case PrimitiveType::GFX_TRIANGLE_FAN:
+		return vertexCount - 2.0f;
+	}
 }
 
 #endif

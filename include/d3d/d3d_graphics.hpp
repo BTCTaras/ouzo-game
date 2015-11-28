@@ -37,8 +37,13 @@ public:
 	LPDIRECT3DDEVICE9 GetDevice();
 
 private:
+	static D3DPRIMITIVETYPE GetD3DPrimitiveType(PrimitiveType type);
+	static float GetPrimitiveCount(PrimitiveType type, size_t vertexCount);
+
 	LPDIRECT3D9 d3d;
 	LPDIRECT3DDEVICE9 d3ddev;
+
+	S_CBuffer m_currentBuffer;
 };
 
 #define GFX_D3D std::static_pointer_cast<CD3DGraphics>(CGame::Inst->GetGraphics())
@@ -51,14 +56,18 @@ typedef std::shared_ptr<CD3DGraphics> S_CD3DGraphics;
 ///
 
 class CD3DBuffer : public CBuffer {
+	friend class CD3DGraphics;
 public:
 	CD3DBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC);
 
 	virtual void Orphan(size_t dataSize, void *data) override;
 	virtual size_t GetSize() override;
 
+	static const DWORD DEFAULT_BUFFER_FVF;
+
 private:
 	size_t m_size;
+	LPDIRECT3DVERTEXBUFFER9 m_buffer;
 };
 
 typedef std::shared_ptr<CD3DBuffer> S_CD3DBuffer;
