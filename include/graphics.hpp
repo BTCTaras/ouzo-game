@@ -44,8 +44,6 @@ public:
 	virtual void LoadIdentity() = 0;
 
 	virtual S_CMatrix operator*(S_CMatrix other) = 0;
-
-	virtual float* ValuePointer() = 0;
 };
 
 S_CMatrix operator*(S_CMatrix first, S_CMatrix second);
@@ -69,7 +67,7 @@ public:
 
 	virtual S_CMatrix operator*(S_CMatrix other) override;
 
-	virtual float* ValuePointer() override;
+	float* ValuePointer();
 	glm::mat4* GetGLMMatrix();
 
 private:

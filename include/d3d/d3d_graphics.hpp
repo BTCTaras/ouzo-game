@@ -4,8 +4,34 @@
 #include "buffer.hpp"
 
 #include <d3d9.h>
+#include <d3dx9.h>
 
 #include <memory>
+
+///
+/// CD3DMatrix
+///
+
+class CD3DMatrix : public CMatrix {
+public:
+	CD3DMatrix(D3DXMATRIX *mat = nullptr);
+
+	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) override;
+	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) override;
+	virtual void Translate(float x, float y, float z = 0.0f) override;
+	virtual void Rotate(float x, float y, float z) override;
+	virtual void Scale(float x, float y, float z) override;
+	virtual void LoadIdentity() override;
+
+	virtual S_CMatrix operator*(S_CMatrix other) override;
+
+	D3DXMATRIX* GetD3DXHandle();
+
+private:
+	D3DXMATRIX m_internalMat;
+};
+
+typedef std::shared_ptr<CD3DMatrix> S_CD3DMatrix;
 
 ///
 ///	CD3DGraphics

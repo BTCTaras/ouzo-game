@@ -255,7 +255,7 @@ void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram pr
 	prog->Use();
 
 	// compute the MVP matrix
-	S_CMatrix mvpMat = mvp.projection * mvp.view * mvp.model;
+	S_CGLMatrix mvpMat = std::static_pointer_cast<CGLMatrix>(mvp.projection * mvp.view * mvp.model);
 	unsigned int mvpLoc = prog->GetUniformLocation("u_MVPMatrix", true);
 
 	// upload our MVP matrix

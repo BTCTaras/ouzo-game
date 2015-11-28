@@ -67,6 +67,15 @@ void CD3DGraphics::BeginScene() {
 
 void CD3DGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program) {
 	m_currentBuffer = vertexBuffer;
+
+	S_CD3DMatrix d3dproj = std::static_pointer_cast<CD3DMatrix>(mvp.projection);
+	d3ddev->SetTransform(D3DTS_PROJECTION, d3dproj->GetD3DXHandle());
+
+	S_CD3DMatrix d3dview = std::static_pointer_cast<CD3DMatrix>(mvp.view);
+	d3ddev->SetTransform(D3DTS_VIEW, d3dview->GetD3DXHandle());
+
+	S_CD3DMatrix d3dmodel = std::static_pointer_cast<CD3DMatrix>(mvp.model);
+	d3ddev->SetTransform(D3DTS_WORLD, d3dmodel->GetD3DXHandle());
 }
 
 void CD3DGraphics::End() {
@@ -109,7 +118,7 @@ S_CBuffer CD3DGraphics::CreateBuffer(BufferType type, BufferStorageType storageT
 }
 
 S_CMatrix CD3DGraphics::CreateIdentityMatrix() {
-	return S_CMatrix();
+	return S_CD3DMatrix(new CD3DMatrix);
 }
 
 void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
