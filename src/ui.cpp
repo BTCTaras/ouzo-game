@@ -63,11 +63,12 @@ void CSceneUI::RenderControl(S_CUIControl control, mvp_matrix_t &matrix) {
 	for (S_CUIRenderable renderable : *control->GetRenderables()) {
 		matrix.model->LoadIdentity();
 		matrix.model->Translate(control->x, control->y, control->z);
+
 		renderable->OnRender(matrix);
 	}
 
 	for (S_CUIControl child : *control->GetChildren()) {
-		RenderControl(child, matrix);
+		this->RenderControl(child, matrix);
 	}
 }
 
@@ -95,8 +96,8 @@ void CSceneUI::OnClick(unsigned int button, float x, float y) {
 ///
 
 CUIControl::CUIControl()
-	: x(0.0f), y(0.0f), z(0.0f),
-	width(0.0f), height(0.0f)
+	:	x(0.0f), y(0.0f), z(0.0f),
+		width(0.0f), height(0.0f)
 {
 }
 
@@ -151,8 +152,8 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
 		1.0f
 	);
 
-	GFX->SetTexture(m_texture);
 	GFX->Begin(mvp, s_globalSpriteBuffer);
+	GFX->SetTexture(m_texture);
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
 	GFX->End();
 }

@@ -156,6 +156,7 @@ void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 	
 	if (!WinUtils::CheckResult(result)) {
 		fprintf(stderr, "Failed to set the stream source!!\n");
+		return;
 	}
 
 	if (elementBuffer != nullptr) {
@@ -182,6 +183,7 @@ void CD3DGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 
 	if (!WinUtils::CheckResult(result)) {
 		fprintf(stderr, "DrawPrimitive call failed!!\n");
+		return;
 	}
 }
 
