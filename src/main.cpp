@@ -1,12 +1,13 @@
 #include "game.hpp"
 #include "scene_menu.hpp"
-#include "scene_ctb.hpp"
+#include "scene_osu.hpp"
 
 #include <stdio.h>
 
 #include <GL/glew.h>
 
 #include <SDL2/SDL.h>
+
 #undef main
 
 int main(int argc, char *argv[]) {
@@ -24,13 +25,24 @@ int main(int argc, char *argv[]) {
 	CGame game;
 	CGame::Inst = &game;
 
-#ifdef _WIN32
 	game.InitGame(GraphicsAPI::OPENGL_CORE);
-#else
-	game.InitGame(GraphicsAPI::OPENGL_CORE);
-#endif
 
-	game.SetScene(new CSceneMenu);
+	CSceneOsu *osu = new CSceneOsu;
+	osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
+
+	const float periods = 3.0f;
+
+	for (float x = 0.0f; x < 1280.0f; x += 32.0f) {
+		S_COsuObject circle = S_COsuObject(new COsuCircle(
+			x - 32.0f,
+			128.0f * sinf(((periods * 2) * M_PI / 1280.0f) * x) + 328.0f
+		));
+
+		osu->AddObject(circle);
+	}
+
+	game.SetScene(osu);
+
 	game.StartLoop();
 	return 0;
 }
