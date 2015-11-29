@@ -182,6 +182,10 @@ void CGame::TranslateEvent(SDL_Event &event) {
 	}
 }
 
+float CGame::GetDeltaTime() {
+	return m_deltaTime;
+}
+
 void CGame::StartLoop() {
 	Uint32 lastTime = SDL_GetTicks();
 

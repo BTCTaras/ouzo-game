@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "scene_menu.hpp"
+#include "scene_ctb.hpp"
 
 #include <stdio.h>
 
@@ -17,13 +18,14 @@ int main(int argc, char *argv[]) {
 								
 	if (SDL_Init(sdlModules) != 0) {
 		fprintf(stderr, "Failed to initialise SDL: %s\n", SDL_GetError());
+		return 1;
 	}
 
 	CGame game;
 	CGame::Inst = &game;
 
 #ifdef _WIN32
-	game.InitGame(GraphicsAPI::DIRECT3D9);
+	game.InitGame(GraphicsAPI::OPENGL_CORE);
 #else
 	game.InitGame(GraphicsAPI::OPENGL_CORE);
 #endif

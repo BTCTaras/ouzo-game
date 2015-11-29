@@ -31,7 +31,7 @@ void CSceneMenu::OnInitUI() {
 
 	m_texture = GFX->CreateTexture("assets/backgrounds/test.jpeg");
 
-	/*m_testBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
+	m_testBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 
 	vertex_t vertices[] = {
 	  { 64.0f, 0.0f, -0.8f, 0.5f, 0.0f },
@@ -39,7 +39,7 @@ void CSceneMenu::OnInitUI() {
 	  { 128.0f, 128.0f, -0.8f, 1.0f, 1.0f },
 	};
 
-	m_testBuffer->Orphan(sizeof(vertices), vertices);*/
+	m_testBuffer->Orphan(sizeof(vertices), vertices);
 }
 
 void CSceneMenu::OnRender() {

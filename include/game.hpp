@@ -40,6 +40,8 @@ public:
 	void SetScene(CScene *scene);
 	S_CScene GetScene();
 
+	float GetDeltaTime();
+
 	S_CGraphics GetGraphics();
 
 	unsigned int GetWidth();
