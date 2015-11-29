@@ -40,7 +40,8 @@ void CGLMatrix::LoadIdentity() {
 
 S_CMatrix CGLMatrix::operator*(S_CMatrix other) {
 	S_CGLMatrix gl_other = std::static_pointer_cast<CGLMatrix>(other);
-	return S_CMatrix(new CGLMatrix(&(m_internalMat * gl_other->m_internalMat)));
+	glm::mat4 m = m_internalMat * gl_other->m_internalMat;
+	return S_CMatrix(new CGLMatrix(&m));
 }
 
 glm::mat4* CGLMatrix::GetGLMMatrix() {

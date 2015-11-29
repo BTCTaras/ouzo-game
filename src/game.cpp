@@ -27,7 +27,7 @@ CGame::CGame()
 
 void CGame::InitGame(GraphicsAPI api) {
 	Uint32 windowFlags =
-		((api == GraphicsAPI::OPENGL_CORE) ? SDL_WINDOW_OPENGL : NULL) |
+		((api == GraphicsAPI::OPENGL_CORE) ? SDL_WINDOW_OPENGL : (Uint32)NULL) |
 		SDL_WINDOW_HIDDEN;
 
 	m_window = SDL_CreateWindow(
@@ -77,9 +77,11 @@ void CGame::InitGame(GraphicsAPI api) {
 	m_graphics->Init(m_window);
 }
 
+#ifdef _WIN32
 HWND CGame::GetWindow_Win32() {
 	return m_win32Window;
 }
+#endif
 
 SDL_Surface *CGame::LoadIconFromFile(const char *file) {
 	FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
@@ -124,7 +126,7 @@ unsigned int CGame::GetHeight() {
 void CGame::Event_OnResize(int width, int height) {
 	this->m_width = width;
 	this->m_height = height;
-	
+
 	m_graphics->SetViewport(0, 0, width, height);
 
 	if (this->GetScene() != nullptr) {
