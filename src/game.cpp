@@ -2,7 +2,6 @@
 #include "graphics.hpp"
 
 #ifdef _WIN32
-#include "d3d/d3d_graphics.hpp"
 #include <Windows.h>
 #endif
 
@@ -59,13 +58,6 @@ void CGame::InitGame(GraphicsAPI api) {
 	case GraphicsAPI::OPENGL_CORE:
 		m_graphics.reset(new CGLGraphics);
 		break;
-
-#ifdef _WIN32
-	case GraphicsAPI::DIRECT3D9:
-		// TODO: Make D3D version configurable
-		m_graphics.reset(new CD3DGraphics);
-		break;
-#endif
 	}
 
 	SDL_ShowWindow(m_window);

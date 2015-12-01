@@ -64,7 +64,7 @@ void CSceneOsu::OnRender() {
 
 	m_mvpMatrix.model->LoadIdentity();
 	m_mvpMatrix.model->Translate(0.0f, 0.0f, -1.0f);
-	m_mvpMatrix.model->Scale(m_backgroundTex->GetWidth(), m_backgroundTex->GetHeight(), 1.0f);
+	m_mvpMatrix.model->Scale((float)m_backgroundTex->GetWidth(), (float)m_backgroundTex->GetHeight(), 1.0f);
 	
 	GFX->Begin(m_mvpMatrix, m_circleBuffer);
 	GFX->SetTexture(m_backgroundTex);
