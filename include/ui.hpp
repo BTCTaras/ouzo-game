@@ -7,6 +7,8 @@
 #include "text.hpp"
 #include "buffer.hpp"
 
+#include "uic_texture.hpp"
+
 #include <memory>
 #include <vector>
 #include <string>
@@ -82,73 +84,6 @@ private:
 };
 
 typedef std::shared_ptr<CUIControl> S_CUIControl;
-
-///
-/// TEXTURE
-///
-
-class CUIControlTexture : public CUIControl {
-public:
-	CUIControlTexture(S_CTexture texture = nullptr);
-
-	void SetTexture(S_CTexture texture);
-
-private:
-	S_CUISprite m_sprite;
-};
-
-typedef std::shared_ptr<CUIControlTexture> S_CUIControlTexture;
-
-///
-/// TEXT
-///
-
-class CUIControlText : public CUIControl {
-public:
-	CUIControlText(CFont *font, const std::string &text, unsigned int size);
-
-	void SetText(const std::string &text);
-
-private:
-	CText m_text;
-	S_CUIText m_uiText;
-};
-
-typedef std::shared_ptr<CUIControlText> S_CUIControlText;
-
-///
-/// BUTTON
-///
-
-class CUIControlButton : public CUIControl {
-public:
-	CUIControlButton(
-		CFont *font, 
-		const std::string &text, 
-		unsigned int fontSize,
-		colour_t colour = { 0.1f, 0.1f, 0.1f }, 
-		colour_t textColour = { 1.0f, 1.0f, 1.0f }
-	);
-	CUIControlButton(
-		CFont *font, 
-		const std::string &text, 
-		unsigned int fontSize, 
-		unsigned int width, 
-		unsigned int height, 
-		colour_t colour = {0.1f, 0.1f, 0.1f}, 
-		colour_t textColour = { 1.0f, 1.0f, 1.0f }
-	);
-
-	void SetText(const std::string &text);
-	void SetColour(colour_t colour);
-
-private:
-	S_CUIControlText m_controlText;
-};
-
-///
-/// SCENE
-///
 
 class CSceneUI : public CScene {
 public:

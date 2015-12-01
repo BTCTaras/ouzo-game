@@ -5,8 +5,10 @@
 #include "shader.hpp"
 #include "font.hpp"
 #include "text.hpp"
-#include "ui.hpp"
 #include "buffer.hpp"
+
+#include "ui.hpp"
+#include "uic_text.hpp"
 
 #include <GL/glew.h>
 
