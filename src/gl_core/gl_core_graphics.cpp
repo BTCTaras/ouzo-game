@@ -78,13 +78,12 @@ void CGLGraphics::Init(SDL_Window *window) {
 	const GLubyte *glVersion = glGetString(GL_VERSION);
 	printf("Graphics Driver: %s\n", glVersion);
 
-	// Make sure transparent objects are rendered properly.
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 	// Ensures that objects behind objects are occluded.
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	GLint textureSize;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &textureSize);
