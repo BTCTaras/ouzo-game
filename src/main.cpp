@@ -7,8 +7,7 @@
 #include <GL/glew.h>
 
 #include <SDL2/SDL.h>
-
-#undef main
+#include <SDL2/SDL_main.h>
 
 int main(int argc, char *argv[]) {
 	Uint32 sdlModules =
