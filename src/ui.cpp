@@ -186,37 +186,3 @@ void CUIControl::HandleEvent(UIEvent event, ui_event_params_t &params) {
 		printf("Got clicked at %f, %f with button %d\n", params.x, params.y, params.button);
 	}
 }
-
-///
-/// CUIControlText
-///
-CUIControlText::CUIControlText(CFont *font, const std::string &text, unsigned int size)
-	: m_text(font, size, text),
-	m_uiText(new CUIText(&m_text))
-{
-	this->AddRenderable(m_uiText);
-}
-
-void CUIControlText::SetText(const std::string &text) {
-	m_uiText->SetText(text);
-}
-
-///
-/// CUIControlTexture
-///
-
-CUIControlTexture::CUIControlTexture(S_CTexture tex)
-	: m_sprite(new CUISprite(nullptr))
-{
-	if (tex != nullptr) {
-		m_sprite->SetTexture(tex);
-		this->width = (float)tex->GetWidth();
-		this->height = (float)tex->GetHeight();
-	}
-
-	this->AddRenderable(m_sprite);
-}
-
-void CUIControlTexture::SetTexture(S_CTexture tex) {
-	m_sprite->SetTexture(tex);
-}
