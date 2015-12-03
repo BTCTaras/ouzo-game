@@ -9,6 +9,7 @@
 
 #include "ui.hpp"
 #include "uic_text.hpp"
+#include "uic_texture.hpp"
 
 #include <GL/glew.h>
 

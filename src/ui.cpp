@@ -5,6 +5,7 @@
 #include "graphics.hpp"
 #include "texture.hpp"
 #include "game.hpp"
+#include "uic_texture.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
