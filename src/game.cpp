@@ -46,11 +46,9 @@ void CGame::InitGame(GraphicsAPI api) {
 	// TODO: Make this work on Windows. It does nothing on OpenGL Core
 	// and crashes on Direct3D.
 	// Maybe try setting the icon via Win32 directly?
-#ifndef _WIN32
 	SDL_Surface *icon = this->LoadIconFromFile("assets/icon.png");
 	SDL_SetWindowIcon(m_window, icon);
 	SDL_FreeSurface(icon);
-#endif
 
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 
@@ -77,18 +75,27 @@ HWND CGame::GetWindow_Win32() {
 
 SDL_Surface *CGame::LoadIconFromFile(const char *file) {
 	FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
-	FIBITMAP *image = FreeImage_ConvertTo32Bits(bitmap);
-	FreeImage_FlipVertical(image);
+	
+	if (!bitmap) {
+		fprintf(stderr, "Failed to load window icon!!\n");
+		return NULL;
+	}
+
+	if (FreeImage_GetBPP(bitmap)) {
+		bitmap = FreeImage_ConvertTo32Bits(bitmap);
+	}
+
+	FreeImage_FlipVertical(bitmap);
 
 	SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(
-		FreeImage_GetBits(image),
-		FreeImage_GetWidth(image),
-		FreeImage_GetHeight(image),
-		FreeImage_GetBPP(image),
-		FreeImage_GetPitch(image),
-		FreeImage_GetRedMask(image),
-		FreeImage_GetGreenMask(image),
-		FreeImage_GetBlueMask(image),
+		FreeImage_GetBits(bitmap),
+		FreeImage_GetWidth(bitmap),
+		FreeImage_GetHeight(bitmap),
+		FreeImage_GetBPP(bitmap),
+		FreeImage_GetPitch(bitmap),
+		FreeImage_GetRedMask(bitmap),
+		FreeImage_GetGreenMask(bitmap),
+		FreeImage_GetBlueMask(bitmap),
 		0
 	);
 
@@ -96,8 +103,6 @@ SDL_Surface *CGame::LoadIconFromFile(const char *file) {
 	// Essentially just translates black to transparent.
 	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
 
-
-	FreeImage_Unload(image);
 	FreeImage_Unload(bitmap);
 	return surf;
 }
