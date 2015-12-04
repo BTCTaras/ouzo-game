@@ -9,10 +9,10 @@
 S_CBuffer g_circleBuffer = nullptr;
 
 const vertex_t QUAD_VERTICES[] = {
-	{ 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-	{ 1.0f, 0.0f, 0.0f, 1.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f, 1.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
+	{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
 };
 
 CSceneCTB::CSceneCTB()

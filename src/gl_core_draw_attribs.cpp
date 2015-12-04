@@ -9,6 +9,9 @@ CGLDrawAttribs::CGLDrawAttribs() {
 }
 
 CGLDrawAttribs::~CGLDrawAttribs() {
+	glDisableVertexAttribArray((GLuint)AttribType::POSITION);
+	glDisableVertexAttribArray((GLuint)AttribType::TEX_COORDS);
+	glDisableVertexAttribArray((GLuint)AttribType::NORMAL);
 	glDeleteVertexArrays(1, &m_id);
 }
 
@@ -38,8 +41,9 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 		break;
 	}
 
+	glEnableVertexAttribArray((GLuint)type);
 	glVertexAttribPointer(
-		type,
+		(GLuint)type,
 		count,
 		GL_FLOAT,
 		GL_FALSE,
