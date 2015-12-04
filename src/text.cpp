@@ -90,7 +90,7 @@ void CText::CreateTextBuffer() {
 	}
 
 	m_fontBufferSize = vertices.size() * sizeof(vertex_t);
-	m_fontBuffer->Orphan(m_fontBufferSize, &vertices[0]);
+	m_fontBuffer->Orphan(m_fontBufferSize, sizeof(vertex_t), &vertices[0]);
 }
 
 void CText::SetColour(colour_t colour) {
@@ -105,14 +105,14 @@ void CText::Render(mvp_matrix_t &mvp) {
 		this->CreateTextBuffer();
 	}
 
-	GFX->Begin(mvp, m_fontBuffer, s_fontProgram);
+	/*GFX->Begin(mvp, m_fontBuffer, s_fontProgram);
 
 	s_fontProgram->SetUniform(ShaderUniformType::GFX_VEC3F, "u_FontColour", &m_colour);
 
 	GFX->SetTexture(atlas, 0);
 	GFX->Draw(PrimitiveType::GFX_TRIANGLES);
 
-	GFX->End();
+	GFX->End();*/
 }
 
 S_CBuffer CText::GetBuffer() {

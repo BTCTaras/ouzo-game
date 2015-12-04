@@ -4,6 +4,7 @@
 #include "texture.hpp"
 #include "atlas_factory.hpp"
 #include "buffer.hpp"
+#include "draw_attribs.hpp"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -13,8 +14,9 @@
 /// Represents a vertex. Values in order (floats): x, y, z, u, v.
 ///
 typedef struct {
-	float x, y, z;
+	float x, y, z, w;
 	float u, v;
+	float nx, ny, nz;
 } vertex_t;
 
 typedef struct {
@@ -86,14 +88,21 @@ public:
 	///
 	virtual void BeginScene() = 0;
 
+	virtual void SetDrawAttributes(S_CDrawAttribs attribs) = 0;
+
+	virtual void SetDrawProgram(S_CProgram program) = 0;
+
+	virtual void SetDrawTransform(mvp_matrix_t &mvp) = 0;
+
+	virtual void SetDrawBuffer(S_CBuffer buffer) = 0;
+
 	///
-	/// Enables all vertex attributes and passes them to the current program.
+	/// Sets the texture to draw with.
 	///
-	/// \param[in]	mvp				The MVP matrix to use for rendering.
-	/// \param[in]	vertexBuffer	The vertex buffer to use for rendering.
-	/// \param[in]	program			The program to use for rendering.
+	/// \param[in]  tex   The texture to use.
+	/// \param[in]  slot  What slot to assign it to. Used for multitexturing.
 	///
-	virtual void Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program = nullptr) = 0;
+	virtual void SetDrawTexture(S_CTexture tex = nullptr, unsigned int slot = 0) = 0;
 
 	///
 	/// Draws a model. The vertex buffer is specified by CGraphics::Begin.
@@ -102,19 +111,6 @@ public:
 	/// \param[in]  elementBuffer The buffer containing the model indices.
 	///
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
-
-	///
-	/// Sets the texture to draw with.
-	///
-	/// \param[in]  tex   The texture to use.
-	/// \param[in]  slot  What slot to assign it to. Used for multitexturing.
-	///
-	virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) = 0;
-
-	///
-	/// Disables all vertex attributes *and unbinds any bound programs*.
-	///
-	virtual void End() = 0;
 
 	///
 	/// Finishes off a frame. Behaviour is backend specific, though
@@ -177,6 +173,8 @@ public:
 	///
 	virtual S_CMatrix CreateIdentityMatrix() = 0;
 
+	virtual S_CDrawAttribs CreateDrawAttribs() = 0;
+
 	///
 	///	Defines the area that this CGraphics object shall render to.
 	///
@@ -198,9 +196,15 @@ public:
 
 	virtual void Init(SDL_Window *window) override;
 	virtual void BeginScene() override;
-	virtual void Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program = nullptr) override;
-	virtual void End() override;
 	virtual void EndScene() override;
+
+	virtual void SetDrawAttributes(S_CDrawAttribs attribs) override;
+	virtual void SetDrawProgram(S_CProgram program) override;
+	virtual void SetDrawTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
+	virtual void SetDrawTransform(mvp_matrix_t &mvp) override;
+	virtual void SetDrawBuffer(S_CBuffer buffer) override;
+
+	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
 
 	virtual S_CProgram GetDefaultProgram() override;
 	virtual S_CTexture CreateTexture(const char *file = NULL) override;
@@ -209,21 +213,11 @@ public:
 	virtual S_CAtlasFactory CreateAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) override;
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
 	virtual S_CMatrix CreateIdentityMatrix() override;
-	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
-	virtual void SetTexture(S_CTexture tex = nullptr, unsigned int slot = 0) override;
+	virtual S_CDrawAttribs CreateDrawAttribs() override;
+
 	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) override;
 
 	virtual unsigned int GetMaxTextureSize() override;
-
-	///
-	/// The vertex attribute containing the vertex position.
-	///
-	static const unsigned int VERT_ATTRIB_POS;
-
-	///
-	/// The vertex atrtribute containing the texture coordinates.
-	///
-	static const unsigned int VERT_ATTRIB_TEX_COORDS;
 
 	///
 	/// Converts the given PrimitiveType to an OpenGL enum.
@@ -238,6 +232,7 @@ private:
 	SDL_GLContext m_context;
 	SDL_Window *m_window;
 	S_CBuffer m_currentBuffer;
+	S_CGLProgram m_drawProgram;
 
 	unsigned int m_glMaxTextureSize;
 };

@@ -4,6 +4,7 @@
 #include "texture.hpp"
 #include "atlas_factory.hpp"
 #include "buffer.hpp"
+#include "draw_attribs.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,9 +16,6 @@
 #include <sstream>
 
 #include <SDL2/SDL.h>
-
-const unsigned int CGLGraphics::VERT_ATTRIB_POS = 0;
-const unsigned int CGLGraphics::VERT_ATTRIB_TEX_COORDS = 1;
 
 #ifdef OUZO_DEBUG
 
@@ -194,6 +192,10 @@ S_CMatrix CGLGraphics::CreateIdentityMatrix() {
 	return S_CGLMatrix(new CGLMatrix);
 }
 
+S_CDrawAttribs CGLGraphics::CreateDrawAttribs() {
+	return S_CGLDrawAttribs(new CGLDrawAttribs);
+}
+
 S_CTexture CGLGraphics::CreateTexture(const char *file) {
 	S_CGLTexture tex(new CGLTexture);
 
@@ -241,62 +243,25 @@ void CGLGraphics::BeginScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-void CGLGraphics::Begin(mvp_matrix_t &mvp, S_CBuffer vertexBuffer, S_CProgram program) {
-	// OpenGL handles are 0 when uninitialised
-	if (m_vao == 0) {
-		fprintf(stderr, "WARNING: CGraphics has no VAO!!\n");
-	}
+void CGLGraphics::SetDrawAttributes(S_CDrawAttribs attribs) {
+	S_CGLDrawAttribs gl_attribs = std::static_pointer_cast<CGLDrawAttribs>(attribs);
+	glBindVertexArray(gl_attribs->GetOpenGLHandle());
+}
 
-	// if program points to 0, fall back to the default (diffuse) program.
-	S_CGLProgram prog = std::static_pointer_cast<CGLProgram>(
-		(program != nullptr) ? program : m_defaultProgram
-		);
-	prog->Use();
-
-	// compute the MVP matrix
-	S_CGLMatrix mvpMat = std::static_pointer_cast<CGLMatrix>(mvp.projection * mvp.view * mvp.model);
-	unsigned int mvpLoc = prog->GetUniformLocation("u_MVPMatrix", true);
-
-	// upload our MVP matrix
-	glUniformMatrix4fv(mvpLoc, 1, GL_FALSE, mvpMat->ValuePointer());
-
-	unsigned int texLoc = prog->GetUniformLocation("u_Texture", true);
-	glUniform1i(texLoc, 0); // we wanna use the texture in slot 0 (GL_TEXTURE0)
-
-	// Specify where to store our vertex attributes
-	glBindVertexArray(m_vao);
-
-	// Specify where to find our data
-	S_CGLBuffer gl_buffer = std::static_pointer_cast<CGLBuffer>(vertexBuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, gl_buffer->GetOpenGLHandle());
-	m_currentBuffer = vertexBuffer; // For use in CGLGraphics::Draw.
-
-	// Enable the vertex attrib array idk why but you gotta do this
-	glEnableVertexAttribArray(CGLGraphics::VERT_ATTRIB_POS);
-
-	// Specify where to find our vertex position data
-	glVertexAttribPointer(CGLGraphics::VERT_ATTRIB_POS,
-		3,          // we want 3 floats per position
-		GL_FLOAT,   // we wanna upload floats
-		GL_FALSE,   // don't normalise our data
-		sizeof(vertex_t), // position data occurs every sizeof(vertex_t) bytes
-		(void*)offsetof(vertex_t, x) // position data is offsetof(x) bytes into each buffer element
-		);
-
-	// Ditto
-	glEnableVertexAttribArray(CGLGraphics::VERT_ATTRIB_TEX_COORDS);
-
-	// Specify where to find our UV data
-	glVertexAttribPointer(CGLGraphics::VERT_ATTRIB_TEX_COORDS,
-		2,          // we want 2 floats per tex coord
-		GL_FLOAT,   // we wanna upload floats
-		GL_FALSE,   // don't normalise our data
-		sizeof(vertex_t), // texture coords occur every sizeof(vertex_t) bytes
-		(void*)offsetof(vertex_t, u) // tex coord data is offsetof(u) bytes into each buffer element
-		);
+void CGLGraphics::SetDrawProgram(S_CProgram program) {
+	S_CGLProgram gl_prog = std::static_pointer_cast<CGLProgram>(program);
+	m_drawProgram = gl_prog;
 }
 
 void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
+	if (m_currentBuffer == nullptr) {
+		fprintf(stderr, "Tried to draw with nullptr buffer!! Did you forget to call SetDrawBuffer?\n");
+		return;
+	}
+
+	S_CGLProgram gl_prog = std::static_pointer_cast<CGLProgram>(m_drawProgram);
+	glUseProgram(gl_prog->GetOpenGLHandle());
+
 	GLenum gl_primitive = CGLGraphics::GetOpenGLPrimitiveTypeEnum(primitive);
 
 	if (elementBuffer != nullptr) {
@@ -306,22 +271,22 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_elementBuffer->GetOpenGLHandle());
 		glDrawElements(
 			gl_primitive,
-			elementBuffer->GetSize() / sizeof(unsigned short), // Amount of elements = elem buffer size / elem size
+			elementBuffer->GetElementCount(), // Amount of elements = elem buffer size / elem size
 			GL_UNSIGNED_SHORT, // Each element is an unsigned short
 			NULL // We've already bound our indices as a buffer
-			);
+		);
 	}
 	else {
 		// We have no element buffer, draw regularily
 		glDrawArrays(
 			gl_primitive,
 			0, // The first vertex is at 0
-			m_currentBuffer->GetSize() / sizeof(vertex_t) // Amount of vertices = vertex buffer size / vertex size
-			);
+			m_currentBuffer->GetElementCount() // Amount of vertices = vertex buffer size / vertex size
+		);
 	}
 }
 
-void CGLGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
+void CGLGraphics::SetDrawTexture(S_CTexture tex, unsigned int slot) {
 	S_CGLTexture gl_tex = std::static_pointer_cast<CGLTexture>(tex);
 	glActiveTexture(GL_TEXTURE0 + slot); // slot must be offset by GL_TEXTURE0
 
@@ -331,6 +296,22 @@ void CGLGraphics::SetTexture(S_CTexture tex, unsigned int slot) {
 	else {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+}
+
+void CGLGraphics::SetDrawTransform(mvp_matrix_t &mvp) {
+	S_CGLMatrix gl_mvp = std::static_pointer_cast<CGLMatrix>(
+		mvp.projection * mvp.view * mvp.model
+	);
+
+	m_drawProgram->SetUniform(
+		ShaderUniformType::GFX_MAT4x4F,
+		"u_MVPMatrix",
+		gl_mvp->ValuePointer()
+	);
+}
+
+void CGLGraphics::SetDrawBuffer(S_CBuffer buffer) {
+	m_currentBuffer = buffer;
 }
 
 unsigned int CGLGraphics::GetOpenGLPrimitiveTypeEnum(PrimitiveType primitive) {
@@ -352,14 +333,6 @@ unsigned int CGLGraphics::GetOpenGLPrimitiveTypeEnum(PrimitiveType primitive) {
 	default:
 		return GL_FALSE;
 	}
-}
-
-void CGLGraphics::End() {
-	// idk why this is necessary but it is
-	glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_TEX_COORDS);
-	glDisableVertexAttribArray(CGLGraphics::VERT_ATTRIB_POS);
-
-	m_currentBuffer = nullptr;
 }
 
 void CGLGraphics::EndScene() {

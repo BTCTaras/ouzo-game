@@ -42,7 +42,7 @@ void CSceneMenu::OnInitUI() {
 	  { 128.0f, 128.0f, -0.8f, 1.0f, 1.0f },
 	};
 
-	m_testBuffer->Orphan(sizeof(vertices), vertices);
+	m_testBuffer->Orphan(sizeof(vertices), sizeof(vertex_t), vertices);
 }
 
 void CSceneMenu::OnRender() {

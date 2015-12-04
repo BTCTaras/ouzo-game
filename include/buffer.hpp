@@ -22,12 +22,22 @@ public:
 	/// \param[in]  dataSize  The size of the inputted data in bytes.
 	/// \param[in]  data      The data to save into the buffer.
 	///
-	virtual void Orphan(size_t dataSize, void *data) = 0;
+	virtual void Orphan(size_t dataSize, size_t elementSize, void *data) = 0;
 
 	///
 	/// Gets the size of the buffer in bytes.
 	///
 	virtual size_t GetSize() = 0;
+
+	///
+	/// Gets the size of a single element in the buffer.
+	///
+	virtual size_t GetElementSize() = 0;
+
+	///
+	/// Gets the amount of elements in this buffer (size / elementSize).
+	///
+	virtual size_t GetElementCount() = 0;
 
 	///
 	/// Returns the type of the buffer.
@@ -42,6 +52,7 @@ public:
 protected:
 	BufferType m_type;
 	BufferStorageType m_storageType;
+
 };
 
 typedef std::shared_ptr<CBuffer> S_CBuffer;
@@ -51,8 +62,11 @@ public:
 	CGLBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC);
 	~CGLBuffer();
 
-	virtual void Orphan(size_t dataSize, void *data) override;
+	virtual void Orphan(size_t dataSize, size_t elementSize, void *data) override;
+
 	virtual size_t GetSize() override;
+	virtual size_t GetElementSize() override;
+	virtual size_t GetElementCount() override;
 
 	///
 	/// Returns the OpenGL handle of this buffer.
@@ -78,7 +92,7 @@ public:
 
 private:
 	unsigned int m_id;
-	size_t m_size;
+	size_t m_size, m_elementSize;
 };
 
 typedef std::shared_ptr<CGLBuffer> S_CGLBuffer;

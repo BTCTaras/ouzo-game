@@ -142,7 +142,7 @@ CUISprite::CUISprite(S_CTexture tex) {
 
 	if (s_globalSpriteBuffer == nullptr) {
 		s_globalSpriteBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
-		s_globalSpriteBuffer->Orphan(sizeof(QUAD_VERTICES), (void*)QUAD_VERTICES);
+		s_globalSpriteBuffer->Orphan(sizeof(QUAD_VERTICES), sizeof(vertex_t), (void*)QUAD_VERTICES);
 	}
 }
 
@@ -153,10 +153,10 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
 		1.0f
 	);
 
-	GFX->Begin(mvp, s_globalSpriteBuffer);
+/*	GFX->Begin(mvp, s_globalSpriteBuffer);
 	GFX->SetTexture(m_texture);
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
-	GFX->End();
+	GFX->End();*/
 }
 
 void CUISprite::SetTexture(S_CTexture tex) {

@@ -15,7 +15,7 @@ CGLBuffer::~CGLBuffer() {
 	}
 }
 
-void CGLBuffer::Orphan(size_t dataSize, void *data) {
+void CGLBuffer::Orphan(size_t dataSize, size_t elementSize, void *data) {
 	GLenum typeEnum = CGLBuffer::GetOpenGLBufferTypeEnum(m_type);
 	glBindBuffer(typeEnum, m_id);
 
@@ -23,10 +23,19 @@ void CGLBuffer::Orphan(size_t dataSize, void *data) {
 	glBufferData(typeEnum, dataSize, data, storageTypeEnum);
 
 	m_size = dataSize;
+	m_elementSize = elementSize;
 }
 
 size_t CGLBuffer::GetSize() {
 	return m_size;
+}
+
+size_t CGLBuffer::GetElementSize() {
+	return m_elementSize;
+}
+
+size_t CGLBuffer::GetElementCount() {
+	return m_size / m_elementSize;
 }
 
 unsigned int CGLBuffer::GetOpenGLHandle() {

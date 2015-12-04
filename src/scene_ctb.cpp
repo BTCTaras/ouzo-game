@@ -18,14 +18,18 @@ const vertex_t QUAD_VERTICES[] = {
 CSceneCTB::CSceneCTB()
 	: m_dudeX(0), m_dudeY(0)
 {
-
 }
 
 void CSceneCTB::OnInit() {
 	if (g_circleBuffer == nullptr) {
 		g_circleBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
-		g_circleBuffer->Orphan(sizeof(QUAD_VERTICES), (void*)QUAD_VERTICES);
+		g_circleBuffer->Orphan(sizeof(QUAD_VERTICES), sizeof(vertex_t), (void*)QUAD_VERTICES);
 	}
+
+	m_quadAttribs.reset(new CGLDrawAttribs);
+	m_quadAttribs->SetSource(AttribType::POSITION, g_circleBuffer, offsetof(vertex_t, x));
+	m_quadAttribs->SetSource(AttribType::TEX_COORDS, g_circleBuffer, offsetof(vertex_t, u));
+	m_quadAttribs->SetSource(AttribType::NORMAL, g_circleBuffer, offsetof(vertex_t, nx));
 
 	m_fruitTex = GFX->CreateTexture("assets/sickfruit.png");
 	m_bowlTex = GFX->CreateTexture("assets/bowl.png");
@@ -43,25 +47,27 @@ void CSceneCTB::OnResize(int width, int height) {
 }
 
 void CSceneCTB::OnRender() {
+	GFX->SetDrawProgram(GFX->GetDefaultProgram());
+	GFX->SetDrawAttributes(m_quadAttribs);
+	GFX->SetDrawBuffer(g_circleBuffer);
+
 	for (fruit_t &fruit : m_fruit) {
 		m_mvpMatrix.model->LoadIdentity();
 		m_mvpMatrix.model->Translate(fruit.x, fruit.y);
 		m_mvpMatrix.model->Scale(64.0f, 64.0f, 1.0f);
 
-		GFX->Begin(m_mvpMatrix, g_circleBuffer);
-		GFX->SetTexture(m_fruitTex);
+		GFX->SetDrawTransform(m_mvpMatrix);
+		GFX->SetDrawTexture(m_fruitTex);
 		GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
-		GFX->End();
 	}
 
 	m_mvpMatrix.model->LoadIdentity();
 	m_mvpMatrix.model->Translate(m_dudeX, m_dudeY);
 	m_mvpMatrix.model->Scale(128.0f, 64.0f, 1.0f);
 
-	GFX->Begin(m_mvpMatrix, g_circleBuffer);
-	GFX->SetTexture(m_bowlTex);
+	GFX->SetDrawTransform(m_mvpMatrix);
+	GFX->SetDrawTexture(m_bowlTex);
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
-	GFX->End();
 }
 
 void CSceneCTB::OnUpdate() {

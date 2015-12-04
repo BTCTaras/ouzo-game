@@ -26,6 +26,7 @@ private:
 	std::vector<fruit_t> m_fruit;
 	mvp_matrix_t m_mvpMatrix;
 	S_CTexture m_fruitTex, m_bowlTex;
+	S_CDrawAttribs m_quadAttribs;
 
 	float m_dudeX, m_dudeY;
 };

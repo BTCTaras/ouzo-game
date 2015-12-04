@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "scene_menu.hpp"
 #include "scene_osu.hpp"
+#include "scene_ctb.hpp"
 
 #include <stdio.h>
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
 
 	game.InitGame(GraphicsAPI::OPENGL_CORE);
 
-	CSceneOsu *osu = new CSceneOsu;
+	/*CSceneOsu *osu = new CSceneOsu;
 	osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
 
 	const float periods = 3.0f;
@@ -38,9 +39,9 @@ int main(int argc, char *argv[]) {
 		));
 
 		osu->AddObject(circle);
-	}
+	}*/
 
-	game.SetScene(osu);
+	game.SetScene(new CSceneCTB);
 
 	game.StartLoop();
 	return 0;
