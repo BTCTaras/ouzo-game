@@ -110,12 +110,12 @@ void CText::Render(mvp_matrix_t &mvp) {
 	static S_CDrawAttribs attribs = GFX->CreateDrawAttribs(m_fontBuffer);
 
 	GFX->SetDrawProgram(s_fontProgram);
+	GFX->SetDrawTexture(atlas);
+	GFX->SetDrawAttributes(attribs);
 	GFX->SetDrawTransform(mvp);
 	GFX->SetDrawBuffer(m_fontBuffer);
-	GFX->SetDrawAttributes(attribs);
-	GFX->SetDrawTexture(atlas);
 
-	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
+	GFX->Draw(PrimitiveType::GFX_TRIANGLES);
 }
 
 S_CBuffer CText::GetBuffer() {
