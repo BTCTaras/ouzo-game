@@ -63,6 +63,7 @@ private:
 	std::vector<S_COsuObject> m_objects;
 	unsigned int m_nextUID;
 	S_CBuffer m_circleBuffer;
+	S_CDrawAttribs m_circleAttribs;
 	S_CTexture m_circleTex, m_backgroundTex;
 	mvp_matrix_t m_mvpMatrix;
 };
