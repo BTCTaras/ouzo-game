@@ -175,6 +175,8 @@ public:
 
 	virtual S_CDrawAttribs CreateDrawAttribs() = 0;
 
+	virtual S_CDrawAttribs CreateDrawAttribs(S_CBuffer buffer) = 0;
+
 	///
 	///	Defines the area that this CGraphics object shall render to.
 	///
@@ -214,6 +216,7 @@ public:
 	virtual S_CBuffer CreateBuffer(BufferType type, BufferStorageType storageType = BufferStorageType::STATIC) override;
 	virtual S_CMatrix CreateIdentityMatrix() override;
 	virtual S_CDrawAttribs CreateDrawAttribs() override;
+	virtual S_CDrawAttribs CreateDrawAttribs(S_CBuffer buffer) override;
 
 	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) override;
 

@@ -196,6 +196,14 @@ S_CDrawAttribs CGLGraphics::CreateDrawAttribs() {
 	return S_CGLDrawAttribs(new CGLDrawAttribs);
 }
 
+S_CDrawAttribs CGLGraphics::CreateDrawAttribs(S_CBuffer buffer) {
+	S_CGLDrawAttribs attribs = S_CGLDrawAttribs(new CGLDrawAttribs);
+	attribs->SetSource(AttribType::POSITION, buffer, offsetof(vertex_t, x));
+	attribs->SetSource(AttribType::TEX_COORDS, buffer, offsetof(vertex_t, u));
+	attribs->SetSource(AttribType::NORMAL, buffer, offsetof(vertex_t, nx));
+	return attribs;
+}
+
 S_CTexture CGLGraphics::CreateTexture(const char *file) {
 	S_CGLTexture tex(new CGLTexture);
 
@@ -292,8 +300,7 @@ void CGLGraphics::SetDrawTexture(S_CTexture tex, unsigned int slot) {
 
 	if (gl_tex != nullptr) {
 		glBindTexture(GL_TEXTURE_2D, gl_tex->GetOpenGLHandle());
-	}
-	else {
+	} else {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 }

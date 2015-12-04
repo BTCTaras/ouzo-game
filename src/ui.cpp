@@ -12,10 +12,10 @@
 #include <glm/gtc/type_ptr.hpp>
 
 const vertex_t QUAD_VERTICES[] = {
-  { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-  { 0.0f, 1.0f, 0.0f, 0.0f, 1.0f },
-  { 1.0f, 0.0f, 0.0f, 1.0f, 0.0f },
-  { 1.0f, 1.0f, 0.0f, 1.0f, 1.0f },
+	{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
+	{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
+	{ 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
 };
 
 ///
@@ -134,6 +134,7 @@ std::vector<S_CUIRenderable>* CUIControl::GetRenderables() {
 ///
 
 S_CBuffer CUISprite::s_globalSpriteBuffer = nullptr;
+S_CDrawAttribs CUISprite::s_globalSpriteDrawAttribs = nullptr;
 
 CUISprite::CUISprite(S_CTexture tex) {
 	if (tex != nullptr) {
@@ -143,6 +144,11 @@ CUISprite::CUISprite(S_CTexture tex) {
 	if (s_globalSpriteBuffer == nullptr) {
 		s_globalSpriteBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 		s_globalSpriteBuffer->Orphan(sizeof(QUAD_VERTICES), sizeof(vertex_t), (void*)QUAD_VERTICES);
+
+		s_globalSpriteDrawAttribs = GFX->CreateDrawAttribs();
+		s_globalSpriteDrawAttribs->SetSource(AttribType::POSITION, s_globalSpriteBuffer, offsetof(vertex_t, x));
+		s_globalSpriteDrawAttribs->SetSource(AttribType::TEX_COORDS, s_globalSpriteBuffer, offsetof(vertex_t, u));
+		s_globalSpriteDrawAttribs->SetSource(AttribType::NORMAL, s_globalSpriteBuffer, offsetof(vertex_t, nx));
 	}
 }
 
@@ -153,10 +159,13 @@ void CUISprite::OnRender(mvp_matrix_t &mvp) {
 		1.0f
 	);
 
-/*	GFX->Begin(mvp, s_globalSpriteBuffer);
-	GFX->SetTexture(m_texture);
+	GFX->SetDrawProgram(GFX->GetDefaultProgram());
+	GFX->SetDrawTransform(mvp);
+	GFX->SetDrawAttributes(s_globalSpriteDrawAttribs);
+	GFX->SetDrawBuffer(s_globalSpriteBuffer);
+	GFX->SetDrawTexture(m_texture);
+
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
-	GFX->End();*/
 }
 
 void CUISprite::SetTexture(S_CTexture tex) {

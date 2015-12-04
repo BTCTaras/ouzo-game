@@ -41,7 +41,7 @@ int main(int argc, char *argv[]) {
 		osu->AddObject(circle);
 	}*/
 
-	game.SetScene(new CSceneCTB);
+	game.SetScene(new CSceneMenu);
 
 	game.StartLoop();
 	return 0;

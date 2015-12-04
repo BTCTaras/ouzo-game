@@ -76,14 +76,14 @@ void CText::CreateTextBuffer() {
 		float v2 = v1 - gdata->v2;
 
 		// Triangle 1
-		vertices.push_back({ x2,      h + y2,      0.0f, u1, v1 });
-		vertices.push_back({ x2,      y2,           0.0f, u1, v2 });
-		vertices.push_back({ x2 + w,  h + y2,      0.0f, u2, v1 });
+		vertices.push_back({ x2,      h + y2,      0.0f, 1.0f, u1, v1, 0.0f, 0.0f, 1.0f });
+		vertices.push_back({ x2,      y2,          0.0f, 1.0f, u1, v2, 0.0f, 0.0f, 1.0f });
+		vertices.push_back({ x2 + w,  h + y2,      0.0f, 1.0f, u2, v1, 0.0f, 0.0f, 1.0f });
 
 		// Triangle 2
-		vertices.push_back({ x2,      y2,           0.0f, u1, v2 });
-		vertices.push_back({ x2 + w,  y2,           0.0f, u2, v2 });
-		vertices.push_back({ x2 + w,  h + y2,      0.0f, u2, v1 });
+		vertices.push_back({ x2,      y2,          0.0f, 1.0f, u1, v2, 0.0f, 0.0f, 1.0f });
+		vertices.push_back({ x2 + w,  y2,          0.0f, 1.0f, u2, v2, 0.0f, 0.0f, 1.0f });
+		vertices.push_back({ x2 + w,  h + y2,      0.0f, 1.0f, u2, v1, 0.0f, 0.0f, 1.0f });
 
 		x += gdata->advanceX >> 6;
 		y += gdata->advanceY >> 6;
@@ -105,14 +105,17 @@ void CText::Render(mvp_matrix_t &mvp) {
 		this->CreateTextBuffer();
 	}
 
-	/*GFX->Begin(mvp, m_fontBuffer, s_fontProgram);
-
 	s_fontProgram->SetUniform(ShaderUniformType::GFX_VEC3F, "u_FontColour", &m_colour);
 
-	GFX->SetTexture(atlas, 0);
-	GFX->Draw(PrimitiveType::GFX_TRIANGLES);
+	static S_CDrawAttribs attribs = GFX->CreateDrawAttribs(m_fontBuffer);
 
-	GFX->End();*/
+	GFX->SetDrawProgram(s_fontProgram);
+	GFX->SetDrawTransform(mvp);
+	GFX->SetDrawBuffer(m_fontBuffer);
+	GFX->SetDrawAttributes(attribs);
+	GFX->SetDrawTexture(atlas);
+
+	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
 }
 
 S_CBuffer CText::GetBuffer() {

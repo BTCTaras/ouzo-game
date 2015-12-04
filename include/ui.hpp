@@ -41,7 +41,9 @@ public:
 
 private:
 	S_CTexture m_texture;
+
 	static S_CBuffer s_globalSpriteBuffer;
+	static S_CDrawAttribs s_globalSpriteDrawAttribs;
 };
 
 typedef std::shared_ptr<CUISprite> S_CUISprite;
