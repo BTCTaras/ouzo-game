@@ -1,11 +1,25 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 PROJECT(ouzo)
 
-# Finds all source files and adds them.
-FILE(GLOB_RECURSE OUZO_SRC "src/*.cpp")
-FILE(GLOB_RECURSE OUZO_HEADERS "include/*.h" "include/*.hpp")
+FILE(GLOB_RECURSE OUZO_SOURCE_FILES "include/*.h" "include/*.hpp" "src/*.cpp")
 
-ADD_EXECUTABLE(ouzo ${OUZO_SRC} ${OUZO_HEADERS} ${OUZO_HLSL_SHADERS})
+# Taken from: https://cmake.org/pipermail/cmake/2013-November/056336.html
+MACRO(GROUP_SOURCES curdir)
+	FILE(GLOB children RELATIVE ${PROJECT_SOURCE_DIR}/${curdir} ${PROJECT_SOURCE_DIR}/${curdir}/*)
+	FOREACH(child ${children})
+		IF(IS_DIRECTORY ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+			GROUP_SOURCES(${curdir}/${child})
+		ELSE()
+			STRING(REPLACE "/" "\\" groupname ${curdir})
+			SOURCE_GROUP(${groupname} FILES ${PROJECT_SOURCE_DIR}/${curdir}/${child})
+		ENDIF()
+	ENDFOREACH()
+ENDMACRO()
+
+GROUP_SOURCES("src")
+GROUP_SOURCES("include")
+
+ADD_EXECUTABLE(ouzo ${OUZO_SOURCE_FILES})
 
 # Fetch modules from ./cmake/Modules
 SET(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules")
