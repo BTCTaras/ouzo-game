@@ -5,8 +5,8 @@
 #include "atlas_factory.hpp"
 #include "buffer.hpp"
 #include "draw_attribs.hpp"
+#include "matrix.hpp"
 
-#include <glm/glm.hpp>
 #include <memory>
 #include <SDL2/SDL.h>
 
@@ -33,67 +33,34 @@ enum PrimitiveType {
 	GFX_TRIANGLES,
 };
 
-class CMatrix;
-typedef std::shared_ptr<CMatrix> S_CMatrix;
-
-class CMatrix {
-public:
-	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) = 0;
-	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) = 0;
-	virtual void Translate(float x, float y, float z = 0.0f) = 0;
-	virtual void Rotate(float x, float y, float z) = 0;
-	virtual void Scale(float x, float y, float z) = 0;
-	virtual void LoadIdentity() = 0;
-
-	virtual S_CMatrix operator*(S_CMatrix other) = 0;
-};
-
-S_CMatrix operator*(S_CMatrix first, S_CMatrix second);
-
-typedef struct {
-	S_CMatrix projection;
-	S_CMatrix view;
-	S_CMatrix model;
-} mvp_matrix_t;
-
-class CGLMatrix : public CMatrix {
-public:
-	CGLMatrix(glm::mat4 *mat = nullptr);
-
-	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) override;
-	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) override;
-	virtual void Translate(float x, float y, float z = 0.0f) override;
-	virtual void Rotate(float x, float y, float z) override;
-	virtual void Scale(float x, float y, float z) override;
-	virtual void LoadIdentity() override;
-
-	virtual S_CMatrix operator*(S_CMatrix other) override;
-
-	float* ValuePointer();
-	glm::mat4* GetGLMMatrix();
-
-private:
-	glm::mat4 m_internalMat;
-};
-
-typedef std::shared_ptr<CGLMatrix> S_CGLMatrix;
-
 class CGraphics {
 public:
 	virtual void Init(SDL_Window *window) = 0;
 
 	///
 	/// To be called at the beginning of a frame. Behaviour is
-	/// backend specific.
+	/// backend specific, though includes clearing the framebuffer.
 	///
 	virtual void BeginScene() = 0;
 
+    ///
+    /// Sets the attributes to draw with.
+    ///
 	virtual void SetDrawAttributes(S_CDrawAttribs attribs) = 0;
 
+    ///
+    /// Sets the program to draw with.
+    ///
 	virtual void SetDrawProgram(S_CProgram program) = 0;
 
+    ///
+    /// Sets the transform to draw with.
+    ///
 	virtual void SetDrawTransform(mvp_matrix_t &mvp) = 0;
 
+    ///
+    /// Sets the buffer to draw with.
+    ///
 	virtual void SetDrawBuffer(S_CBuffer buffer) = 0;
 
 	///
@@ -111,6 +78,14 @@ public:
 	/// \param[in]  elementBuffer The buffer containing the model indices.
 	///
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
+
+    ///
+    /// Draws a model multiple times.
+    /// Uses the AttribType::INSTANCE attribute to determine per-model transformations.
+    ///
+    /// \param[in]  primitive       Specifies how the vertices shall be connected.
+    /// \param[in]  elementBuffer   The buffer containing the model indices.
+    virtual void DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
 
 	///
 	/// Finishes off a frame. Behaviour is backend specific, though
@@ -173,8 +148,21 @@ public:
 	///
 	virtual S_CMatrix CreateIdentityMatrix() = 0;
 
+    ///
+    /// Creates a simple uninitialised S_CDrawAttribs object.
+    ///
 	virtual S_CDrawAttribs CreateDrawAttribs() = 0;
 
+    ///
+    /// Creates a S_CDrawAttribs with its sources set to standardised values.
+    /// Passing in an array of vertex_t will definitely work.
+    ///
+    /// That is:
+    ///
+    /// POSITION has offset 0 bytes (4 floats)
+    /// TEX_COORDS has offset 16 bytes (2 floats)
+    /// NORMAL has offset 24 bytes (3 floats)
+    ///
 	virtual S_CDrawAttribs CreateDrawAttribs(S_CBuffer buffer) = 0;
 
 	///
@@ -207,6 +195,7 @@ public:
 	virtual void SetDrawBuffer(S_CBuffer buffer) override;
 
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
+	virtual void DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
 
 	virtual S_CProgram GetDefaultProgram() override;
 	virtual S_CTexture CreateTexture(const char *file = NULL) override;

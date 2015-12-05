@@ -1,4 +1,5 @@
 #include "graphics.hpp"
+#include "matrix.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

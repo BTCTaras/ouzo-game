@@ -12,6 +12,7 @@ CGLDrawAttribs::~CGLDrawAttribs() {
 	glDisableVertexAttribArray((GLuint)AttribType::POSITION);
 	glDisableVertexAttribArray((GLuint)AttribType::TEX_COORDS);
 	glDisableVertexAttribArray((GLuint)AttribType::NORMAL);
+	glDisableVertexAttribArray((GLuint)AttribType::INSTANCE);
 	glDeleteVertexArrays(1, &m_id);
 }
 
@@ -39,6 +40,10 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 	case AttribType::NORMAL:
 		count = ATTRIB_NORMAL_COUNT;
 		break;
+
+    case AttribType::INSTANCE:
+        count = 1;
+        break;
 	}
 
 	glEnableVertexAttribArray((GLuint)type);
@@ -50,6 +55,10 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 		gl_buf->GetElementSize(),
 		(void*)offset
 	);
+
+	if (type == AttribType::INSTANCE) {
+        glVertexAttribDivisor((GLuint)type, 1);
+	}
 }
 
 unsigned int CGLDrawAttribs::GetOpenGLHandle() {

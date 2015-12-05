@@ -7,7 +7,8 @@
 enum AttribType {
 	POSITION,
 	TEX_COORDS,
-	NORMAL
+	NORMAL,
+	INSTANCE
 };
 
 class CDrawAttribs {
