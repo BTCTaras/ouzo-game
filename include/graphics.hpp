@@ -5,8 +5,8 @@
 #include "atlas_factory.hpp"
 #include "buffer.hpp"
 #include "draw_attribs.hpp"
+#include "matrix.hpp"
 
-#include <glm/glm.hpp>
 #include <memory>
 #include <SDL2/SDL.h>
 
@@ -32,51 +32,6 @@ enum PrimitiveType {
 	GFX_TRIANGLE_FAN,
 	GFX_TRIANGLES,
 };
-
-class CMatrix;
-typedef std::shared_ptr<CMatrix> S_CMatrix;
-
-class CMatrix {
-public:
-	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) = 0;
-	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) = 0;
-	virtual void Translate(float x, float y, float z = 0.0f) = 0;
-	virtual void Rotate(float x, float y, float z) = 0;
-	virtual void Scale(float x, float y, float z) = 0;
-	virtual void LoadIdentity() = 0;
-
-	virtual S_CMatrix operator*(S_CMatrix other) = 0;
-};
-
-S_CMatrix operator*(S_CMatrix first, S_CMatrix second);
-
-typedef struct {
-	S_CMatrix projection;
-	S_CMatrix view;
-	S_CMatrix model;
-} mvp_matrix_t;
-
-class CGLMatrix : public CMatrix {
-public:
-	CGLMatrix(glm::mat4 *mat = nullptr);
-
-	virtual void Perspective(float fov, float width, float height, float nearZ, float farZ) override;
-	virtual void Orthographic(float left, float right, float bottom, float top, float nearZ = -1.0f, float farZ = 1.0f) override;
-	virtual void Translate(float x, float y, float z = 0.0f) override;
-	virtual void Rotate(float x, float y, float z) override;
-	virtual void Scale(float x, float y, float z) override;
-	virtual void LoadIdentity() override;
-
-	virtual S_CMatrix operator*(S_CMatrix other) override;
-
-	float* ValuePointer();
-	glm::mat4* GetGLMMatrix();
-
-private:
-	glm::mat4 m_internalMat;
-};
-
-typedef std::shared_ptr<CGLMatrix> S_CGLMatrix;
 
 class CGraphics {
 public:
@@ -123,6 +78,14 @@ public:
 	/// \param[in]  elementBuffer The buffer containing the model indices.
 	///
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
+
+    ///
+    /// Draws a model multiple times.
+    /// Uses the AttribType::INSTANCE attribute to determine per-model transformations.
+    ///
+    /// \param[in]  primitive       Specifies how the vertices shall be connected.
+    /// \param[in]  elementBuffer   The buffer containing the model indices.
+    virtual void DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
 
 	///
 	/// Finishes off a frame. Behaviour is backend specific, though
@@ -232,6 +195,7 @@ public:
 	virtual void SetDrawBuffer(S_CBuffer buffer) override;
 
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
+	virtual void DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
 
 	virtual S_CProgram GetDefaultProgram() override;
 	virtual S_CTexture CreateTexture(const char *file = NULL) override;

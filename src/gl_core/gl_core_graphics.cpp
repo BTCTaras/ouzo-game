@@ -192,7 +192,7 @@ S_CMatrix CGLGraphics::CreateIdentityMatrix() {
 	return S_CGLMatrix(new CGLMatrix);
 }
 
-S_CDrawAttribs CGLGraphics::CreateDrawAttribs() {
+S_CDrawAttriraphics::CreateDrawAttribs() {
 	return S_CGLDrawAttribs(new CGLDrawAttribs);
 }
 
@@ -283,8 +283,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 			GL_UNSIGNED_SHORT, // Each element is an unsigned short
 			NULL // We've already bound our indices as a buffer
 		);
-	}
-	else {
+	} else {
 		// We have no element buffer, draw regularily
 		glDrawArrays(
 			gl_primitive,
@@ -292,6 +291,25 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 			m_currentBuffer->GetElementCount() // Amount of vertices = vertex buffer size / vertex size
 		);
 	}
+}
+
+void CGLGraphics::DrawInstanced(PrimitiveType type, CInstanceData &data, S_CBuffer elementBuffer = nullptr) {
+    if (m_currentBuffer == nullptr) {
+        fprintf(stderr, "Tried to draw instanced with nullptr buffer!! Did you forget to call SetDrawBuffer?\n");
+		return;
+    }
+
+    S_CGLProgram gl_prog = std::static_pointer_cast<CGLProgram>(m_drawProgram);
+    glUseProgram(gl_prog->GetOpenGLHandle());
+
+    GLenum gl_primitive = CGLGraphics::GetOpenGLPrimitiveTypeEnum(primitive);
+
+    if (elementBuffer != nullptr) {
+        S_CGLBuffer gl_elementBuffer = std::static_pointer_cast<CGLBuffer>(elementBuffer);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_elementBuffer->GetOpenGLHandle());
+
+
+    }
 }
 
 void CGLGraphics::SetDrawTexture(S_CTexture tex, unsigned int slot) {
