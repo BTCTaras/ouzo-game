@@ -1,4 +1,4 @@
-#include "uic_text.hpp"
+#include "ui/uic_text.hpp"
 
 CUIControlText::CUIControlText(CFont *font, const std::string &text, unsigned int size)
 	: m_text(font, size, text),

@@ -1,7 +1,7 @@
-#include "scene_osu.hpp"
+#include "scene/scene_osu.hpp"
 
 #include "game.hpp"
-#include "graphics.hpp"
+#include "graphics_common/graphics.hpp"
 
 #include <algorithm>
 

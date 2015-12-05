@@ -1,7 +1,7 @@
-#include "font.hpp"
-#include "font_chars.hpp"
-#include "atlas_factory.hpp"
-#include "graphics.hpp"
+#include "graphics_common/font.hpp"
+#include "graphics_common/font_chars.hpp"
+#include "graphics_common/atlas_factory.hpp"
+#include "graphics_common/graphics.hpp"
 #include "game.hpp"
 
 #include <stdio.h>

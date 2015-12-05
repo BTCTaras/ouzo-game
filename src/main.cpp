@@ -1,7 +1,7 @@
 #include "game.hpp"
-#include "scene_menu.hpp"
-#include "scene_osu.hpp"
-#include "scene_ctb.hpp"
+#include "scene/scene_menu.hpp"
+#include "scene/scene_osu.hpp"
+#include "scene/scene_ctb.hpp"
 
 #include <stdio.h>
 

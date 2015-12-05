@@ -1,8 +1,8 @@
 #pragma once
 
 #include "scene.hpp"
-#include "graphics.hpp"
-#include "texture.hpp"
+#include "graphics_common/graphics.hpp"
+#include "graphics_common/texture.hpp"
 
 #include <vector>
 

@@ -1,8 +1,8 @@
-#include "draw_attribs.hpp"
+#include "graphics_common/draw_attribs.hpp"
 
 #include <GL/glew.h>
 
-#include "buffer.hpp"
+#include "graphics_common/buffer.hpp"
 
 CGLDrawAttribs::CGLDrawAttribs() {
 	glGenVertexArrays(1, &m_id);

@@ -1,6 +1,6 @@
 #include "scene.hpp"
 
-#include "graphics.hpp"
+#include "graphics_common/graphics.hpp"
 #include "game.hpp"
 
 void CScene::OnInit() {

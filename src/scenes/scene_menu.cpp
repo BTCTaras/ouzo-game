@@ -1,15 +1,15 @@
-#include "scene_menu.hpp"
+#include "scene/scene_menu.hpp"
 
-#include "graphics.hpp"
+#include "graphics_common/graphics.hpp"
 #include "game.hpp"
-#include "shader.hpp"
-#include "font.hpp"
-#include "text.hpp"
-#include "buffer.hpp"
+#include "graphics_common/shader.hpp"
+#include "graphics_common/font.hpp"
+#include "graphics_common/text.hpp"
+#include "graphics_common/buffer.hpp"
 
-#include "ui.hpp"
-#include "uic_text.hpp"
-#include "uic_texture.hpp"
+#include "ui/ui.hpp"
+#include "ui/uic_text.hpp"
+#include "ui/uic_texture.hpp"
 
 #include <GL/glew.h>
 

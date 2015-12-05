@@ -1,10 +1,11 @@
-#include "instance_data.hpp"
+#include "graphics_common/instance_data.hpp"
 
-#include "buffer.hpp"
-#include "graphics.hpp"
+#include "graphics_common/buffer.hpp"
+#include "graphics_common/graphics.hpp"
 #include "game.hpp"
 
 #include <map>
+#include <vector>
 
 CInstanceData::CInstanceData() {
 
@@ -13,6 +14,7 @@ CInstanceData::CInstanceData() {
 instance_id_t CInstanceData::AddInstance(S_CMatrix trans) {
     instance_id_t id = this->MakeUniqueInstanceID();
     m_instances[id] = trans;
+	return id;
 }
 
 S_CBuffer CInstanceData::CreateBuffer() {
@@ -32,6 +34,7 @@ S_CBuffer CInstanceData::CreateBuffer() {
     }
 
     buf->Orphan(bufData.size() * sizeof(float), sizeof(float), &bufData[0]);
+	return buf;
 }
 
 instance_id_t CInstanceData::MakeUniqueInstanceID() {

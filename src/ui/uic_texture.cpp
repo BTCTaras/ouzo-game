@@ -1,4 +1,4 @@
-#include "uic_texture.hpp"
+#include "ui/uic_texture.hpp"
 
 CUIControlTexture::CUIControlTexture(S_CTexture tex)
 	: m_sprite(new CUISprite(nullptr))

@@ -1,4 +1,4 @@
-#include "buffer.hpp"
+#include "graphics_common/buffer.hpp"
 
 #include <GL/glew.h>
 

@@ -1,10 +1,10 @@
-#include "graphics.hpp"
+#include "graphics_common/graphics.hpp"
 
-#include "shader.hpp"
-#include "texture.hpp"
-#include "atlas_factory.hpp"
-#include "buffer.hpp"
-#include "draw_attribs.hpp"
+#include "graphics_common/shader.hpp"
+#include "graphics_common/texture.hpp"
+#include "graphics_common/atlas_factory.hpp"
+#include "graphics_common/buffer.hpp"
+#include "graphics_common/draw_attribs.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

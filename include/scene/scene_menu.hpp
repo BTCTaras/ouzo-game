@@ -1,12 +1,12 @@
 #pragma once
 
-#include "ui.hpp"
-#include "shader.hpp"
-#include "graphics.hpp"
-#include "texture.hpp"
-#include "font.hpp"
-#include "text.hpp"
-#include "buffer.hpp"
+#include "ui/ui.hpp"
+#include "graphics_common/shader.hpp"
+#include "graphics_common/graphics.hpp"
+#include "graphics_common/texture.hpp"
+#include "graphics_common/font.hpp"
+#include "graphics_common/text.hpp"
+#include "graphics_common/buffer.hpp"
 
 class CSceneMenu : public CSceneUI {
 public:

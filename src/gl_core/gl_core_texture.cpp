@@ -1,4 +1,4 @@
-#include "texture.hpp"
+#include "graphics_common/texture.hpp"
 
 #include <GL/glew.h>
 #include <FreeImage.h>

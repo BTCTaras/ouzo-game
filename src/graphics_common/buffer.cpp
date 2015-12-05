@@ -1,4 +1,4 @@
-#include "buffer.hpp"
+#include "graphics_common/buffer.hpp"
 
 CBuffer::CBuffer(BufferType type, BufferStorageType storageType) {
 	m_type = type;

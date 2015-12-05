@@ -1,11 +1,11 @@
-#include "ui.hpp"
+#include "ui/ui.hpp"
 
 #include <GL/glew.h>
 
-#include "graphics.hpp"
-#include "texture.hpp"
+#include "graphics_common/graphics.hpp"
+#include "graphics_common/texture.hpp"
 #include "game.hpp"
-#include "uic_texture.hpp"
+#include "ui/uic_texture.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

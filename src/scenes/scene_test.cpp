@@ -1,4 +1,4 @@
-#include "scene_test.hpp"
+#include "scene/scene_test.hpp"
 
 #include <GL/glew.h>
 

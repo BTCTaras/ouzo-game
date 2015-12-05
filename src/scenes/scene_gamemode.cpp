@@ -1,4 +1,4 @@
-#include "scene_gamemode.hpp"
+#include "scene/scene_gamemode.hpp"
 
 #include <GL/glew.h>
 

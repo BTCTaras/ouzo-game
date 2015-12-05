@@ -1,6 +1,6 @@
-#include "scene_ctb.hpp"
+#include "scene/scene_ctb.hpp"
 
-#include "graphics.hpp"
+#include "graphics_common/graphics.hpp"
 #include "game.hpp"
 
 #define _USE_MATH_DEFINES

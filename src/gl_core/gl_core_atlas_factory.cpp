@@ -1,6 +1,6 @@
-#include "atlas_factory.hpp"
+#include "graphics_common/atlas_factory.hpp"
 
-#include "texture.hpp"
+#include "graphics_common/texture.hpp"
 
 #include <stdlib.h>
 

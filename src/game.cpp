@@ -1,5 +1,5 @@
 #include "game.hpp"
-#include "graphics.hpp"
+#include "graphics_common/graphics.hpp"
 
 #ifdef _WIN32
 #include <Windows.h>

@@ -1,8 +1,8 @@
 #include "scene_gamemode.hpp"
 
-#include "graphics.hpp"
-#include "texture.hpp"
-#include "buffer.hpp"
+#include "graphics_common/graphics.hpp"
+#include "graphics_common/texture.hpp"
+#include "graphics_common/buffer.hpp"
 
 #include <vector>
 #include <memory>

@@ -1,5 +1,5 @@
-#include "graphics.hpp"
-#include "matrix.hpp"
+#include "graphics_common/graphics.hpp"
+#include "graphics_common/matrix.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>

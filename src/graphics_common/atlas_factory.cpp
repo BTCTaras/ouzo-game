@@ -1,4 +1,4 @@
-#include "atlas_factory.hpp"
+#include "graphics_common/atlas_factory.hpp"
 
 CAtlasFactory::CAtlasFactory(unsigned int width, unsigned int height, unsigned int channels) {
 	m_width = width;

@@ -1,12 +1,12 @@
-#include "text.hpp"
+#include "graphics_common/text.hpp"
 
 #include <GL/glew.h>
 
-#include "shader.hpp"
-#include "graphics.hpp"
+#include "graphics_common/shader.hpp"
+#include "graphics_common/graphics.hpp"
 #include "game.hpp"
-#include "font.hpp"
-#include "texture.hpp"
+#include "graphics_common/font.hpp"
+#include "graphics_common/texture.hpp"
 
 #include <vector>
 
