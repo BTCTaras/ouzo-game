@@ -10,3 +10,7 @@ CUIControlText::CUIControlText(CFont *font, const std::string &text, unsigned in
 void CUIControlText::SetText(const std::string &text) {
 	m_uiText->SetText(text);
 }
+
+void CUIControlText::SetColour(colour_t &colour) {
+	this->m_text.SetColour(colour);
+}

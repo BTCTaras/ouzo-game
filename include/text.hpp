@@ -15,7 +15,7 @@ public:
 	CText(CFont *font, unsigned int size, const std::string &text);
 	~CText();
 
-	void SetColour(colour_t colour);
+	void SetColour(colour_t &colour);
 	void InitText(CFont *font, unsigned int size, const std::string &text);
 
 	void SetText(const std::string &text);

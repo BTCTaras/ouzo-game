@@ -7,8 +7,6 @@
 #include "text.hpp"
 #include "buffer.hpp"
 
-#include "uic_texture.hpp"
-
 #include <memory>
 #include <vector>
 #include <string>
@@ -85,6 +83,8 @@ private:
 
 typedef std::shared_ptr<CUIControl> S_CUIControl;
 
+class CUIControlTexture;
+
 class CSceneUI : public CScene {
 public:
 	CSceneUI();
@@ -108,7 +108,7 @@ protected:
 	mvp_matrix_t m_mvpMatrix;
 
 private:
-	S_CUIControlTexture m_mainControl;
+	std::shared_ptr<CUIControlTexture> m_mainControl;
 	S_CProgram m_program;
 
 	int m_width, m_height;

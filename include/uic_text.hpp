@@ -7,6 +7,7 @@ public:
 	CUIControlText(CFont *font, const std::string &text, unsigned int size);
 
 	void SetText(const std::string &text);
+	void SetColour(colour_t &colour);
 
 private:
 	CText m_text;

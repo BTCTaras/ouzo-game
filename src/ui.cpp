@@ -6,6 +6,8 @@
 #include "texture.hpp"
 #include "game.hpp"
 
+#include "uic_texture.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -109,11 +111,19 @@ void CUIControl::SetPosition(float x, float y, float z) {
 	this->x = x;
 	this->y = y;
 	this->z = z;
+	
+	for (S_CUIControl control : *this->GetChildren()) {
+		control->SetPosition(x, y, z);
+	}
 }
 
 void CUIControl::SetSize(float width, float height) {
 	this->width = width;
 	this->height = height;
+	
+	for (S_CUIControl control : *this->GetChildren()) {
+		control->SetSize(width, height);
+	}
 }
 
 void CUIControl::AddRenderable(S_CUIRenderable renderable) {

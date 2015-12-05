@@ -93,7 +93,7 @@ void CText::CreateTextBuffer() {
 	m_fontBuffer->Orphan(m_fontBufferSize, &vertices[0]);
 }
 
-void CText::SetColour(colour_t colour) {
+void CText::SetColour(colour_t &colour) {
 	m_colour = colour;
 }
 
