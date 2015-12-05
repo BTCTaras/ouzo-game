@@ -192,7 +192,7 @@ S_CMatrix CGLGraphics::CreateIdentityMatrix() {
 	return S_CGLMatrix(new CGLMatrix);
 }
 
-S_CDrawAttriraphics::CreateDrawAttribs() {
+S_CDrawAttribs CGLGraphics::CreateDrawAttribs() {
 	return S_CGLDrawAttribs(new CGLDrawAttribs);
 }
 
@@ -293,7 +293,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 	}
 }
 
-void CGLGraphics::DrawInstanced(PrimitiveType type, CInstanceData &data, S_CBuffer elementBuffer = nullptr) {
+void CGLGraphics::DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer) {
     if (m_currentBuffer == nullptr) {
         fprintf(stderr, "Tried to draw instanced with nullptr buffer!! Did you forget to call SetDrawBuffer?\n");
 		return;
