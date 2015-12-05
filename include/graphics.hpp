@@ -84,16 +84,28 @@ public:
 
 	///
 	/// To be called at the beginning of a frame. Behaviour is
-	/// backend specific.
+	/// backend specific, though includes clearing the framebuffer.
 	///
 	virtual void BeginScene() = 0;
 
+    ///
+    /// Sets the attributes to draw with.
+    ///
 	virtual void SetDrawAttributes(S_CDrawAttribs attribs) = 0;
 
+    ///
+    /// Sets the program to draw with.
+    ///
 	virtual void SetDrawProgram(S_CProgram program) = 0;
 
+    ///
+    /// Sets the transform to draw with.
+    ///
 	virtual void SetDrawTransform(mvp_matrix_t &mvp) = 0;
 
+    ///
+    /// Sets the buffer to draw with.
+    ///
 	virtual void SetDrawBuffer(S_CBuffer buffer) = 0;
 
 	///
@@ -173,8 +185,21 @@ public:
 	///
 	virtual S_CMatrix CreateIdentityMatrix() = 0;
 
+    ///
+    /// Creates a simple uninitialised S_CDrawAttribs object.
+    ///
 	virtual S_CDrawAttribs CreateDrawAttribs() = 0;
 
+    ///
+    /// Creates a S_CDrawAttribs with its sources set to standardised values.
+    /// Passing in an array of vertex_t will definitely work.
+    ///
+    /// That is:
+    ///
+    /// POSITION has offset 0 bytes (4 floats)
+    /// TEX_COORDS has offset 16 bytes (2 floats)
+    /// NORMAL has offset 24 bytes (3 floats)
+    ///
 	virtual S_CDrawAttribs CreateDrawAttribs(S_CBuffer buffer) = 0;
 
 	///
