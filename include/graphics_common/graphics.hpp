@@ -235,6 +235,7 @@ private:
 	S_CGLProgram m_drawProgram;
 
 	unsigned int m_glMaxTextureSize;
+	unsigned int m_lastActiveTex;
 };
 
 typedef std::shared_ptr<CGLGraphics> S_CGLGraphics;

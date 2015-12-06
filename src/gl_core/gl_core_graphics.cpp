@@ -29,6 +29,7 @@ void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GL
 #endif
 
 void CGLGraphics::Init(SDL_Window *window) {
+	m_lastActiveTex = 0xFFFFFFFF;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
 	// Create an OpenGL 3.3 context.
@@ -335,7 +336,12 @@ void CGLGraphics::DrawInstanced(PrimitiveType primitive, size_t instanceCount, S
 
 void CGLGraphics::SetDrawTexture(S_CTexture tex, unsigned int slot) {
 	S_CGLTexture gl_tex = std::static_pointer_cast<CGLTexture>(tex);
-	glActiveTexture(GL_TEXTURE0 + slot); // slot must be offset by GL_TEXTURE0
+
+	unsigned int texSlot = GL_TEXTURE0 + slot;
+	if (m_lastActiveTex != texSlot) {
+		glActiveTexture(texSlot); // slot must be offset by GL_TEXTURE0
+		m_lastActiveTex = texSlot;
+	}
 
 	if (gl_tex != nullptr) {
 		glBindTexture(GL_TEXTURE_2D, gl_tex->GetOpenGLHandle());

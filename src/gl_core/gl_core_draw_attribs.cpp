@@ -6,6 +6,12 @@
 
 CGLDrawAttribs::CGLDrawAttribs() {
 	glGenVertexArrays(1, &m_id);
+	glBindVertexArray(m_id);
+
+	glVertexAttribDivisor((GLuint)AttribType::OFFSET1, 1);
+	glVertexAttribDivisor((GLuint)AttribType::OFFSET2, 1);
+	glVertexAttribDivisor((GLuint)AttribType::OFFSET3, 1);
+	glVertexAttribDivisor((GLuint)AttribType::OFFSET4, 1);
 }
 
 CGLDrawAttribs::~CGLDrawAttribs() {
@@ -58,10 +64,6 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 		gl_buf->GetElementSize(),
 		(void*)offset
 	);
-
-	if (type >= AttribType::OFFSET1 && type <= AttribType::OFFSET4) {
-		glVertexAttribDivisor((GLuint)type, 1);
-	}
 
 	m_buffers[type] = buf;
 }
