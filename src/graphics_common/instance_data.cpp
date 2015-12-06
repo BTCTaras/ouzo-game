@@ -1,56 +1,57 @@
 #include "graphics_common/instance_data.hpp"
-
-#include "graphics_common/buffer.hpp"
 #include "graphics_common/graphics.hpp"
 #include "game.hpp"
 
-#include <map>
-#include <vector>
-
-CInstanceData::CInstanceData() {
-
+CInstanceData::CInstanceData()
+	: m_hasChanged(false)
+{
 }
 
-instance_id_t CInstanceData::AddInstance(S_CMatrix trans) {
-    instance_id_t id = this->MakeUniqueInstanceID();
-    m_instances[id] = trans;
+instance_id_t CInstanceData::AddInstance(S_CMatrix matrix) {
+	instance_id_t id = (instance_id_t)m_instances.size();
+	m_instances.push_back(matrix);
+	m_hasChanged = true;
 	return id;
 }
 
-S_CBuffer CInstanceData::CreateBuffer() {
-    S_CBuffer buf = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
+S_CMatrix CInstanceData::GetInstance(instance_id_t id, bool willModify) {
+	if (willModify) {
+		m_hasChanged = true;
+	}
 
-    std::vector<float> bufData;
-
-    for (std::pair<instance_id_t, S_CMatrix> p : m_instances) {
-        instance_id_t id = p.first;
-        S_CMatrix mat = p.second;
-
-        float *data = mat->ValuePointer();
-
-        for (unsigned int i = 0; i < 16; ++i) {
-            bufData.push_back(data[i]);
-        }
-    }
-
-    buf->Orphan(bufData.size() * sizeof(float), sizeof(float), &bufData[0]);
-	return buf;
+	return m_instances[id];
 }
 
-instance_id_t CInstanceData::MakeUniqueInstanceID() {
-    instance_id_t id = 0;
+void CInstanceData::LoadInto(S_CDrawAttribs attribs) {
+	if (m_hasChanged) { // prevent unnecessary buffer recreation
+		this->CreateBuffers();
+	}
 
-    while (this->GetTransformByID(id) != nullptr) {
-        id++;
-    }
-
-    return id;
+	for (int i = 0; i < 4; ++i) {
+		attribs->SetSource((AttribType)(AttribType::OFFSET1 + i), m_buffers[i], 0);
+	}
 }
+	
+void CInstanceData::CreateBuffers() {
+	std::vector<float> buffers[4];
 
-S_CMatrix CInstanceData::GetTransformByID(instance_id_t id) {
-    if (m_instances.find(id) == m_instances.end()) {
-        return nullptr;
-    }
+	int i = 0;
+	for (S_CMatrix mat : m_instances) {
+		float *ptr = mat->ValuePointer();
 
-    return m_instances[id];
+		for (int i = 0; i < 4; ++i) {
+			for (int j = 0; j < 4; ++j) {
+				buffers[i].push_back(ptr[i * 4 + j]);
+			}
+		}
+	}
+
+	for (int i = 0; i < 4; ++i) {
+		m_buffers[i] = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
+
+		size_t bufSize = sizeof(float) * buffers[i].size();
+		m_buffers[i]->Orphan(bufSize, sizeof(float) * 4, &buffers[i][0]);
+	}
+	
+	m_hasChanged = false;
 }

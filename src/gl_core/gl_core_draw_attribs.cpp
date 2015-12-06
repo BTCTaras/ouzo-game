@@ -12,13 +12,13 @@ CGLDrawAttribs::~CGLDrawAttribs() {
 	glDisableVertexAttribArray((GLuint)AttribType::POSITION);
 	glDisableVertexAttribArray((GLuint)AttribType::TEX_COORDS);
 	glDisableVertexAttribArray((GLuint)AttribType::NORMAL);
-	glDisableVertexAttribArray((GLuint)AttribType::INSTANCE);
 	glDeleteVertexArrays(1, &m_id);
 }
 
-const GLint ATTRIB_POSITION_COUNT = 4;
-const GLint ATTRIB_TEX_COORDS_COUNT = 2;
-const GLint ATTRIB_NORMAL_COUNT = 3;
+static const GLint ATTRIB_POSITION_COUNT = 4;
+static const GLint ATTRIB_TEX_COORDS_COUNT = 2;
+static const GLint ATTRIB_NORMAL_COUNT = 3;
+static const GLint ATTRIB_OFFSET_COUNT = 4;
 
 void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 	glBindVertexArray(m_id);
@@ -41,9 +41,12 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 		count = ATTRIB_NORMAL_COUNT;
 		break;
 
-    case AttribType::INSTANCE:
-        count = 1;
-        break;
+	case AttribType::OFFSET1:
+	case AttribType::OFFSET2:
+	case AttribType::OFFSET3:
+	case AttribType::OFFSET4:
+		count = ATTRIB_OFFSET_COUNT;
+		break;
 	}
 
 	glEnableVertexAttribArray((GLuint)type);
@@ -56,9 +59,19 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 		(void*)offset
 	);
 
-	if (type == AttribType::INSTANCE) {
-        glVertexAttribDivisor((GLuint)type, 1);
+	if (type >= AttribType::OFFSET1 && type <= AttribType::OFFSET4) {
+		glVertexAttribDivisor((GLuint)type, 1);
 	}
+
+	m_buffers[type] = buf;
+}
+
+S_CBuffer CGLDrawAttribs::GetSource(AttribType type) {
+	if (m_buffers.find(type) == m_buffers.end()) {
+		return nullptr;
+	}
+
+	return m_buffers[type];
 }
 
 unsigned int CGLDrawAttribs::GetOpenGLHandle() {

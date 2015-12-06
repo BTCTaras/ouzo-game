@@ -1,4 +1,5 @@
 #include "graphics_common/shader.hpp"
+#include "break.hpp"
 
 #include <stdio.h>
 #include <GL/glew.h>
@@ -48,24 +49,33 @@ unsigned int CGLProgram::GetOpenGLHandle() {
 	return m_id;
 }
 
-unsigned int CGLProgram::GetUniformLocation(const char *name, bool ignoreUniformNotFound) {
+int CGLProgram::GetUniformLocation(const char *name, bool ignoreUniformNotFound) {
 	std::string sname = name;
 
 	if (m_uniformCache.find(sname) != m_uniformCache.end()) {
 		return m_uniformCache[sname];
-	}
-	else {
+	} else {
 		GLint id = glGetUniformLocation(m_id, name);
 		if (id == -1) {
 			if (ignoreUniformNotFound) {
 				return -1;
-			}
-			else {
+			} else {
 				fprintf(stderr, "CGLProgram::GetUniformLocation: Program has no uniform called \"%s\"!!\n", name);
 				return -1;
 			}
 		}
 
+		m_uniformCache[sname] = id;
+		return id;
+	}
+}
+
+int CGLProgram::GetBlockLocation(const char *name) {
+	std::string sname = name;
+	if (m_uniformCache.find(sname) != m_uniformCache.end()) {
+		return m_uniformCache[sname];
+	} else {
+		GLint id = glGetUniformBlockIndex(m_id, name);
 		m_uniformCache[sname] = id;
 		return id;
 	}
@@ -82,13 +92,14 @@ void CGLProgram::Link() {
 		std::unique_ptr<GLchar> str(new GLchar[buflen]);
 		glGetProgramInfoLog(m_id, buflen, NULL, str.get());
 		fprintf(stderr, "Failed to link program: %s\n", str.get());
+		DEBUG_BREAK;
 	}
 }
 
 void CGLProgram::SetUniform(ShaderUniformType type, const char *name, void *values) {
 	this->Use();
 
-	GLint loc = this->GetUniformLocation(name);
+	GLint loc = this->GetUniformLocation(name, true);
 
 	const GLfloat *floats = (const GLfloat*)values;
 	const GLint *ints = (const GLint*)values;

@@ -43,7 +43,7 @@ typedef std::shared_ptr<COsuCircle> S_COsuCircle;
 
 class CSceneOsu : public CSceneGamemode {
 public:
-	CSceneOsu();
+	virtual void OnInit() override;
 
 	virtual unsigned short GetGamemodeID() override;
 	virtual void OnRender() override;
@@ -62,7 +62,7 @@ private:
 
 	std::vector<S_COsuObject> m_objects;
 	unsigned int m_nextUID;
-	S_CBuffer m_circleBuffer;
+	S_CBuffer m_circleBuffer, m_circleInstBuffer;
 	S_CDrawAttribs m_circleAttribs;
 	S_CTexture m_circleTex, m_backgroundTex;
 	mvp_matrix_t m_mvpMatrix;

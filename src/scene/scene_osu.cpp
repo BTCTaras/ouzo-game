@@ -13,10 +13,10 @@ const vertex_t CIRCLE_VERTS[] = {
 	{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
 	{ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
 	{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
+	{ 1.00f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
 };
 
-CSceneOsu::CSceneOsu() {
+void CSceneOsu::OnInit() {
 	m_circleBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 	m_circleBuffer->Orphan(sizeof(CIRCLE_VERTS), sizeof(vertex_t), (void*)CIRCLE_VERTS);
 
@@ -27,6 +27,17 @@ CSceneOsu::CSceneOsu() {
 	m_mvpMatrix.model = GFX->CreateIdentityMatrix();
 
 	m_circleTex = GFX->CreateTexture("assets/gamemodes/standard/circle.png");
+
+	CInstanceData data;
+
+	for (S_COsuObject obj : m_objects) {
+		S_CMatrix mat = GFX->CreateIdentityMatrix();
+		mat->Translate(obj->x, obj->y, 0.0f);
+		mat->Scale(64.0f, 64.0f, 0.0f);
+		data.AddInstance(mat);
+	}
+	
+	data.LoadInto(m_circleAttribs);
 }
 
 void CSceneOsu::OnResize(int width, int height) {
@@ -56,26 +67,14 @@ void CSceneOsu::OnRender() {
 
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
 
-	// Simple state sorting
-	std::sort(m_objects.begin(), m_objects.end(), [](S_COsuObject a, S_COsuObject b) {
-		return a->GetType() < b->GetType();
-	});
+	m_mvpMatrix.model->LoadIdentity();
 
-	for (S_COsuObject obj : m_objects) {
-		switch (obj->GetType()) {
-		case OsuObjectType::CIRCLE:
-			this->RenderCircle(obj->x, obj->y, NULL);
-			break;
-
-		case OsuObjectType::SLIDER:
-			this->RenderSlider(obj->x, obj->y, NULL);
-			break;
-
-		case OsuObjectType::SPINNER:
-			this->RenderSpinner(obj->x, obj->y, NULL);
-			break;
-		}
-	}
+	GFX->SetDrawTransform(m_mvpMatrix);
+	GFX->SetDrawBuffer(m_circleBuffer);
+	GFX->SetDrawAttributes(m_circleAttribs);
+	GFX->SetDrawTexture(m_circleTex);
+	
+	GFX->DrawInstanced(PrimitiveType::GFX_TRIANGLE_STRIP, m_objects.size());
 }
 
 unsigned int CSceneOsu::MakeUniqueObjectID() {

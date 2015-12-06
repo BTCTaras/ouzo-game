@@ -6,6 +6,7 @@
 #include "buffer.hpp"
 #include "draw_attribs.hpp"
 #include "matrix.hpp"
+#include "instance_data.hpp"
 
 #include <memory>
 #include <SDL2/SDL.h>
@@ -84,8 +85,10 @@ public:
     /// Uses the AttribType::INSTANCE attribute to determine per-model transformations.
     ///
     /// \param[in]  primitive       Specifies how the vertices shall be connected.
+	/// \param[in]	instanceCount	The amount of instances to render.
     /// \param[in]  elementBuffer   The buffer containing the model indices.
-    virtual void DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) = 0;
+	///
+    virtual void DrawInstanced(PrimitiveType primitive, size_t instanceCount, S_CBuffer elementBuffer = nullptr) = 0;
 
 	///
 	/// Finishes off a frame. Behaviour is backend specific, though
@@ -176,6 +179,8 @@ public:
 	virtual void SetViewport(unsigned int x, unsigned int y, unsigned int w, unsigned int h) = 0;
 
 	virtual unsigned int GetMaxTextureSize() = 0;
+
+	virtual int GetMaxInstanceCount() = 0;
 };
 
 typedef std::shared_ptr<CGraphics> S_CGraphics;
@@ -195,7 +200,7 @@ public:
 	virtual void SetDrawBuffer(S_CBuffer buffer) override;
 
 	virtual void Draw(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
-	virtual void DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer = nullptr) override;
+	virtual void DrawInstanced(PrimitiveType primitive, size_t instanceCount, S_CBuffer elementBuffer = nullptr) override;
 
 	virtual S_CProgram GetDefaultProgram() override;
 	virtual S_CTexture CreateTexture(const char *file = NULL) override;
@@ -211,6 +216,8 @@ public:
 
 	virtual unsigned int GetMaxTextureSize() override;
 
+	virtual int GetMaxInstanceCount() override;
+
 	///
 	/// Converts the given PrimitiveType to an OpenGL enum.
 	///
@@ -224,6 +231,7 @@ private:
 	SDL_GLContext m_context;
 	SDL_Window *m_window;
 	S_CBuffer m_currentBuffer;
+	CInstanceData m_defaultInstData;
 	S_CGLProgram m_drawProgram;
 
 	unsigned int m_glMaxTextureSize;

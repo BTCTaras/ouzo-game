@@ -98,6 +98,9 @@ void CGLGraphics::Init(SDL_Window *window) {
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS_ARB);
 	}
 #endif
+
+	S_CMatrix mat = this->CreateIdentityMatrix();
+	m_defaultInstData.AddInstance(mat);
 }
 
 #ifdef OUZO_DEBUG
@@ -201,6 +204,7 @@ S_CDrawAttribs CGLGraphics::CreateDrawAttribs(S_CBuffer buffer) {
 	attribs->SetSource(AttribType::POSITION, buffer, offsetof(vertex_t, x));
 	attribs->SetSource(AttribType::TEX_COORDS, buffer, offsetof(vertex_t, u));
 	attribs->SetSource(AttribType::NORMAL, buffer, offsetof(vertex_t, nx));
+	m_defaultInstData.LoadInto(attribs);
 	return attribs;
 }
 
@@ -247,6 +251,10 @@ unsigned int CGLGraphics::GetMaxTextureSize() {
 	return m_glMaxTextureSize;
 }
 
+int CGLGraphics::GetMaxInstanceCount() {
+	return 128;
+}
+
 void CGLGraphics::BeginScene() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -268,7 +276,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 	}
 
 	S_CGLProgram gl_prog = std::static_pointer_cast<CGLProgram>(m_drawProgram);
-	glUseProgram(gl_prog->GetOpenGLHandle());
+	gl_prog->Use();
 
 	GLenum gl_primitive = CGLGraphics::GetOpenGLPrimitiveTypeEnum(primitive);
 
@@ -293,7 +301,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 	}
 }
 
-void CGLGraphics::DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer) {
+void CGLGraphics::DrawInstanced(PrimitiveType primitive, size_t instanceCount, S_CBuffer elementBuffer) {
     if (m_currentBuffer == nullptr) {
         fprintf(stderr, "Tried to draw instanced with nullptr buffer!! Did you forget to call SetDrawBuffer?\n");
 		return;
@@ -308,8 +316,21 @@ void CGLGraphics::DrawInstanced(PrimitiveType primitive, S_CBuffer elementBuffer
         S_CGLBuffer gl_elementBuffer = std::static_pointer_cast<CGLBuffer>(elementBuffer);
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_elementBuffer->GetOpenGLHandle());
 
-
-    }
+		glDrawElementsInstanced(
+			gl_primitive,
+			instanceCount,
+			GL_UNSIGNED_SHORT,
+			NULL,
+			gl_elementBuffer->GetElementCount()
+		);
+	} else {
+		glDrawArraysInstanced(
+			gl_primitive,
+			0,
+			instanceCount,
+			m_currentBuffer->GetElementCount()
+		);
+	}
 }
 
 void CGLGraphics::SetDrawTexture(S_CTexture tex, unsigned int slot) {
@@ -324,14 +345,37 @@ void CGLGraphics::SetDrawTexture(S_CTexture tex, unsigned int slot) {
 }
 
 void CGLGraphics::SetDrawTransform(mvp_matrix_t &mvp) {
-	S_CGLMatrix gl_mvp = std::static_pointer_cast<CGLMatrix>(
-		mvp.projection * mvp.view * mvp.model
+	S_CMatrix fullmvp = mvp.projection * mvp.view * mvp.model;
+	S_CMatrix vp = mvp.projection * mvp.view;
+
+	m_drawProgram->SetUniform(
+		ShaderUniformType::GFX_MAT4x4F,
+		"u_ModelMatrix",
+		mvp.model->ValuePointer()
+	);
+
+	m_drawProgram->SetUniform(
+		ShaderUniformType::GFX_MAT4x4F,
+		"u_ViewMatrix",
+		mvp.view->ValuePointer()
+	);
+	
+	m_drawProgram->SetUniform(
+		ShaderUniformType::GFX_MAT4x4F,
+		"u_VPMatrix",
+		vp->ValuePointer()
+	);
+
+	m_drawProgram->SetUniform(
+		ShaderUniformType::GFX_MAT4x4F,
+		"u_ProjectionMatrix",
+		mvp.projection->ValuePointer()
 	);
 
 	m_drawProgram->SetUniform(
 		ShaderUniformType::GFX_MAT4x4F,
 		"u_MVPMatrix",
-		gl_mvp->ValuePointer()
+		fullmvp->ValuePointer()
 	);
 }
 

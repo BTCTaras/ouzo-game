@@ -137,7 +137,12 @@ public:
 	///
 	/// Retrieves a uniform location from the uniform cache.
 	///
-	unsigned int GetUniformLocation(const char *name, bool ignoreUniformNotFound = false);
+	int GetUniformLocation(const char *name, bool ignoreUniformNotFound = false);
+
+	///
+	/// Retrieves the location of a uniform block from the uniform cache.
+	///
+	int GetBlockLocation(const char *name);
 
 private:
 	void Link();

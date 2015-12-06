@@ -1,22 +1,29 @@
 #pragma once
 
-#include "matrix.hpp"
-#include "buffer.hpp"
+#include "graphics_common/matrix.hpp"
+#include "graphics_common/draw_attribs.hpp"
 
-#include <map>
+#include <vector>
+#include <memory>
 
 typedef unsigned int instance_id_t;
 
 class CInstanceData {
 public:
-    CInstanceData();
-    instance_id_t AddInstance(S_CMatrix trans);
+	CInstanceData();
 
-    S_CBuffer CreateBuffer();
+	instance_id_t AddInstance(S_CMatrix matrix);
+	S_CMatrix GetInstance(instance_id_t id, bool willModify = false);
+
+	void LoadInto(S_CDrawAttribs attribs);
 
 private:
-    instance_id_t MakeUniqueInstanceID();
-    S_CMatrix GetTransformByID(instance_id_t id);
+	void CreateBuffers();
 
-    std::map<instance_id_t, S_CMatrix> m_instances;
+	std::vector<S_CMatrix> m_instances;
+	S_CBuffer m_buffers[4];
+
+	bool m_hasChanged;
 };
+
+typedef std::shared_ptr<CInstanceData> S_CInstanceData;
