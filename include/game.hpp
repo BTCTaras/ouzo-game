@@ -61,7 +61,7 @@ private:
 
 	SDL_Surface *LoadIconFromFile(const char *file);
 
-	void OnRender();
+	void OnRender(Uint32 *swapTime);
 	void OnUpdate();
 
 	unsigned int m_targetFPS;

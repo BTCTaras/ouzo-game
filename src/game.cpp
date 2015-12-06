@@ -197,9 +197,7 @@ void CGame::StartLoop() {
 		m_deltaTime = dt / 1000.0f;
 
 		this->OnUpdate();
-		this->OnRender();
-
-		lastTime = SDL_GetTicks();
+		this->OnRender(&lastTime);
 
 		if (!m_vsync) {
 			// Give the CPU a short break
@@ -243,9 +241,14 @@ S_CScene CGame::GetScene() {
 	return m_scene;
 }
 
-void CGame::OnRender() {
+void CGame::OnRender(Uint32 *swapTime) {
 	m_graphics->BeginScene();
 	m_scene->OnRender();
+
+	if (swapTime != NULL) {
+		*swapTime = SDL_GetTicks();
+	}
+
 	m_graphics->EndScene();
 }
 
