@@ -49,7 +49,7 @@ void CInstanceData::CreateBuffers() {
 	for (int i = 0; i < 4; ++i) {
 		m_buffers[i] = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 		m_buffers[i]->Orphan(
-			sizeof(float) * 4 * buffers[i].size(),
+			sizeof(float) * buffers[i].size(),
 			sizeof(float) * 4,
 			&buffers[i][0]
 		);
