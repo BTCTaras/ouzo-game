@@ -327,8 +327,8 @@ void CGLGraphics::DrawInstanced(PrimitiveType primitive, size_t instanceCount, S
 		glDrawArraysInstanced(
 			gl_primitive,
 			0,
-			instanceCount,
-			m_currentBuffer->GetElementCount()
+			m_currentBuffer->GetElementCount(),
+			instanceCount
 		);
 	}
 }

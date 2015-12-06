@@ -14,6 +14,7 @@ public:
 	virtual void Rotate(float x, float y, float z) = 0;
 	virtual void Scale(float x, float y, float z) = 0;
 	virtual void LoadIdentity() = 0;
+	virtual void Transpose() = 0;
 
 	virtual float* ValuePointer() = 0;
 
@@ -38,6 +39,7 @@ public:
 	virtual void Rotate(float x, float y, float z) override;
 	virtual void Scale(float x, float y, float z) override;
 	virtual void LoadIdentity() override;
+	virtual void Transpose() override;
 
 	virtual S_CMatrix operator*(S_CMatrix other) override;
 

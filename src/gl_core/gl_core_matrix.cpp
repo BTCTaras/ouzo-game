@@ -39,6 +39,10 @@ void CGLMatrix::LoadIdentity() {
 	m_internalMat = glm::mat4(1.0f);
 }
 
+void CGLMatrix::Transpose() {
+	m_internalMat = glm::transpose(m_internalMat);
+}
+
 S_CMatrix CGLMatrix::operator*(S_CMatrix other) {
 	S_CGLMatrix gl_other = std::static_pointer_cast<CGLMatrix>(other);
 	glm::mat4 m = m_internalMat * gl_other->m_internalMat;

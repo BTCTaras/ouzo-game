@@ -60,10 +60,16 @@ void CSceneOsu::OnRender() {
 	m_mvpMatrix.model->Translate(0.0f, 0.0f, -0.9f);
 	m_mvpMatrix.model->Scale((float)m_backgroundTex->GetWidth(), (float)m_backgroundTex->GetHeight(), 1.0f);
 	
+	static S_CDrawAttribs bgattribs = nullptr;
+
+	if (bgattribs == nullptr) {
+		bgattribs = GFX->CreateDrawAttribs(m_circleBuffer);
+	}
+
 	GFX->SetDrawBuffer(m_circleBuffer);
 	GFX->SetDrawTexture(m_backgroundTex);
 	GFX->SetDrawTransform(m_mvpMatrix);
-	GFX->SetDrawAttributes(m_circleAttribs);
+	GFX->SetDrawAttributes(bgattribs);
 
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
 
