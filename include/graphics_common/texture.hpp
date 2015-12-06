@@ -8,7 +8,7 @@ enum FilterType {
 
 class CTexture {
 public:
-	virtual void LoadFromFile(const char *file) = 0;
+	virtual void LoadFromFile(const char *file, FilterType filterType) = 0;
 
 	virtual void Use() = 0;
 
@@ -29,7 +29,7 @@ public:
 
 	virtual void Use() override;
 
-	virtual void LoadFromFile(const char *file) override;
+	virtual void LoadFromFile(const char *file, FilterType filterType = FilterType::LINEAR) override;
 
 	unsigned int GetOpenGLHandle();
 

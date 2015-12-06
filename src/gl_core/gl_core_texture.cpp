@@ -19,7 +19,7 @@ CGLTexture::CGLTexture(const char *file)
 	this->LoadFromFile(file);
 }
 
-void CGLTexture::LoadFromFile(const char *file) {
+void CGLTexture::LoadFromFile(const char *file, FilterType filterType) {
 	FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
 
 	if (!bitmap) {
@@ -39,8 +39,21 @@ void CGLTexture::LoadFromFile(const char *file) {
 	}
 
 	glBindTexture(GL_TEXTURE_2D, m_id);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	GLenum gl_filterType;
+
+	switch (filterType) {
+	case FilterType::LINEAR:
+		gl_filterType = GL_LINEAR;
+		break;
+
+	case FilterType::NEAREST_NEIGHBOUR:
+		gl_filterType = GL_NEAREST;
+		break;
+	}
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, gl_filterType);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, gl_filterType);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_width, m_height,
 		0, GL_BGRA, GL_UNSIGNED_BYTE, (void*)FreeImage_GetBits(bitmap));
