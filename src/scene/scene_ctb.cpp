@@ -1,19 +1,14 @@
 #include "scene/scene_ctb.hpp"
 
 #include "graphics_common/graphics.hpp"
+#include "graphics_common/sprite_verts.hpp"
+
 #include "game.hpp"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
 
 S_CBuffer g_circleBuffer = nullptr;
-
-const vertex_t QUAD_VERTICES[] = {
-	{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-};
 
 CSceneCTB::CSceneCTB()
 	: m_dudeX(0), m_dudeY(0)
@@ -23,7 +18,7 @@ CSceneCTB::CSceneCTB()
 void CSceneCTB::OnInit() {
 	if (g_circleBuffer == nullptr) {
 		g_circleBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
-		g_circleBuffer->Orphan(sizeof(QUAD_VERTICES), sizeof(vertex_t), (void*)QUAD_VERTICES);
+		g_circleBuffer->Orphan(SPRITE_VERTS_SIZE, sizeof(vertex_t), (void*)SPRITE_VERTS);
 	}
 
 	m_quadAttribs.reset(new CGLDrawAttribs);

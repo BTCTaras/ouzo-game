@@ -4,6 +4,8 @@
 #include "graphics_common/texture.hpp"
 #include "graphics_common/buffer.hpp"
 
+#include "osu/osu_beatmap.hpp"
+
 #include <vector>
 #include <memory>
 #include <functional>
@@ -23,4 +25,6 @@ private:
 	S_CBuffer m_backgroundBuffer;
 	S_CTexture m_backgroundTex;
 	mvp_matrix_t m_mvpMatrix;
+
+	COsuBeatmap m_beatmap;
 };

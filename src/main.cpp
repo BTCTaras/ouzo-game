@@ -27,9 +27,9 @@ int main(int argc, char *argv[]) {
 
 	game.InitGame(GraphicsAPI::OPENGL_CORE);
 
-	//CSceneOsu *osu = new CSceneOsu;
-	//osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
-	game.SetScene(new CSceneMenu);
+	CSceneOsu *osu = new CSceneOsu;
+	osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
+	game.SetScene(osu);
 
 	game.StartLoop();
 	return 0;

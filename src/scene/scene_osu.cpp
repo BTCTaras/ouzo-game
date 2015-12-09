@@ -2,6 +2,7 @@
 
 #include "game.hpp"
 #include "graphics_common/graphics.hpp"
+#include "graphics_common/sprite_verts.hpp"
 
 #include <algorithm>
 
@@ -9,16 +10,9 @@
 /// CSceneOsu
 ///
 
-const vertex_t BACKGROUND_VERTS[] = {
-	{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.00f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-};
-
 void CSceneOsu::OnInit() {
 	m_backgroundBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
-	m_backgroundBuffer->Orphan(sizeof(BACKGROUND_VERTS), sizeof(vertex_t), (void*)BACKGROUND_VERTS);
+	m_backgroundBuffer->Orphan(SPRITE_VERTS_SIZE, sizeof(vertex_t), (void*)SPRITE_VERTS);
 
 	m_mvpMatrix.projection = GFX->CreateIdentityMatrix();
 	m_mvpMatrix.view = GFX->CreateIdentityMatrix();
@@ -57,4 +51,6 @@ void CSceneOsu::OnRender() {
 	GFX->SetDrawAttributes(bgattribs);
 
 	GFX->Draw(PrimitiveType::GFX_TRIANGLE_STRIP);
+
+	m_beatmap.OnRender(m_mvpMatrix);
 }

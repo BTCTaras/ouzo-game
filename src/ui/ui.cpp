@@ -4,19 +4,14 @@
 
 #include "graphics_common/graphics.hpp"
 #include "graphics_common/texture.hpp"
+#include "graphics_common/sprite_verts.hpp"
+
 #include "game.hpp"
 #include "ui/uic_texture.hpp"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-
-const vertex_t QUAD_VERTICES[] = {
-	{ 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f },
-	{ 1.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f },
-};
 
 ///
 /// CSceneUI
@@ -143,7 +138,7 @@ CUISprite::CUISprite(S_CTexture tex) {
 
 	if (s_globalSpriteBuffer == nullptr) {
 		s_globalSpriteBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
-		s_globalSpriteBuffer->Orphan(sizeof(QUAD_VERTICES), sizeof(vertex_t), (void*)QUAD_VERTICES);
+		s_globalSpriteBuffer->Orphan(SPRITE_VERTS_SIZE, sizeof(vertex_t), (void*)SPRITE_VERTS);
 
 		s_globalSpriteDrawAttribs = GFX->CreateDrawAttribs(s_globalSpriteBuffer);
 	}
