@@ -1,6 +1,0 @@
-@echo off
-echo diffuse.frag.hlsl...
-fxc diffuse.frag.hlsl /O3 /Tps_3_0 /Fo diffuse.frag.fx
-echo diffuse.vert.hlsl...
-fxc diffuse.vert.hlsl /O3 /Tvs_3_0 /Fo diffuse.vert.fx
-pause

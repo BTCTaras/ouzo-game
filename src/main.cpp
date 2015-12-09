@@ -27,21 +27,9 @@ int main(int argc, char *argv[]) {
 
 	game.InitGame(GraphicsAPI::OPENGL_CORE);
 
-	CSceneOsu *osu = new CSceneOsu;
-	osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
-
-	const float periods = 3.0f;
-
-	for (float x = 0.0f; x < 1280.0f; x += 32.0f) {
-		S_COsuObject circle = S_COsuObject(new COsuCircle(
-			x - 32.0f,
-			128.0f * sinf(((periods * 2) * M_PI / 1280.0f) * x) + 328.0f
-		));
-
-		osu->AddObject(circle);
-	}
-
-	game.SetScene(osu);
+	//CSceneOsu *osu = new CSceneOsu;
+	//osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
+	game.SetScene(new CSceneMenu);
 
 	game.StartLoop();
 	return 0;

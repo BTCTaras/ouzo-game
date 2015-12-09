@@ -145,10 +145,7 @@ CUISprite::CUISprite(S_CTexture tex) {
 		s_globalSpriteBuffer = GFX->CreateBuffer(BufferType::VERTEX_BUFFER);
 		s_globalSpriteBuffer->Orphan(sizeof(QUAD_VERTICES), sizeof(vertex_t), (void*)QUAD_VERTICES);
 
-		s_globalSpriteDrawAttribs = GFX->CreateDrawAttribs();
-		s_globalSpriteDrawAttribs->SetSource(AttribType::POSITION, s_globalSpriteBuffer, offsetof(vertex_t, x));
-		s_globalSpriteDrawAttribs->SetSource(AttribType::TEX_COORDS, s_globalSpriteBuffer, offsetof(vertex_t, u));
-		s_globalSpriteDrawAttribs->SetSource(AttribType::NORMAL, s_globalSpriteBuffer, offsetof(vertex_t, nx));
+		s_globalSpriteDrawAttribs = GFX->CreateDrawAttribs(s_globalSpriteBuffer);
 	}
 }
 

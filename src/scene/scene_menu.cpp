@@ -30,7 +30,7 @@ void CSceneMenu::OnInitUI() {
 
 	S_CUIControlText text(new CUIControlText(&m_font, u8"Test Button", 32));
 	text->SetPosition(200, 100, 0.8f);
-	//this->AddControl(text);
+	this->AddControl(text);
 
 	m_texture = GFX->CreateTexture("assets/backgrounds/test.jpeg");
 
