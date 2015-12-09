@@ -1,0 +1,37 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "D2CB460C49756DBDE27C59A3AE75A070816FF486+++0B84D05",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "D2CB460C49756DBDE27C59A3AE75A070816FF486+++3A6DB83" : 0,
+    "D2CB460C49756DBDE27C59A3AE75A070816FF486+++0B84D05" : 0,
+    "D2CB460C49756DBDE27C59A3AE75A070816FF486+++B5E9CDE" : 0
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "1B471613-F4C3-4637-8C58-97E584DE44CA",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "D2CB460C49756DBDE27C59A3AE75A070816FF486+++3A6DB83" : "",
+    "D2CB460C49756DBDE27C59A3AE75A070816FF486+++0B84D05" : "ouzo-game\/",
+    "D2CB460C49756DBDE27C59A3AE75A070816FF486+++B5E9CDE" : ""
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "ouzo",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "ouzo.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ouzo-team\/ouzo-game.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D2CB460C49756DBDE27C59A3AE75A070816FF486+++0B84D05"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ouzo-team\/ouzo-game.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D2CB460C49756DBDE27C59A3AE75A070816FF486+++3A6DB83"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/ouzo-team\/ouzo-game.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "D2CB460C49756DBDE27C59A3AE75A070816FF486+++B5E9CDE"
+    }
+  ]
+}

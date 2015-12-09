@@ -22,7 +22,13 @@
 // Not sure why this hackiness is needed but it is.
 #ifdef _WIN32
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
-#else
+#endif
+
+#ifdef __APPLE__
+void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
+#endif 
+
+#ifdef __UNIX__
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
 #endif
 
@@ -92,7 +98,7 @@ void CGLGraphics::Init(SDL_Window *window) {
 	m_glMaxTextureSize = textureSize;
 
 #ifdef OUZO_DEBUG
-	if (GL_ARB_debug_output) {
+	if (glewIsSupported("GL_ARB_debug_output")) {
 		printf("GL_ARB_debug_output is supported!! Enabling debug output...\n");
 		glDebugMessageCallbackARB(GL_DebugCallback, this);
 		glDebugMessageControlARB(GL_DONT_CARE, GL_DEBUG_TYPE_OTHER_ARB, GL_DONT_CARE, 0, NULL, GL_FALSE);
@@ -107,7 +113,13 @@ void CGLGraphics::Init(SDL_Window *window) {
 #ifdef OUZO_DEBUG
 #ifdef _WIN32
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
-#else
+#endif
+    
+#ifdef __APPLE__
+void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)  {
+#endif
+    
+#ifdef __UNIX__
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam) {
 #endif
 	const char *typeName;
