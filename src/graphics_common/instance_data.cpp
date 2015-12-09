@@ -31,11 +31,10 @@ void CInstanceData::LoadInto(S_CDrawAttribs attribs) {
 		attribs->SetSource((AttribType)(AttribType::OFFSET1 + i), m_buffers[i], 0);
 	}
 }
-	
+
 void CInstanceData::CreateBuffers() {
 	std::vector<float> buffers[4];
 
-	int i = 0;
 	for (S_CMatrix mat : m_instances) {
 		float *ptr = mat->ValuePointer();
 
@@ -54,6 +53,6 @@ void CInstanceData::CreateBuffers() {
 			&buffers[i][0]
 		);
 	}
-	
+
 	m_hasChanged = false;
 }
