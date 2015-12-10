@@ -10,7 +10,7 @@ CSoundManager::CSoundManager(unsigned int channels)
 {
 	m_usedChannels = (bool*)malloc(channels * sizeof(bool));
 	
-	for (int i = 0; i < channels; ++i) {
+	for (unsigned int i = 0; i < channels; ++i) {
 		m_usedChannels[i] = false;
 	}
 }
