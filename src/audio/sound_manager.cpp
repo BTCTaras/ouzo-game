@@ -46,6 +46,12 @@ void CSoundManager::PlayMusic(const char *file) {
 	}
 
 	m_music = Mix_LoadMUS(file);
+
+	if (!m_music) {
+		fprintf(stderr, "Failed to load music file \"%s\": %s\n", file, Mix_GetError());
+		return;
+	}
+
 	Mix_PlayMusic(m_music, std::numeric_limits<int>::max());
 }
 

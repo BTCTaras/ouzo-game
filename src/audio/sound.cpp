@@ -14,6 +14,9 @@ CSound::~CSound() {
 
 void CSound::LoadFromFile(const char *file) {
 	m_chunk = Mix_LoadWAV(file);
+	if (!m_chunk) {
+		fprintf(stderr, "Failed to load sound file \"%s\": %s\n", file, Mix_GetError());
+	}
 }
 
 void CSound::Play(sound_play_data_t &playData) {
