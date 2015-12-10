@@ -22,13 +22,9 @@
 // Not sure why this hackiness is needed but it is.
 #ifdef _WIN32
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
-#endif
-
-#ifdef __APPLE__
+#elifdef __APPLE__
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
-#endif 
-
-#ifdef __UNIX__
+#else
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
 #endif
 
@@ -113,13 +109,9 @@ void CGLGraphics::Init(SDL_Window *window) {
 #ifdef OUZO_DEBUG
 #ifdef _WIN32
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
-#endif
-    
-#ifdef __APPLE__
+#elifdef __APPLE__
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)  {
-#endif
-    
-#ifdef __UNIX__
+#else
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam) {
 #endif
 	const char *typeName;
@@ -377,7 +369,7 @@ void CGLGraphics::SetDrawTransform(mvp_matrix_t &mvp) {
 		"u_ViewMatrix",
 		mvp.view->ValuePointer()
 	);
-	
+
 	m_drawProgram->SetUniform(
 		ShaderUniformType::GFX_MAT4x4F,
 		"u_VPMatrix",
