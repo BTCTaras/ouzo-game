@@ -25,13 +25,9 @@ bool initLibs() {
 
 	Uint32 mixFormats =
 		MIX_INIT_OGG |
-		MIX_INIT_MODPLUG |
+		MIX_INIT_MOD |
 		MIX_INIT_FLAC |
-		MIX_INIT_FLUIDSYNTH
-#ifdef __APPLE__
-		| MIX_INIT_MP3
-#endif
-		;
+		MIX_INIT_MP3;
 
 	if (Mix_Init(mixFormats) < 0) {
 		fprintf(stderr, "Failed to initialise SDL_mixer: %s\n", Mix_GetError());

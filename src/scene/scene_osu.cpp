@@ -18,7 +18,7 @@ void CSceneOsu::OnInit() {
 	m_mvpMatrix.view = GFX->CreateIdentityMatrix();
 	m_mvpMatrix.model = GFX->CreateIdentityMatrix();
 
-	SFX->PlayMusic("assets/sound/bg.ogg");
+	SFX->PlayMusic("assets/sound/bg.mp3");
 }
 
 void CSceneOsu::OnResize(int width, int height) {
