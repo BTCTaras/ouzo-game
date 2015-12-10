@@ -6,7 +6,8 @@
 
 CSoundManager::CSoundManager(unsigned int channels)
 	:	m_usedChannels(NULL),
-		m_channelCount(channels)
+		m_channelCount(channels),
+		m_music(NULL)
 {
 	m_usedChannels = (bool*)malloc(channels * sizeof(bool));
 	
@@ -40,6 +41,10 @@ void CSoundManager::FreeChannel(unsigned int channel) {
 }
 
 void CSoundManager::PlayMusic(const char *file) {
+	if (m_music != NULL) {
+		Mix_FreeMusic(m_music);
+	}
+
 	m_music = Mix_LoadMUS(file);
 	Mix_PlayMusic(m_music, std::numeric_limits<int>::max());
 }
