@@ -19,8 +19,9 @@ const char *GAME_START_TITLE = "Ouzo";
 CGame *CGame::Inst = nullptr;
 
 CGame::CGame()
-	: m_targetFPS(60),
-	m_running(true)
+	:	m_targetFPS(60),
+		m_running(true),
+		m_sound(8)
 {
 }
 
@@ -109,7 +110,6 @@ SDL_Surface *CGame::LoadIconFromFile(const char *file) {
 
 CGame::~CGame() {
 	SDL_DestroyWindow(m_window);
-	SDL_Quit();
 }
 
 unsigned int CGame::GetWidth() {
@@ -222,6 +222,10 @@ void CGame::SetVerticalSync(bool vsync) {
 
 S_CGraphics CGame::GetGraphics() {
 	return m_graphics;
+}
+
+CSoundManager* CGame::GetSound() {
+	return &m_sound;
 }
 
 void CGame::SetScene(CScene *scene) {

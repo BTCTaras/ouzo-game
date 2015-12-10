@@ -119,7 +119,7 @@ void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GL
 	case GL_DEBUG_TYPE_ERROR_ARB:
 		typeName = "ERROR";
 		break;
-	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR: // behaviour*
+	case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR_ARB: // behaviour*
 		typeName = "DEPRECATED_BEHAVIOUR";
 		break;
 	case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR_ARB: // behaviour*

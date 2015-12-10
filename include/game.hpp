@@ -2,8 +2,10 @@
 
 #include "scene.hpp"
 #include "graphics_common/graphics.hpp"
+#include "audio/sound_manager.hpp"
 
 #define GFX CGame::Inst->GetGraphics()
+#define SFX CGame::Inst->GetSound()
 
 #ifdef _WIN32
 #include <Windows.h>
@@ -43,6 +45,7 @@ public:
 	float GetDeltaTime();
 
 	S_CGraphics GetGraphics();
+	CSoundManager* GetSound();
 
 	unsigned int GetWidth();
 	unsigned int GetHeight();
@@ -73,6 +76,7 @@ private:
 
 	S_CScene m_scene;
 	S_CGraphics m_graphics;
+	CSoundManager m_sound;
 
 #ifdef _WIN32
 	HWND m_win32Window;

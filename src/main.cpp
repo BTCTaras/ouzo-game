@@ -9,16 +9,49 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_main.h>
+#include <SDL2/SDL_mixer.h>
 
-int main(int argc, char *argv[]) {
+bool initLibs() {
 	Uint32 sdlModules =
 		SDL_INIT_VIDEO |
 		SDL_INIT_AUDIO |
 		SDL_INIT_GAMECONTROLLER |
 		SDL_INIT_JOYSTICK;
-								
+
 	if (SDL_Init(sdlModules) != 0) {
 		fprintf(stderr, "Failed to initialise SDL: %s\n", SDL_GetError());
+		return false;
+	}
+
+	Uint32 mixFormats =
+		MIX_INIT_OGG |
+		MIX_INIT_MODPLUG |
+		MIX_INIT_FLAC |
+		MIX_INIT_FLUIDSYNTH
+#ifdef __APPLE__
+		| MIX_INIT_MP3
+#endif
+		;
+
+	if (Mix_Init(mixFormats) < 0) {
+		fprintf(stderr, "Failed to initialise SDL_mixer: %s\n", Mix_GetError());
+		return false;
+	}
+
+	if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0) {
+		fprintf(stderr, "Failed to open SDL_mixer: %s\n", Mix_GetError());
+		return false;
+	}
+
+	return true;
+}
+
+int main(int argc, char *argv[]) {
+	if (!initLibs()) {
+		fprintf(stderr, "One or more libraries couldn't be initialised!!\n");
+#ifdef OUZO_DEBUG
+		getchar();
+#endif
 		return 1;
 	}
 
@@ -32,5 +65,9 @@ int main(int argc, char *argv[]) {
 	game.SetScene(osu);
 
 	game.StartLoop();
+
+	Mix_CloseAudio();
+	Mix_Quit();
+	SDL_Quit();
 	return 0;
 }

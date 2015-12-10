@@ -36,7 +36,7 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 
 	switch (type) {
 	case AttribType::POSITION:
-		count = ATTRIB_NORMAL_COUNT;
+		count = ATTRIB_POSITION_COUNT;
 		break;
 
 	case AttribType::TEX_COORDS:
