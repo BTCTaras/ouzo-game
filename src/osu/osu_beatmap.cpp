@@ -10,7 +10,7 @@ COsuBeatmap::COsuBeatmap() {
 }
 
 osu_object_id_t COsuBeatmap::AddObject(S_COsuObject obj) {
-	osu_object_id_t id = m_objects.size();
+	osu_object_id_t id = (osu_object_id_t)m_objects.size();
 	m_objects.push_back(obj);
 	return id;
 }

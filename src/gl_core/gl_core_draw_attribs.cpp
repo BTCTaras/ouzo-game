@@ -61,7 +61,7 @@ void CGLDrawAttribs::SetSource(AttribType type, S_CBuffer buf, size_t offset) {
 		count,
 		GL_FLOAT,
 		GL_FALSE,
-		gl_buf->GetElementSize(),
+		(GLsizei)gl_buf->GetElementSize(),
 		(void*)offset
 	);
 

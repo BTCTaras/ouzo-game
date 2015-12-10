@@ -89,7 +89,7 @@ void CText::CreateTextBuffer() {
 		y += gdata->advanceY >> 6;
 	}
 
-	m_fontBufferSize = vertices.size() * sizeof(vertex_t);
+	m_fontBufferSize = (unsigned int)(vertices.size() * sizeof(vertex_t));
 	m_fontBuffer->Orphan(m_fontBufferSize, sizeof(vertex_t), &vertices[0]);
 }
 

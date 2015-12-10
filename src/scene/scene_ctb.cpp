@@ -5,7 +5,6 @@
 
 #include "game.hpp"
 
-#define _USE_MATH_DEFINES
 #include <math.h>
 
 S_CBuffer g_circleBuffer = nullptr;

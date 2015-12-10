@@ -91,7 +91,7 @@ S_CTexture CFont::CreateAtlas(unsigned int size) {
 		gdata.v2 = gdata.height / atlasHeight;
 		m_glyphData[c] = gdata;
 
-		atlas->Write(size * i, 0, gdata.width, gdata.height, g->bitmap.buffer);
+		atlas->Write(size * (unsigned int)i, 0, gdata.width, gdata.height, g->bitmap.buffer);
 	}
 
 	S_CTexture tex = atlas->GetTexture(FilterType::LINEAR);

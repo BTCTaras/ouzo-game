@@ -292,7 +292,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, gl_elementBuffer->GetOpenGLHandle());
 		glDrawElements(
 			gl_primitive,
-			elementBuffer->GetElementCount(), // Amount of elements = elem buffer size / elem size
+			(GLsizei)elementBuffer->GetElementCount(), // Amount of elements = elem buffer size / elem size
 			GL_UNSIGNED_SHORT, // Each element is an unsigned short
 			NULL // We've already bound our indices as a buffer
 		);
@@ -301,7 +301,7 @@ void CGLGraphics::Draw(PrimitiveType primitive, S_CBuffer elementBuffer) {
 		glDrawArrays(
 			gl_primitive,
 			0, // The first vertex is at 0
-			m_currentBuffer->GetElementCount() // Amount of vertices = vertex buffer size / vertex size
+			(GLsizei)m_currentBuffer->GetElementCount() // Amount of vertices = vertex buffer size / vertex size
 		);
 	}
 }
@@ -323,17 +323,17 @@ void CGLGraphics::DrawInstanced(PrimitiveType primitive, size_t instanceCount, S
 
 		glDrawElementsInstanced(
 			gl_primitive,
-			instanceCount,
+			(GLsizei)instanceCount,
 			GL_UNSIGNED_SHORT,
 			NULL,
-			gl_elementBuffer->GetElementCount()
+			(GLsizei)gl_elementBuffer->GetElementCount()
 		);
 	} else {
 		glDrawArraysInstanced(
 			gl_primitive,
 			0,
-			m_currentBuffer->GetElementCount(),
-			instanceCount
+			(GLsizei)m_currentBuffer->GetElementCount(),
+			(GLsizei)instanceCount
 		);
 	}
 }
