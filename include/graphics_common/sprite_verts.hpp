@@ -2,5 +2,7 @@
 
 #include <stddef.h>
 
-extern const float SPRITE_VERTS[];
+struct vertex_t;
+
+extern const vertex_t SPRITE_VERTS[];
 extern const size_t SPRITE_VERTS_SIZE;

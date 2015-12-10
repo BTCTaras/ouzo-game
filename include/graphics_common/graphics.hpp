@@ -12,17 +12,20 @@
 #include <SDL2/SDL.h>
 
 ///
-/// Represents a vertex. Values in order (floats): x, y, z, u, v.
+/// Represents a vertex. Values in order (floats): x, y, z, w, u, v, nx, ny, nz.
 ///
-typedef struct {
+struct vertex_t {
 	float x, y, z, w;
 	float u, v;
 	float nx, ny, nz;
-} vertex_t;
+};
 
-typedef struct {
+///
+/// Represents a colour. Values in order (floats): r, g, b.
+///
+struct colour_t {
 	float r, g, b;
-} colour_t;
+};
 
 enum PrimitiveType {
 	GFX_POINTS,
