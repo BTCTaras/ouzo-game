@@ -10,6 +10,8 @@
 
 #include <algorithm>
 
+const float STAR_SIZE = 64.0f;
+
 ///
 ///	CCircleRenderer
 ///
@@ -46,6 +48,7 @@ void CCircleRenderer::RebuildInstances() {
 	for (element_t elem : m_elements) {
 		S_CMatrix mat = GFX->CreateIdentityMatrix();
 		mat->Translate(elem.x, elem.y, 0.0f);
+		mat->Scale(STAR_SIZE, STAR_SIZE, 1.0f);
 		data.AddInstance(mat);
 	}
 
