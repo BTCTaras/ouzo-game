@@ -5,12 +5,12 @@
 #include <stdlib.h>
 
 CSoundManager::CSoundManager(unsigned int channels)
-	:	m_usedChannels(NULL),
-		m_channelCount(channels),
-		m_music(NULL)
+	:	m_music(NULL),
+		m_usedChannels(NULL),
+		m_channelCount(channels)
 {
 	m_usedChannels = (bool*)malloc(channels * sizeof(bool));
-	
+
 	for (unsigned int i = 0; i < channels; ++i) {
 		m_usedChannels[i] = false;
 	}
