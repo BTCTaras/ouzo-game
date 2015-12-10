@@ -22,7 +22,7 @@
 // Not sure why this hackiness is needed but it is.
 #ifdef _WIN32
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
-#elifdef __APPLE__
+#elif defined(__APPLE__)
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam);
 #else
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam);
@@ -109,7 +109,7 @@ void CGLGraphics::Init(SDL_Window *window) {
 #ifdef OUZO_DEBUG
 #ifdef _WIN32
 void __stdcall GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam) {
-#elifdef __APPLE__
+#elif defined(__APPLE__)
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)  {
 #else
 void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, void *userParam) {
