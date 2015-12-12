@@ -26,6 +26,12 @@ private:
 	S_CDrawAttribs m_starAttribs;
 	mvp_matrix_t m_mvpMatrix;
 
+	S_CBuffer m_hatBuffer;
+	S_CTexture m_hatTexture;
+	S_CDrawAttribs m_hatAttribs;
+
+	size_t m_hatCount;
+
 	S_CProgram m_starProgram;
 
 	size_t m_starCount;
