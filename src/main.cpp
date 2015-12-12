@@ -1,7 +1,6 @@
 #include "game.hpp"
-#include "scene/scene_menu.hpp"
+#include "scene/scene_benchmark.hpp"
 #include "scene/scene_osu.hpp"
-#include "scene/scene_ctb.hpp"
 
 #include <stdio.h>
 
@@ -56,9 +55,11 @@ int main(int argc, char *argv[]) {
 
 	game.InitGame(GraphicsAPI::OPENGL_CORE);
 
-	CSceneOsu *osu = new CSceneOsu;
+	/*CSceneOsu *osu = new CSceneOsu;
 	osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
-	game.SetScene(osu);
+	game.SetScene(osu);*/
+
+	game.SetScene(new CSceneBenchmark);
 
 	game.StartLoop();
 

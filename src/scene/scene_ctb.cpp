@@ -85,3 +85,7 @@ void CSceneCTB::OnClick(unsigned int button, float x, float y) {
 		m_dudeX = x - 64.0f;
 	}
 }
+
+unsigned short CSceneCTB::GetGamemodeID() {
+	return 0x1;
+}

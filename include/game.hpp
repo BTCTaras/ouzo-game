@@ -17,11 +17,7 @@
 struct GLFWwindow;
 
 enum GraphicsAPI {
-	OPENGL_CORE,
-	
-#ifdef _WIN32
-	DIRECT3D9
-#endif
+	OPENGL_CORE
 };
 
 class CGame {
@@ -42,15 +38,13 @@ public:
 	void SetScene(CScene *scene);
 	S_CScene GetScene();
 
-	float GetDeltaTime();
+	double GetDeltaTime();
 
 	S_CGraphics GetGraphics();
 	CSoundManager* GetSound();
 
 	unsigned int GetWidth();
 	unsigned int GetHeight();
-
-	unsigned int m_width, m_height;
 
 #ifdef _WIN32
 	HWND GetWindow_Win32();
@@ -68,7 +62,7 @@ private:
 	void OnUpdate();
 
 	unsigned int m_targetFPS;
-	float m_deltaTime;
+	double m_deltaTime;
 	bool m_vsync;
 
 	bool m_running;

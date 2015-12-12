@@ -51,7 +51,7 @@ void CGame::InitGame(GraphicsAPI api) {
 	SDL_SetWindowIcon(m_window, icon);
 	SDL_FreeSurface(icon);
 
-	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
+	this->SetVerticalSync(false); // On for now to prevent my gpu from screaming
 
 	switch (api) {
 	case GraphicsAPI::OPENGL_CORE:
@@ -113,17 +113,18 @@ CGame::~CGame() {
 }
 
 unsigned int CGame::GetWidth() {
-	return m_width;
+	int width;
+	SDL_GetWindowSize(m_window, &width, NULL);
+	return width;
 }
 
 unsigned int CGame::GetHeight() {
-	return m_height;
+	int height;
+	SDL_GetWindowSize(m_window, NULL, &height);
+	return height;
 }
 
 void CGame::Event_OnResize(int width, int height) {
-	this->m_width = width;
-	this->m_height = height;
-
 	m_graphics->SetViewport(0, 0, width, height);
 
 	if (this->GetScene() != nullptr) {
@@ -179,7 +180,7 @@ void CGame::TranslateEvent(SDL_Event &event) {
 	}
 }
 
-float CGame::GetDeltaTime() {
+double CGame::GetDeltaTime() {
 	return m_deltaTime;
 }
 
@@ -194,7 +195,7 @@ void CGame::StartLoop() {
 
 		Uint32 now = SDL_GetTicks();
 		Uint32 dt = now - lastTime; // This is the time difference between last frame and this frame.
-		m_deltaTime = dt / 1000.0f;
+		m_deltaTime = dt / 1000.0;
 
 		this->OnUpdate();
 		this->OnRender(&lastTime);
