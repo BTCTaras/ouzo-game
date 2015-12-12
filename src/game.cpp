@@ -216,14 +216,27 @@ void CGame::SetTargetFPS(unsigned int fps) {
 	m_targetFPS = fps;
 }
 
+// TODO: Move this to CGraphics
 void CGame::SetVerticalSync(bool vsync) {
 	m_vsync = vsync;
-	int interval = vsync ? 1 : 0;
+	int interval;
 
-	printf("%d\n", interval);
+	if (vsync) {
+		if (glewIsSupported("WGL_EXT_swap_control_tear") || glewIsSupported("GLX_EXT_swap_control_tear")) {
+			printf("EXT_swap_control_tear is available!! Using late swap tearing!\n");
+			interval = -1;
+		} else {
+			interval = 1;
+		}
+	}
+	else {
+		interval = 0;
+	}
 
 	if (SDL_GL_SetSwapInterval(interval) == -1) {
 		fprintf(stderr, "Failed to set swap interval: %s\n", SDL_GetError());
+		fprintf(stderr, "Disabling VSync\n");
+		m_vsync = false;
 		return;
 	}
 }

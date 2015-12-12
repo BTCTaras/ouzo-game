@@ -34,19 +34,6 @@ void CGLGraphics::Init(SDL_Window *window) {
 	m_lastActiveTex = 0xFFFFFFFF;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
 
-	// Create an OpenGL 3.3 context.
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
-
-	// Use the core profile.
-#ifdef OUZO_DEBUG
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG | SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-#else
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
-#endif
-
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-
 	m_context = SDL_GL_CreateContext(window); // Create an OpenGL context.
 	SDL_GL_MakeCurrent(window, m_context); // Make sure our OpenGL calls are directed to this context.
 

@@ -31,9 +31,9 @@ void CSceneBenchmark::OnInit() {
 
 	CInstanceData data;
 	
-	for (float z = -8.0f; z < 0.0f; z += 0.3f) {
-		for (float y = -3.0f; y < 3.0f; y += 0.3f) {
-			for (float x = -8.0f; x < 8.0f; x += 0.3f) {
+	for (float z = -8.0f; z < 0.0f; z += 0.4f) {
+		for (float y = -3.0f; y < 3.0f; y += 0.4f) {
+			for (float x = -12.0f; x < 12.0f; x += 0.4f) {
 				S_CMatrix mat = GFX->CreateIdentityMatrix();
 				mat->Translate(x + dist(mt), y + dist(mt), z + dist(mt));
 				data.AddInstance(mat);
@@ -58,7 +58,10 @@ void CSceneBenchmark::OnInit() {
 	m_starProgram->SetUniform(ShaderUniformType::GFX_VEC4F, "u_PointColour", colour);
 
 	m_font.LoadFromFile("assets/fonts/Lato-Regular.ttf");
-	m_dtText.InitText(&m_font, 16, "Hello World lol");
+
+	std::ostringstream ss;
+	ss << "Stars: " << m_starCount;
+	m_dtText.InitText(&m_font, 32, ss.str());
 }
 
 void CSceneBenchmark::OnResize(int width, int height) {
@@ -123,11 +126,7 @@ void CSceneBenchmark::OnRender() {
 	);
 
 	m_mvpMatrix.model->LoadIdentity();
-	m_mvpMatrix.model->Translate(6.0f, 16.0f);
+	m_mvpMatrix.model->Translate(6.0f, 32.0f);
 
-	std::ostringstream ss;
-	ss << CGame::Inst->GetDeltaTime();
-
-	m_dtText.SetText(ss.str());
 	m_dtText.Render(m_mvpMatrix);
 }
