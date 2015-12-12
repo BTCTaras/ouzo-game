@@ -58,6 +58,7 @@ int CGLProgram::GetUniformLocation(const char *name, bool ignoreUniformNotFound)
 		GLint id = glGetUniformLocation(m_id, name);
 		if (id == -1) {
 			if (ignoreUniformNotFound) {
+				m_uniformCache[sname] = id;
 				return -1;
 			} else {
 				fprintf(stderr, "CGLProgram::GetUniformLocation: Program has no uniform called \"%s\"!!\n", name);

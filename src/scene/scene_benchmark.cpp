@@ -72,8 +72,8 @@ void CSceneBenchmark::OnInit() {
 
 	CInstanceData hatData;
 	
-	for (float d = 1.5f; d < 4.0f; d += 0.1125f) {
-		for (float angle = 0.0f; angle < 360.0f; angle += 11.25f) {
+	for (float d = 1.5f; d < 8.0f; d += 0.1125f) {
+		for (float angle = 0.0f; angle < 360.0f; angle += 1.0f) {
 			float rad = (float)(M_PI / 180.0f * angle);
 			
 			S_CMatrix mat = GFX->CreateIdentityMatrix();
