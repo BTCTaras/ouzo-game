@@ -51,8 +51,6 @@ void CGame::InitGame(GraphicsAPI api) {
 	SDL_SetWindowIcon(m_window, icon);
 	SDL_FreeSurface(icon);
 
-	this->SetVerticalSync(false); // On for now to prevent my gpu from screaming
-
 	switch (api) {
 	case GraphicsAPI::OPENGL_CORE:
 		m_graphics.reset(new CGLGraphics);
@@ -66,6 +64,7 @@ void CGame::InitGame(GraphicsAPI api) {
 #endif
 
 	m_graphics->Init(m_window);
+	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 }
 
 #ifdef _WIN32
@@ -218,7 +217,11 @@ void CGame::SetTargetFPS(unsigned int fps) {
 
 void CGame::SetVerticalSync(bool vsync) {
 	m_vsync = vsync;
-	SDL_GL_SetSwapInterval(vsync ? 1 : 0);
+
+	if (SDL_GL_SetSwapInterval(vsync ? 1 : 0) == -1) {
+		fprintf(stderr, "Failed to set swap interval: %s\n", SDL_GetError());
+		return;
+	}
 }
 
 S_CGraphics CGame::GetGraphics() {
