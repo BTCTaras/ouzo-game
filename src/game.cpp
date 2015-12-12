@@ -64,6 +64,7 @@ void CGame::InitGame(GraphicsAPI api) {
 #endif
 
 	m_graphics->Init(m_window);
+
 	this->SetVerticalSync(true); // On for now to prevent my gpu from screaming
 }
 
@@ -217,8 +218,11 @@ void CGame::SetTargetFPS(unsigned int fps) {
 
 void CGame::SetVerticalSync(bool vsync) {
 	m_vsync = vsync;
+	int interval = vsync ? 1 : 0;
 
-	if (SDL_GL_SetSwapInterval(vsync ? 1 : 0) == -1) {
+	printf("%d\n", interval);
+
+	if (SDL_GL_SetSwapInterval(interval) == -1) {
 		fprintf(stderr, "Failed to set swap interval: %s\n", SDL_GetError());
 		return;
 	}
@@ -251,12 +255,14 @@ S_CScene CGame::GetScene() {
 
 void CGame::OnRender(Uint32 *swapTime) {
 	m_graphics->BeginScene();
-	m_scene->OnRender();
-
+	
+	// This seems wrong but it works so if weird shit happens,
+	// it's this thing's fault
 	if (swapTime != NULL) {
 		*swapTime = SDL_GetTicks();
 	}
 
+	m_scene->OnRender();
 	m_graphics->EndScene();
 }
 
