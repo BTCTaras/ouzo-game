@@ -30,13 +30,13 @@ void CSceneBenchmark::OnInit() {
 	m_starBuffer->Orphan(sizeof(star), sizeof(vertex_t), star);
 
 	m_starAttribs = GFX->CreateDrawAttribs(m_starBuffer);
-	
+
 	std::random_device rd;
 	std::mt19937 mt(rd());
 	std::uniform_real_distribution<float> dist(-4.0f, 4.0f);
 
 	CInstanceData data;
-	
+
 	for (float z = -8.0f; z < -5.0f; z += 0.5f) {
 		for (float y = -6.0f; y < 6.0f; y += 0.5f) {
 			for (float x = -12.0f; x < 12.0f; x += 0.5f) {
@@ -71,11 +71,11 @@ void CSceneBenchmark::OnInit() {
 	std::uniform_real_distribution<float> scaleDist(0.01f, 0.1f);
 
 	CInstanceData hatData;
-	
-	for (float d = 1.5f; d < 8.0f; d += 0.1125f) {
-		for (float angle = 0.0f; angle < 360.0f; angle += 1.0f) {
+
+	for (float d = 1.5f; d < 4.0f; d += 0.1f) {
+		for (float angle = 0.0f; angle < 360.0f; angle += 11.1125f) {
 			float rad = (float)(M_PI / 180.0f * angle);
-			
+
 			S_CMatrix mat = GFX->CreateIdentityMatrix();
 			float x = cosf(rad + angleDist(mt)) * d;
 			float y = sinf(rad + angleDist(mt)) * d;
@@ -162,7 +162,7 @@ void CSceneBenchmark::OnRender() {
 	GFX->SetDrawBuffer(m_starBuffer);
 	GFX->SetDrawAttributes(m_starAttribs);
 	GFX->SetDrawTexture(m_texture);
-	
+
 	GFX->DrawInstanced(PrimitiveType::GFX_POINTS, m_starCount);
 
 	m_mvpMatrix.projection->LoadIdentity();

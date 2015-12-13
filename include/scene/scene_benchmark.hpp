@@ -12,7 +12,7 @@
 class CSceneBenchmark : public CScene {
 public:
 	CSceneBenchmark();
-	
+
 	virtual void OnInit() override;
 	virtual void OnResize(int width, int height) override;
 
@@ -30,11 +30,10 @@ private:
 	S_CTexture m_hatTexture;
 	S_CDrawAttribs m_hatAttribs;
 
+    size_t m_starCount;
 	size_t m_hatCount;
 
 	S_CProgram m_starProgram;
-
-	size_t m_starCount;
 
 	CText m_dtText;
 	CFont m_font;
