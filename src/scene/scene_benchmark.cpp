@@ -3,6 +3,8 @@
 #include "graphics_common/wavefront.hpp"
 #include "graphics_common/graphics.hpp"
 #include "graphics_common/font.hpp"
+#include "audio/sound.hpp"
+#include "audio/sound_manager.hpp"
 #include "game.hpp"
 
 #include <random>
@@ -96,6 +98,8 @@ void CSceneBenchmark::OnInit() {
 	std::ostringstream ss;
 	ss << "Stars: " << m_starCount << "; Hats: " << m_hatCount;
 	m_dtText.InitText(&m_font, 32, ss.str());
+
+	SFX->PlayMusic("assets/sound/bg.mp3");
 }
 
 void CSceneBenchmark::OnResize(int width, int height) {

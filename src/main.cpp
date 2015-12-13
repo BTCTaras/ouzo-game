@@ -11,11 +11,7 @@
 #include <SDL2/SDL_mixer.h>
 
 bool initLibs() {
-	Uint32 sdlModules =
-		SDL_INIT_VIDEO |
-		SDL_INIT_AUDIO |
-		SDL_INIT_GAMECONTROLLER |
-		SDL_INIT_JOYSTICK;
+	Uint32 sdlModules = SDL_INIT_EVERYTHING;
 
 	if (SDL_Init(sdlModules) != 0) {
 		fprintf(stderr, "Failed to initialise SDL: %s\n", SDL_GetError());
