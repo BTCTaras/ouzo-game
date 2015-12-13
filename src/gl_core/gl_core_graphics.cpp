@@ -33,6 +33,7 @@ void GL_DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GL
 void CGLGraphics::Init(SDL_Window *window) {
 	m_lastActiveTex = 0xFFFFFFFF;
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, SDL_TRUE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
 	m_context = SDL_GL_CreateContext(window); // Create an OpenGL context.
 	SDL_GL_MakeCurrent(window, m_context); // Make sure our OpenGL calls are directed to this context.
