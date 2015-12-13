@@ -44,10 +44,8 @@ void CGame::InitGame(GraphicsAPI api) {
 		return;
 	}
 
-	// TODO: Make this work on Windows. It does nothing on OpenGL Core
-	// and crashes on Direct3D.
-	// Maybe try setting the icon via Win32 directly?
-	SDL_Surface *icon = this->LoadIconFromFile("assets/icon.png");
+    SDL_Surface *icon = SDL_LoadBMP("assets/icon.bmp");
+    SDL_SetColorKey(icon, SDL_TRUE, SDL_MapRGB(icon->format, 255, 0, 255));
 	SDL_SetWindowIcon(m_window, icon);
 	SDL_FreeSurface(icon);
 
@@ -73,40 +71,6 @@ HWND CGame::GetWindow_Win32() {
 	return m_win32Window;
 }
 #endif
-
-SDL_Surface *CGame::LoadIconFromFile(const char *file) {
-	FIBITMAP *bitmap = FreeImage_Load(FreeImage_GetFileType(file, 0), file);
-	
-	if (!bitmap) {
-		fprintf(stderr, "Failed to load window icon!!\n");
-		return NULL;
-	}
-
-	if (FreeImage_GetBPP(bitmap)) {
-		bitmap = FreeImage_ConvertTo32Bits(bitmap);
-	}
-
-	FreeImage_FlipVertical(bitmap);
-
-	SDL_Surface *surf = SDL_CreateRGBSurfaceFrom(
-		FreeImage_GetBits(bitmap),
-		FreeImage_GetWidth(bitmap),
-		FreeImage_GetHeight(bitmap),
-		FreeImage_GetBPP(bitmap),
-		FreeImage_GetPitch(bitmap),
-		FreeImage_GetRedMask(bitmap),
-		FreeImage_GetGreenMask(bitmap),
-		FreeImage_GetBlueMask(bitmap),
-		0
-	);
-
-	// Workaround to transparent being black because of FreeImage
-	// Essentially just translates black to transparent.
-	SDL_SetColorKey(surf, SDL_TRUE, SDL_MapRGB(surf->format, 0, 0, 0));
-
-	FreeImage_Unload(bitmap);
-	return surf;
-}
 
 CGame::~CGame() {
 	SDL_DestroyWindow(m_window);
@@ -268,7 +232,7 @@ S_CScene CGame::GetScene() {
 
 void CGame::OnRender(Uint32 *swapTime) {
 	m_graphics->BeginScene();
-	
+
 	// This seems wrong but it works so if weird shit happens,
 	// it's this thing's fault
 	if (swapTime != NULL) {

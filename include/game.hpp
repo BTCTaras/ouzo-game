@@ -56,8 +56,6 @@ private:
 
 	void TranslateEvent(SDL_Event &event);
 
-	SDL_Surface *LoadIconFromFile(const char *file);
-
 	void OnRender(Uint32 *swapTime);
 	void OnUpdate();
 
