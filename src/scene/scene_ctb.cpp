@@ -6,6 +6,7 @@
 #include "game.hpp"
 
 #include <math.h>
+#include <algorithm>
 
 S_CBuffer g_circleBuffer = nullptr;
 
@@ -20,10 +21,7 @@ void CSceneCTB::OnInit() {
 		g_circleBuffer->Orphan(SPRITE_VERTS_SIZE, sizeof(vertex_t), (void*)SPRITE_VERTS);
 	}
 
-	m_quadAttribs.reset(new CGLDrawAttribs);
-	m_quadAttribs->SetSource(AttribType::POSITION, g_circleBuffer, offsetof(vertex_t, x));
-	m_quadAttribs->SetSource(AttribType::TEX_COORDS, g_circleBuffer, offsetof(vertex_t, u));
-	m_quadAttribs->SetSource(AttribType::NORMAL, g_circleBuffer, offsetof(vertex_t, nx));
+	m_quadAttribs = GFX->CreateDrawAttribs(g_circleBuffer);
 
 	m_fruitTex = GFX->CreateTexture("assets/sickfruit.png");
 	m_bowlTex = GFX->CreateTexture("assets/bowl.png");
@@ -65,15 +63,29 @@ void CSceneCTB::OnRender() {
 }
 
 void CSceneCTB::OnUpdate() {
-	for (fruit_t &fruit : m_fruit) {
-		fruit.y += 10.0f;
+	std::vector<fruit_t*> toRemove;
 
-		if (fruit.x > m_dudeX && fruit.x < m_dudeX + 128.0f && fruit.y > m_dudeY) {
-			fruit.x = 800000000; // shhh
+	for (fruit_t &fruit : m_fruit) {
+		fruit.y += CGame::Inst->GetDeltaTime() * 100.0f;
+
+		if ( (fruit.x > m_dudeX && fruit.x < m_dudeX + 128.0f && fruit.y > m_dudeY)
+			|| fruit.y > CGame::Inst->GetHeight() + fruit.y ) {
+			toRemove.push_back(&fruit);
 		}
 	}
 
-	if (SDL_GetTicks() % 2 == 0) {
+	for (fruit_t *fruit : toRemove) {
+		std::remove_if(m_fruit.begin(), m_fruit.end(), [=](fruit_t &f) {
+			return f.x == fruit->x && f.y == fruit->y;
+		});
+	}
+
+	static float fruitTimer = 0.0f;
+	fruitTimer += (float)CGame::Inst->GetDeltaTime();
+
+	printf("%f\n", fruitTimer);
+
+	if ((int)(fruitTimer) % 2 == 0) {
 		m_fruit.push_back({ (float)(rand() % CGame::Inst->GetWidth()), 0 });
 	}
 
