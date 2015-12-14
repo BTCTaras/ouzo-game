@@ -1,6 +1,7 @@
 #include "game.hpp"
 #include "scene/scene_benchmark.hpp"
 #include "scene/scene_osu.hpp"
+#include "scene/scene_ctb.hpp"
 
 #include <stdio.h>
 
@@ -55,7 +56,7 @@ int main(int argc, char *argv[]) {
 	osu->SetBackgroundTex(GFX->CreateTexture("assets/backgrounds/test.jpeg"));
 	game.SetScene(osu);*/
 
-	game.SetScene(new CSceneBenchmark);
+	game.SetScene(new CSceneCTB);
 
 	game.StartLoop();
 
